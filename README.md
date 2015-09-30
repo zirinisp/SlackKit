@@ -1,2 +1,2 @@
 # SlackRTMKit
-a Swift implementation of the Slack RTM API
+a Swift wrapper of the Slack RTM API
