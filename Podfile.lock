@@ -1,0 +1,10 @@
+PODS:
+  - Starscream (1.0.0)
+
+DEPENDENCIES:
+  - Starscream
+
+SPEC CHECKSUMS:
+  Starscream: 24012f5dc21c634b66e2270b1bb95771b5316d5b
+
+COCOAPODS: 0.38.2
