@@ -19,7 +19,7 @@
 		26072A521BB48F7600CD650C /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26072A471BB48F7600CD650C /* Message.swift */; settings = {ASSET_TAGS = (); }; };
 		26072A531BB48F7600CD650C /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26072A481BB48F7600CD650C /* Team.swift */; settings = {ASSET_TAGS = (); }; };
 		26072A541BB48F7600CD650C /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26072A491BB48F7600CD650C /* User.swift */; settings = {ASSET_TAGS = (); }; };
-		53B3CE1F797A621E29EC737E /* Pods_SlackRTMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035936C333DAAB690C85D0E8 /* Pods_SlackRTMKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		53B3CE1F797A621E29EC737E /* Pods_SlackRTMKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 035936C333DAAB690C85D0E8 /* Pods_SlackRTMKit.framework */; settings = {ATTRIBUTES = (Required, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -338,7 +338,7 @@
 				INFOPLIST_FILE = SlackRTMKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.skookum.SlackRTMKit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchsoft.SlackRTMKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
@@ -359,7 +359,7 @@
 				INFOPLIST_FILE = SlackRTMKit/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks @loader_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.skookum.SlackRTMKit;
+				PRODUCT_BUNDLE_IDENTIFIER = com.launchsoft.SlackRTMKit;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
 			};
