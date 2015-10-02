@@ -36,9 +36,12 @@ public class Client: WebSocketDelegate {
     public var bots: [String: Bot]?
     public var files: [String: File]?
     
-    internal lazy var sentMessages = [String: Message]?()
+    internal lazy var sentMessages = [String: Message]()
     
-    private let token = "SLACK_AUTH_TOKEN"
+    private var token = "SLACK_AUTH_TOKEN"
+    public func setAuthToken(token: String) {
+        self.token = token
+    }
     
     private var webSocket: WebSocket?
     
