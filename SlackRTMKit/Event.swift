@@ -141,6 +141,7 @@ internal struct Event {
     let user: User?
     let file: File?
     let message: Message?
+    let nestedMessage: Message?
     let item: Item?
     
     init(event:Dictionary<String, AnyObject>) {
@@ -174,6 +175,7 @@ internal struct Event {
         edited = Edited(edited:event["edited"] as? Dictionary<String, AnyObject>)
         item = Item(item: event["item"] as? Dictionary<String, AnyObject>)
         message = Message(message: event)
+        nestedMessage = Message(message: event["message"] as? Dictionary<String, AnyObject>)
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
         if (Comment(comment: event["comment"] as? Dictionary<String, AnyObject>) == nil) {

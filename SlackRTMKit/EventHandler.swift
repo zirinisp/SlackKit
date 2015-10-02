@@ -32,7 +32,7 @@ internal struct EventHandler {
     
     static func messageSent(event: Event) {
         if let reply = event.replyTo {
-            if let message = Client.sharedInstance.sentMessages?[reply] {
+            if let message = Client.sharedInstance.sentMessages[reply] {
                 message.ts = event.ts
                 message.text = event.text
                 Client.sharedInstance.channels?[message.channel!]?.messages[message.ts!] = message
@@ -50,15 +50,15 @@ internal struct EventHandler {
     
     static func messageChanged(event: Event) {
         if let id = event.channel?.id {
-            if let ts = event.message?.ts {
-                Client.sharedInstance.channels?[id]?.messages[ts] = event.message
+            if let nested = event.nestedMessage {
+                Client.sharedInstance.channels?[id]?.messages[nested.ts!] = nested
             }
         }
     }
     
     static func messageDeleted(event: Event) {
         if let id = event.channel?.id {
-            if let key = event.message?.ts {
+            if let key = event.message?.deletedTs {
                 Client.sharedInstance.channels?[id]?.messages.removeValueForKey(key)
             }
         }
@@ -211,14 +211,11 @@ internal struct EventHandler {
     //MARK: - Reactions
     static func addedReaction(event: Event) {
         if let channel = event.item?.channel {
-            if let message = Client.sharedInstance.channels?[channel]?.messages[event.item!.message!.ts!] {
-                let reactions = message.reactions.filter({$0.name! == event.reaction!})
-                if var reaction = reactions.first {
-                    reaction.users?.append(event.user!.id!)
-                    reaction.count!++
+            if let message = Client.sharedInstance.channels?[channel]?.messages[event.item!.ts!] {
+                if (message.reactions[event.reaction!]) == nil {
+                    message.reactions[event.reaction!] = Reaction(name: event.reaction, user: event.user!.id!)
                 } else {
-                    let newReaction = Reaction(name: event.reaction, user: event.user!.id!)
-                    message.reactions.append(newReaction!)
+                    message.reactions[event.reaction!]?.users[event.user!.id!] = event.user!.id!
                 }
             }
         }
@@ -226,14 +223,12 @@ internal struct EventHandler {
     
     static func removedReaction(event: Event) {
         if let channel = event.item?.channel {
-            if let message = Client.sharedInstance.channels?[channel]?.messages[event.item!.message!.ts!] {
-                let reactions = message.reactions.filter({$0.name! == event.reaction!})
-                if var reaction = reactions.first {
-                    let index = reaction.users?.indexOf(event.user!.id!)
-                    reaction.users?.removeAtIndex(index!)
-                    if (reaction.users?.count == 0) {
-                        message.reactions = message.reactions.filter({$0.name! != event.reaction!})
-                    }
+            if let message = Client.sharedInstance.channels?[channel]?.messages[event.item!.ts!] {
+                if (message.reactions[event.reaction!]) != nil {
+                    message.reactions[event.reaction!]?.users.removeValueForKey(event.user!.id!)
+                }
+                if (message.reactions[event.reaction!]?.users.count == 0) {
+                    message.reactions.removeValueForKey(event.reaction!)
                 }
             }
         }

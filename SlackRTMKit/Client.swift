@@ -103,11 +103,11 @@ public class Client: WebSocketDelegate {
     
     private func addSentMessage(dictionary:Dictionary<String, AnyObject>) {
         var message = dictionary
-        let ts = message["id"] as? String
+        let ts = message["id"] as? NSNumber
         message.removeValueForKey("id")
-        message["ts"] = ts
+        message["ts"] = ts?.stringValue
         message["user"] = self.authenticatedUser?.id
-        sentMessages?[ts!] = Message(message: message)
+        sentMessages[ts!.stringValue] = Message(message: message)
     }
     
     private func slackFormatEscaping(string: String) -> String {

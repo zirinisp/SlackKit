@@ -52,7 +52,7 @@ public class Message {
     let pinnedTo: [String]?
     let comment: Comment?
     let file: File?
-    internal(set) public lazy var reactions = [Reaction]()
+    internal(set) public lazy var reactions = Dictionary<String, Reaction>()
     
     init?(message: Dictionary<String, AnyObject>?) {
         subtype = message?["subtype"] as? String
@@ -78,7 +78,8 @@ public class Message {
         file = File(file: message?["file"] as? Dictionary<String, AnyObject>)
         if let messageReactions = message?["reactions"] as? [Dictionary<String, AnyObject>] {
             for react in messageReactions {
-                self.reactions.append(Reaction(reaction: react)!)
+                let reaction = Reaction(reaction: react)
+                self.reactions[reaction!.name!] = reaction
             }
         }
     }

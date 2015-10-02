@@ -35,19 +35,15 @@ public struct Edited {
 // MARK: - Reaction
 public struct Reaction {
     let name: String?
-    internal(set) public var count: Int?
-    internal(set) public lazy var users = [String]?()
+    internal(set) public lazy var users = Dictionary<String, String>()
     
     internal init?(reaction:Dictionary<String, AnyObject>?) {
         name = reaction?["name"] as? String
-        count = reaction?["count"] as? Int
-        users = reaction?["users"] as? [String]
     }
     
     internal init?(name: String?, user: String) {
         self.name = name
-        users?.append(user)
-        self.count = 1
+        users[user] = user
     }
 }
 
@@ -88,6 +84,7 @@ public func ==(lhs: Comment, rhs: Comment) -> Bool {
 // MARK: - Item
 public struct Item {
     let type: String?
+    let ts: String?
     let channel: String?
     let message: Message?
     let file: File?
@@ -95,6 +92,7 @@ public struct Item {
     
     internal init?(item:Dictionary<String, AnyObject>?) {
         type = item?["type"] as? String
+        ts = item?["ts"] as? String
         channel = item?["channel"] as? String
         message = Message(message: item?["message"] as? Dictionary<String, AnyObject>)
         file = File(file: item?["file"] as? Dictionary<String, AnyObject>)
