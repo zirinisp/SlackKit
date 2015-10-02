@@ -58,11 +58,13 @@ public class Client: WebSocketDelegate {
             }
             do {
                 let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! Dictionary<String, AnyObject>
-                self.initialSetup(result)
-                let socketURL = NSURL(string: result["url"] as! String)
-                self.webSocket = WebSocket(url: socketURL!)
-                self.webSocket?.delegate = self
-                self.webSocket?.connect()
+                if (result["ok"] as! Bool == true) {
+                    self.initialSetup(result)
+                    let socketURL = NSURL(string: result["url"] as! String)
+                    self.webSocket = WebSocket(url: socketURL!)
+                    self.webSocket?.delegate = self
+                    self.webSocket?.connect()
+                }
             } catch _ {
                 print(error)
             }
