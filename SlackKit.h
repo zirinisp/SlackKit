@@ -1,5 +1,5 @@
 //
-// SlackRTMKit.h
+// SlackKit.h
 //
 // Copyright © 2015 Peter Zignego. All rights reserved.
 //
@@ -23,12 +23,8 @@
 
 #import <Foundation/Foundation.h>
 
-//! Project version number for SlackRTMKit.
-FOUNDATION_EXPORT double SlackRTMKitVersionNumber;
+//! Project version number for SlackKit.
+FOUNDATION_EXPORT double SlackKitVersionNumber;
 
-//! Project version string for SlackRTMKit.
-FOUNDATION_EXPORT const unsigned char SlackRTMKitVersionString[];
-
-// In this header, you should import all the public headers of your framework using statements like #import <SlackRTMKit/PublicHeader.h>
-
-
+//! Project version string for SlackKit.
+FOUNDATION_EXPORT const unsigned char SlackKitVersionString[];

@@ -1,8 +1,7 @@
 source 'https://github.com/CocoaPods/Specs.git'
-platform :osx, '10.10'
 
 use_frameworks!
 
-target 'SlackRTMKit' do
+target 'SlackKit' do
 	pod 'Starscream'
 end
