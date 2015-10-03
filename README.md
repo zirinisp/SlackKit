@@ -1,4 +1,4 @@
-#SlackKit
+![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
 ##iOS/OS X Slack Client Library
 ###Description
 This is a Slack client library for iOS and OS X written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm).
@@ -20,7 +20,7 @@ import SlackKit
 ```
 
 ###Usage
-To use SlackRTMKit you'll need a bearer token which identifies a single user. You can generate a [full access token or create one using OAuth 2](https://api.slack.com/web).
+To use SlackKit you'll need a bearer token which identifies a single user. You can generate a [full access token or create one using OAuth 2](https://api.slack.com/web).
 
 Once you have a token, give it to the Client:
 ```swift
