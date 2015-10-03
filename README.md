@@ -38,4 +38,12 @@ Once connected, the client will begin to consume any messages sent by the Slack 
 Client.sharedInstance.sendMessage(message: "Hello, world!", channelID: "CHANNEL_ID")
 ```
 
+####Print a List of Users in a Channel:
+```swift
+let users = Client.sharedInstance.channels?["CHANNEL_ID"]?.members
+print(users)
+```
 
+###Get In Touch
+[@pvzig](https://twitter.com/pvzig)
+<peter@launchsoft.co>
