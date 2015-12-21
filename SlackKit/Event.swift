@@ -126,7 +126,7 @@ internal struct Event {
     let fileID: String?
     let presence: String?
     let name: String?
-    let value: String?
+    let value: AnyObject?
     let plan: String?
     let url: String?
     let domain: String?
@@ -163,7 +163,7 @@ internal struct Event {
         fileID = event["file_id"] as? String
         presence = event["presence"] as? String
         name = event["name"] as? String
-        value = event["value"] as? String
+        value = event["value"]
         plan = event["plan"] as? String
         url = event["url"] as? String
         domain = event["domain"] as? String
