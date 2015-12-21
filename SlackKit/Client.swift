@@ -35,6 +35,16 @@ public class Client: WebSocketDelegate {
     public var users: [String: User]?
     public var bots: [String: Bot]?
     public var files: [String: File]?
+    //MARK: - Delegates
+    public var slackEventsDelegate: SlackEventsDelegate?
+    public var messageEventsDelegate: MessageEventsDelegate?
+    public var channelEventsDelegate: ChannelEventsDelegate?
+    public var groupEventsDelegate: GroupEventsDelegate?
+    public var fileEventsDelegate: FileEventsDelegate?
+    public var pinEventsDelegate: PinEventsDelegate?
+    public var starEventsDelegate: StarEventsDelegate?
+    public var reactionEventsDelegate: ReactionEventsDelegate?
+    public var teamEventsDelegate: TeamEventsDelegate?
     
     internal lazy var sentMessages = [String: Message]()
     

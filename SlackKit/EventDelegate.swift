@@ -1,0 +1,89 @@
+//
+// EventDelegate.swift
+//
+// Copyright © 2015 Peter Zignego. All rights reserved.
+//
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
+
+import Foundation
+
+public protocol SlackEventsDelegate {
+    func clientConnected()
+    func preferenceChanged(preference: String, value: AnyObject)
+    func userChanged(user: User)
+    func presenceChanged(user: User, presence: String)
+    func manualPresenceChanged(user: User, presence: String)
+    func botEvent(bot: Bot)
+}
+
+public protocol MessageEventsDelegate {
+    func messageSent(message: Message)
+    func messageReceived(message: Message)
+    func messageChanged(message: Message)
+    func messageDeleted(message: Message?)
+}
+
+public protocol ChannelEventsDelegate {
+    func userTyping(channel: Channel, user: User)
+    func channelMarked(channel: Channel, timestamp: String)
+    func channelCreated(channel: Channel)
+    func channelDeleted(channel: Channel)
+    func channelRenamed(channel: Channel)
+    func channelArchived(channel: Channel)
+    func channelHistoryChanged(channel: Channel)
+    func channelJoined(channel: Channel, user: User)
+    func channelLeft(channel: Channel, user: User)
+}
+
+public protocol GroupEventsDelegate {
+    func groupOpened(group: Channel)
+}
+
+public protocol FileEventsDelegate {
+    func fileProcessed(file: File)
+    func fileMadePrivate(file: File)
+    func fileDeleted(file: File)
+    func fileCommentAdded(file: File, comment: Comment)
+    func fileCommentEdited(file: File, comment: Comment)
+    func fileCommentDeleted(file: File, comment: Comment)
+}
+
+public protocol PinEventsDelegate {
+    func itemPinned(item: Item, channel: Channel)
+    func itemUnpinned(item: Item, channel: Channel)
+}
+
+public protocol StarEventsDelegate {
+    func messageStarred(channel: Channel, message: Message, star: Bool)
+}
+
+public protocol ReactionEventsDelegate {
+    func reactionAdded(reaction: Reaction, channel: Channel, message: Message)
+    func reactionRemoved(reaction: Reaction, channel: Channel, message: Message)
+}
+
+public protocol TeamEventsDelegate {
+    func teamJoined(user: User)
+    func teamPlanChanged(plan: String)
+    func teamPreferencesChanged(preference: String, value: AnyObject)
+    func teamNameChanged(name: String)
+    func teamDomainChanged(domain: String)
+    func teamEmailDomainChanged(domain: String)
+    func teamEmojiChanged()
+}
