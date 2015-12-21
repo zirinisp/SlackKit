@@ -34,7 +34,7 @@ public class Client: WebSocketDelegate {
     public var channels: [String: Channel]?
     public var users: [String: User]?
     public var bots: [String: Bot]?
-    public var files: [String: File]?
+    public var files = [String: File]()
     //MARK: - Delegates
     public var slackEventsDelegate: SlackEventsDelegate?
     public var messageEventsDelegate: MessageEventsDelegate?
