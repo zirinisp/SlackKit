@@ -135,7 +135,7 @@ public class Client: WebSocketDelegate {
         enumerateUsers(json["users"] as? Array)
         enumerateChannels(json["channels"] as? Array)
         enumerateGroups(json["groups"] as? Array)
-        enumerateDMs(json["ims"] as? Array)
+        enumerateIMs(json["ims"] as? Array)
         enumerateBots(json["bots"] as? Array)
     }
     
@@ -162,10 +162,10 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateDMs(dms: Array<AnyObject>?) {
         for (var i=0; i < dms!.count; i++) {
             let dm = Channel(channel: dms?[i] as? Dictionary<String, AnyObject>)
             self.channels?[dm!.id!] = dm
+    private func enumerateIMs(ims: [AnyObject]?) {
         }
     }
     

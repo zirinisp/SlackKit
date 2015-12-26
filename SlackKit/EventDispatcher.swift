@@ -42,10 +42,10 @@ internal struct EventDispatcher {
         case .UserTyping:
             EventHandler.userTyping(event)
             break
-        case .ChannelMarked, .DMMarked, .GroupMarked:
+        case .ChannelMarked, .IMMarked, .GroupMarked:
             EventHandler.channelMarked(event)
             break
-        case .ChannelCreated, .DMCreated:
+        case .ChannelCreated, .IMCreated:
             EventHandler.channelCreated(event)
             break
         case .ChannelJoined, .GroupJoined:
@@ -66,13 +66,13 @@ internal struct EventDispatcher {
         case .ChannelUnarchive, .GroupUnarchive:
             EventHandler.channelArchived(event, archived: false)
             break
-        case .ChannelHistoryChanged, .DMHistoryChanged, .GroupHistoryChanged:
+        case .ChannelHistoryChanged, .IMHistoryChanged, .GroupHistoryChanged:
             EventHandler.channelHistoryChanged(event)
             break
-        case .DMOpen, .GroupOpen:
+        case .IMOpen, .GroupOpen:
             EventHandler.open(event, open: true)
             break
-        case .DMClose, .GroupClose:
+        case .IMClose, .GroupClose:
             EventHandler.open(event, open: false)
             break
         case .FileCreated:

@@ -30,7 +30,7 @@ public struct Channel {
     internal(set) public var isArchived: Bool?
     internal(set) public var isGeneral: Bool?
     public let isGroup: Bool?
-    public let isDM: Bool?
+    public let isIM: Bool?
     internal(set) public var user: String?
     internal(set) public var isUserDeleted: Bool?
     internal(set) public var isOpen: Bool?
@@ -56,7 +56,7 @@ public struct Channel {
         isArchived = channel?["is_archived"] as? Bool
         isGeneral = channel?["is_general"] as? Bool
         isGroup = channel?["is_group"] as? Bool
-        isDM = channel?["is_im"] as? Bool
+        isIM = channel?["is_im"] as? Bool
         isUserDeleted = channel?["is_user_deleted"] as? Bool
         user = channel?["user"] as? String
         isOpen = channel?["is_open"] as? Bool
@@ -80,6 +80,6 @@ public struct Channel {
         created = nil
         creator = nil
         isGroup = false
-        isDM = false
+        isIM = false
     }
 }
