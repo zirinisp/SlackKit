@@ -129,9 +129,9 @@ public class Client: WebSocketDelegate {
     }
     
     //MARK: - Client setup
-    private func initialSetup(json: Dictionary<String, AnyObject>) {
-        team = Team(team: json["team"] as? Dictionary<String, AnyObject>)
-        authenticatedUser = User(user: json["self"] as? Dictionary<String, AnyObject>)
+    private func initialSetup(json: [String: AnyObject]) {
+        team = Team(team: json["team"] as? [String: AnyObject])
+        authenticatedUser = User(user: json["self"] as? [String: AnyObject])
         enumerateUsers(json["users"] as? Array)
         enumerateChannels(json["channels"] as? Array)
         enumerateGroups(json["groups"] as? Array)
@@ -139,41 +139,52 @@ public class Client: WebSocketDelegate {
         enumerateBots(json["bots"] as? Array)
     }
     
-    private func enumerateUsers(users: Array<AnyObject>?) {
-        self.users = [String: User]()
-        for (var i=0; i < users!.count; i++) {
-            let user = User(user: users?[i] as? Dictionary<String, AnyObject>)
-            self.users?[user!.id!] = user
+    private func enumerateUsers(users: [AnyObject]?) {
+        if let users = users {
+            for user in users {
+                let u = User(user: user as? [String: AnyObject])
+                self.users[u!.id!] = u
+            }
         }
     }
     
-    private func enumerateChannels(channels: Array<AnyObject>?) {
-        self.channels = [String: Channel]()
-        for (var i=0; i < channels!.count; i++) {
-            let channel = Channel(channel: channels?[i] as? Dictionary<String, AnyObject>)
-            self.channels?[channel!.id!] = channel
+    private func enumerateChannels(channels: [AnyObject]?) {
+        if let channels = channels {
+            for channel in channels {
+                let c = Channel(channel: channel as? [String: AnyObject])
+                self.channels[c!.id!] = c
+            }
         }
     }
     
-    private func enumerateGroups(groups: Array<AnyObject>?) {
-        for (var i=0; i < groups!.count; i++) {
-            let group = Channel(channel: groups?[i] as? Dictionary<String, AnyObject>)
-            self.channels?[group!.id!] = group
+    private func enumerateGroups(groups: [AnyObject]?) {
+        if let groups = groups {
+            for group in groups {
+                let g = Channel(channel: group as? [String: AnyObject])
+                self.channels[g!.id!] = g
+            }
         }
     }
     
-        for (var i=0; i < dms!.count; i++) {
-            let dm = Channel(channel: dms?[i] as? Dictionary<String, AnyObject>)
-            self.channels?[dm!.id!] = dm
     private func enumerateIMs(ims: [AnyObject]?) {
+        if let ims = ims {
+            for im in ims {
+                let i = Channel(channel: im as? [String: AnyObject])
+                self.channels[i!.id!] = i
+            }
+        }
+    }
         }
     }
     
-    private func enumerateBots(bots: Array<AnyObject>?) {
-        self.bots = [String: Bot]()
-        for (var i=0; i < bots?.count; i++) {
-            let bot = Bot(bot: bots?[i] as? Dictionary<String, AnyObject>)
-            self.bots?[bot!.id!] = bot
+    private func enumerateBots(bots: [AnyObject]?) {
+        if let bots = bots {
+            for bot in bots {
+                let b = Bot(bot: bot as? [String: AnyObject])
+                self.bots[b!.id!] = b
+            }
+        }
+    }
         }
     }
     
