@@ -23,8 +23,8 @@
 
 // MARK: - Edited
 public struct Edited {
-    let user: String?
-    let ts: String?
+    public let user: String?
+    public let ts: String?
     
     internal init?(edited:Dictionary<String, AnyObject>?) {
         user = edited?["user"] as? String
@@ -34,8 +34,8 @@ public struct Edited {
 
 // MARK: - Reaction
 public struct Reaction {
-    let name: String?
     internal(set) public lazy var users = Dictionary<String, String>()
+    public let name: String?
     
     internal init?(reaction:Dictionary<String, AnyObject>?) {
         name = reaction?["name"] as? String
@@ -55,8 +55,8 @@ public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
 
 // MARK: - Comment
 public struct Comment {
-    let id: String?
-    let user: String?
+    public let id: String?
+    public let user: String?
     internal(set) public var timestamp: String?
     internal(set) public var comment: String?
     
@@ -83,12 +83,12 @@ public func ==(lhs: Comment, rhs: Comment) -> Bool {
 
 // MARK: - Item
 public struct Item {
-    let type: String?
-    let ts: String?
-    let channel: String?
-    let message: Message?
-    let file: File?
-    let comment: Comment?
+    public let type: String?
+    public let ts: String?
+    public let channel: String?
+    public let message: Message?
+    public let file: File?
+    public let comment: Comment?
     
     internal init?(item:Dictionary<String, AnyObject>?) {
         type = item?["type"] as? String
@@ -108,9 +108,9 @@ public func ==(lhs: Item, rhs: Item) -> Bool {
 
 // MARK: - Topic
 public struct Topic {
-    let value: String?
-    let creator: String?
-    let lastSet: String?
+    public let value: String?
+    public let creator: String?
+    public let lastSet: String?
     
     internal init?(topic: Dictionary<String, AnyObject>?) {
         value = topic?["value"] as? String

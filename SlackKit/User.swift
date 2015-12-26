@@ -51,13 +51,13 @@ public struct User {
         }
     }
     
-    let id: String?
+    public let id: String?
     internal(set) public var name: String?
     internal(set) public var deleted: Bool?
     internal(set) public var profile: Profile?
     internal(set) public var presence: String?
     internal(set) public var color: String?
-    let isBot: Bool?
+    public let isBot: Bool?
     internal(set) public var isAdmin: Bool?
     internal(set) public var isOwner: Bool?
     internal(set) public var isPrimaryOwner: Bool?

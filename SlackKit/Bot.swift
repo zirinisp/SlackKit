@@ -23,7 +23,7 @@
 
 public struct Bot {
     
-    let id: String?
+    public let id: String?
     internal(set) public var name: String?
     internal(set) public var icons: Dictionary<String, AnyObject>?
     

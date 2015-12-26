@@ -23,46 +23,47 @@
 
 public struct File {
     
-    let id: String?
-    let created: String?
     let timeStamp: String?
-    let name: String?
-    let title: String?
-    let mimeType: String?
-    let fileType: String?
-    let prettyType: String?
-    let user: String?
-    let mode: String?
-    let editable: Bool?
-    let isExternal: Bool?
-    let externalType: String?
-    let size: Int?
-    let url: String?
-    let urlDownload: String?
-    let urlPrivate: String?
-    let urlPrivateDownload: String?
-    let thumb64: String?
-    let thumb80: String?
-    let thumb360: String?
-    let thumb360gif: String?
-    let thumb360w: String?
-    let thumb360h: String?
-    let permalink: String?
-    let editLink: String?
-    let preview: String?
-    let previewHighlight: String?
-    let lines: Int?
-    let linesMore: Int?
+    public let id: String?
+    public let created: String?
+    public let name: String?
+    public let title: String?
+    public let mimeType: String?
+    public let fileType: String?
+    public let prettyType: String?
+    public let user: String?
+    public let mode: String?
+    internal(set) public var editable: Bool?
+    public let isExternal: Bool?
+    public let externalType: String?
+    public let size: Int?
+    public let url: String?
+    public let urlDownload: String?
+    public let urlPrivate: String?
+    public let urlPrivateDownload: String?
+    public let thumb64: String?
+    public let thumb80: String?
+    public let thumb360: String?
+    public let thumb360gif: String?
+    public let thumb360w: String?
+    public let thumb360h: String?
+    public let permalink: String?
+    public let editLink: String?
+    public let preview: String?
+    public let previewHighlight: String?
+    public let lines: Int?
+    public let linesMore: Int?
     internal(set) public var isPublic: Bool?
-    let publicSharedURL: Bool?
-    let channels: [String]?
-    let groups: [String]?
-    let dms: [String]?
-    let initialComment: Comment?
-    let stars: Int?
-    let isStarred: Bool?
-    let pinnedTo: [String]?
-    internal(set) public lazy var comments = [Comment]?()
+    internal(set) public var publicSharedURL: Bool?
+    internal(set) public var channels: [String]?
+    internal(set) public var groups: [String]?
+    internal(set) public var ims: [String]?
+    public let initialComment: Comment?
+    internal(set) public var stars: Int?
+    internal(set) public var isStarred: Bool?
+    internal(set) public var pinnedTo: [String]?
+    internal(set) public lazy var comments = [Comment]()
+    internal(set) public lazy var reactions = [String: Reaction]()
     
     init?(file:Dictionary<String, AnyObject>?) {
         id = file?["id"] as? String
@@ -117,7 +118,6 @@ public struct File {
         prettyType = nil
         user = nil
         mode = nil
-        editable = nil
         isExternal = nil
         externalType = nil
         size = nil
@@ -137,14 +137,7 @@ public struct File {
         previewHighlight = nil
         lines = nil
         linesMore = nil
-        publicSharedURL = nil
-        channels = nil
-        groups = nil
-        dms = nil
         initialComment = nil
-        stars = nil
-        isStarred = nil
-        pinnedTo = nil
     }
 }
 

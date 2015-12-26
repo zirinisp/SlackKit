@@ -29,30 +29,30 @@ public enum ItemType: String {
 }
 
 public class Message {
-
-    let type = "message"
-    let subtype: String?
-    var ts: String?
-    let user: String?
-    let channel: String?
-    let hidden: Bool?
+    
+    public let type = "message"
+    public let subtype: String?
+    internal(set) public var ts: String?
+    public let user: String?
+    public let channel: String?
+    internal(set) public var hidden: Bool?
     internal(set) public var text: String?
-    let botID: String?
-    let username: String?
-    let icons: Dictionary<String, AnyObject>?
-    let deletedTs: String?
-    let purpose: String?
-    let topic: String?
-    let name: String?
-    let members: [String]?
-    let oldName: String?
-    let upload: Bool?
-    let itemType: String?
+    public let botID: String?
+    public let username: String?
+    public let icons: [String: AnyObject]?
+    public let deletedTs: String?
+    internal(set) var purpose: String?
+    internal(set) var topic: String?
+    internal(set) var name: String?
+    internal(set) var members: [String]?
+    internal(set) var oldName: String?
+    public let upload: Bool?
+    public let itemType: String?
     internal(set) public var isStarred: Bool?
-    let pinnedTo: [String]?
-    let comment: Comment?
-    let file: File?
-    internal(set) public lazy var reactions = Dictionary<String, Reaction>()
+    internal(set) var pinnedTo: [String]?
+    public let comment: Comment?
+    public let file: File?
+    internal(set) public lazy var reactions = [String: Reaction]()
     
     init?(message: Dictionary<String, AnyObject>?) {
         subtype = message?["subtype"] as? String

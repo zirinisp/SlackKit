@@ -26,15 +26,18 @@ import Starscream
 
 public class Client: WebSocketDelegate {
     
-    public var connected = false
-    public var authenticated = false
-    public var authenticatedUser: User?
-    public var team: Team?
+    internal(set) public var connected = false
+    internal(set) public var authenticated = false
+    internal(set) public var authenticatedUser: User?
+    internal(set) public var team: Team?
     
-    public var channels: [String: Channel]?
-    public var users: [String: User]?
-    public var bots: [String: Bot]?
-    public var files = [String: File]()
+    internal(set) public var channels = [String: Channel]()
+    internal(set) public var users = [String: User]()
+    internal(set) public var userGroups = [String: UserGroup]()
+    internal(set) public var bots = [String: Bot]()
+    internal(set) public var files = [String: File]()
+    internal(set) public lazy var sentMessages = [String: Message]()
+    
     //MARK: - Delegates
     public var slackEventsDelegate: SlackEventsDelegate?
     public var messageEventsDelegate: MessageEventsDelegate?
@@ -45,8 +48,6 @@ public class Client: WebSocketDelegate {
     public var starEventsDelegate: StarEventsDelegate?
     public var reactionEventsDelegate: ReactionEventsDelegate?
     public var teamEventsDelegate: TeamEventsDelegate?
-    
-    internal lazy var sentMessages = [String: Message]()
     
     private var token = "SLACK_AUTH_TOKEN"
     public func setAuthToken(token: String) {
