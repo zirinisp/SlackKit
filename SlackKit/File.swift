@@ -23,7 +23,6 @@
 
 public struct File {
     
-    let timeStamp: String?
     public let id: String?
     public let created: String?
     public let name: String?
@@ -68,7 +67,6 @@ public struct File {
     init?(file:Dictionary<String, AnyObject>?) {
         id = file?["id"] as? String
         created = file?["created"] as? String
-        timeStamp = file?["timestamp"] as? String
         name = file?["name"] as? String
         title = file?["title"] as? String
         mimeType = file?["mimetype"] as? String
@@ -110,7 +108,6 @@ public struct File {
     init?(id:String?) {
         self.id = id
         created = nil
-        timeStamp = nil
         name = nil
         title = nil
         mimeType = nil
