@@ -191,7 +191,7 @@ public class Client: WebSocketDelegate {
     // MARK: - Convenience methods
     
     public func IDForChannelName(name: String) -> String? {
-        for channel in channels! {
+        for channel in channels {
             if (channel.1.name == name) {
                 return channel.1.id!
             }

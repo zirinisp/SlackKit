@@ -41,7 +41,7 @@ internal struct EventHandler {
             if let message = Client.sharedInstance.sentMessages[reply] {
                 message.ts = event.ts
                 message.text = event.text
-                Client.sharedInstance.channels?[message.channel!]?.messages[message.ts!] = message
+                Client.sharedInstance.channels[message.channel!]?.messages[message.ts!] = message
                 
                 if let delegate = Client.sharedInstance.messageEventsDelegate {
                     delegate.messageSent(message)
@@ -54,7 +54,7 @@ internal struct EventHandler {
         if let channel = event.channel,
             message = event.message
         {
-            Client.sharedInstance.channels?[channel.id!]?.messages[message.ts!] = message
+            Client.sharedInstance.channels[channel.id!]?.messages[message.ts!] = message
             
             if let delegate = Client.sharedInstance.messageEventsDelegate {
                 delegate.messageReceived(message)
@@ -65,7 +65,7 @@ internal struct EventHandler {
     static func messageChanged(event: Event) {
         if let id = event.channel?.id {
             if let nested = event.nestedMessage {
-                Client.sharedInstance.channels?[id]?.messages[nested.ts!] = nested
+                Client.sharedInstance.channels[id]?.messages[nested.ts!] = nested
                 
                 if let delegate = Client.sharedInstance.messageEventsDelegate {
                     delegate.messageChanged(nested)
@@ -77,8 +77,8 @@ internal struct EventHandler {
     static func messageDeleted(event: Event) {
         if let id = event.channel?.id {
             if let key = event.message?.deletedTs {
-                let message = Client.sharedInstance.channels?[id]?.messages[key]
-                Client.sharedInstance.channels?[id]?.messages.removeValueForKey(key)
+                let message = Client.sharedInstance.channels[id]?.messages[key]
+                Client.sharedInstance.channels[id]?.messages.removeValueForKey(key)
                 
                 if let delegate = Client.sharedInstance.messageEventsDelegate {
                     delegate.messageDeleted(message)
@@ -89,8 +89,8 @@ internal struct EventHandler {
     
     //MARK: - Channels
     static func userTyping(event: Event) {
-        if (!Client.sharedInstance.channels![event.channel!.id!]!.usersTyping.contains(event.user!.id!)) {
-            Client.sharedInstance.channels?[event.channel!.id!]?.usersTyping.append(event.user!.id!)
+        if (!Client.sharedInstance.channels[event.channel!.id!]!.usersTyping.contains(event.user!.id!)) {
+            Client.sharedInstance.channels[event.channel!.id!]?.usersTyping.append(event.user!.id!)
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.userTyping(event.channel!, user: event.user!)
@@ -99,15 +99,15 @@ internal struct EventHandler {
         
         let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
         dispatch_after(timeout, dispatch_get_main_queue()) {
-            if let index = Client.sharedInstance.channels?[event.channel!.id!]?.usersTyping.indexOf(event.user!.id!) {
-                Client.sharedInstance.channels?[event.channel!.id!]?.usersTyping.removeAtIndex(index)
+            if let index = Client.sharedInstance.channels[event.channel!.id!]?.usersTyping.indexOf(event.user!.id!) {
+                Client.sharedInstance.channels[event.channel!.id!]?.usersTyping.removeAtIndex(index)
             }
         }
     }
     
     static func channelMarked(event: Event) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?[channel.id!]?.lastRead = event.ts
+            Client.sharedInstance.channels[channel.id!]?.lastRead = event.ts
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.channelMarked(channel, timestamp: event.ts!)
@@ -118,7 +118,7 @@ internal struct EventHandler {
     
     static func channelCreated(event: Event) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?[channel.id!] = channel
+            Client.sharedInstance.channels[channel.id!] = channel
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.channelCreated(channel)
@@ -128,7 +128,7 @@ internal struct EventHandler {
     
     static func channelDeleted(event: Event) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?.removeValueForKey(channel.id!)
+            Client.sharedInstance.channels.removeValueForKey(channel.id!)
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.channelDeleted(channel)
@@ -138,7 +138,7 @@ internal struct EventHandler {
     
     static func channelJoined(event: Event) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?[channel.id!]?.members.append(Client.sharedInstance.authenticatedUser!.id!)
+            Client.sharedInstance.channels[channel.id!]?.members.append(Client.sharedInstance.authenticatedUser!.id!)
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.channelJoined(channel, user: Client.sharedInstance.authenticatedUser!)
@@ -148,8 +148,8 @@ internal struct EventHandler {
     
     static func channelLeft(event: Event) {
         if let channel = event.channel {
-            if let index = Client.sharedInstance.channels?[channel.id!]?.members.indexOf(Client.sharedInstance.authenticatedUser!.id!) {
-                Client.sharedInstance.channels?[channel.id!]?.members.removeAtIndex(index)
+            if let index = Client.sharedInstance.channels[channel.id!]?.members.indexOf(Client.sharedInstance.authenticatedUser!.id!) {
+                Client.sharedInstance.channels[channel.id!]?.members.removeAtIndex(index)
                 
                 if let delegate = Client.sharedInstance.channelEventsDelegate {
                     delegate.channelLeft(channel, user: Client.sharedInstance.authenticatedUser!)
@@ -160,7 +160,7 @@ internal struct EventHandler {
     
     static func channelRenamed(event: Event) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?[channel.id!]?.name = channel.name
+            Client.sharedInstance.channels[channel.id!]?.name = channel.name
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.channelRenamed(channel)
@@ -170,7 +170,7 @@ internal struct EventHandler {
     
     static func channelArchived(event: Event, archived: Bool) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?[channel.id!]?.isArchived = archived
+            Client.sharedInstance.channels[channel.id!]?.isArchived = archived
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
                 delegate.channelArchived(channel)
@@ -191,7 +191,7 @@ internal struct EventHandler {
     //MARK: - DM & Group Open/Close
     static func open(event: Event, open: Bool) {
         if let channel = event.channel {
-            Client.sharedInstance.channels?[channel.id!]?.isOpen = open
+            Client.sharedInstance.channels[channel.id!]?.isOpen = open
             
             if let delegate = Client.sharedInstance.groupEventsDelegate {
                 delegate.groupOpened(channel)
@@ -201,7 +201,13 @@ internal struct EventHandler {
     
     //MARK: - Files
     static func processFile(event: Event) {
-        if let file = event.file {
+        if var file = event.file {
+            if let comment = file.initialComment {
+                let exists = Client.sharedInstance.files[file.id!]?.comments.filter({$0.timestamp == comment.timestamp}).count
+                if (comment.comment?.isEmpty == false && exists == 0) {
+                    file.comments.append(comment)
+                }
+            }
             Client.sharedInstance.files[file.id!] = file
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
@@ -235,7 +241,7 @@ internal struct EventHandler {
     static func fileCommentAdded(event: Event) {
         if let file = event.file {
             if let comment = event.comment {
-                Client.sharedInstance.files[file.id!]?.comments?.append(comment)
+                Client.sharedInstance.files[file.id!]?.comments.append(comment)
                 
                 if let delegate = Client.sharedInstance.fileEventsDelegate {
                     delegate.fileCommentAdded(file, comment: comment)
@@ -247,7 +253,7 @@ internal struct EventHandler {
     static func fileCommentEdited(event: Event) {
         if let file = event.file {
             if let commentEdit = event.comment {
-                if let comments = Client.sharedInstance.files[file.id!]?.comments?.filter({$0.id == commentEdit.id}) {
+                if let comments = Client.sharedInstance.files[file.id!]?.comments.filter({$0.id == commentEdit.id}) {
                     if var comment = comments.first {
                         comment.comment = commentEdit.comment
                         comment.timestamp = commentEdit.timestamp
@@ -264,7 +270,7 @@ internal struct EventHandler {
     static func fileCommentDeleted(event: Event) {
         if let file = event.file {
             if let comment = event.comment {
-                if let comments = Client.sharedInstance.files[file.id!]?.comments?.filter({$0.id != comment.id}) {
+                if let comments = Client.sharedInstance.files[file.id!]?.comments.filter({$0.id != comment.id}) {
                     Client.sharedInstance.files[file.id!]?.comments = comments
                 }
                 
@@ -278,22 +284,22 @@ internal struct EventHandler {
     //MARK: - Pins
     static func pinAdded(event: Event) {
         if let id = event.channelID {
-            Client.sharedInstance.channels?[id]?.pinnedItems.append(event.item!)
+            Client.sharedInstance.channels[id]?.pinnedItems.append(event.item!)
             
             if let delegate = Client.sharedInstance.pinEventsDelegate {
-                delegate.itemPinned(event.item!, channel: Client.sharedInstance.channels![id]!)
+                delegate.itemPinned(event.item!, channel: Client.sharedInstance.channels[id]!)
             }
         }
     }
     
     static func pinRemoved(event: Event) {
         if let id = event.channelID {
-            if let pins = Client.sharedInstance.channels?[id]?.pinnedItems.filter({$0 != event.item}) {
-                Client.sharedInstance.channels?[id]?.pinnedItems = pins
+            if let pins = Client.sharedInstance.channels[id]?.pinnedItems.filter({$0 != event.item}) {
+                Client.sharedInstance.channels[id]?.pinnedItems = pins
             }
             
             if let delegate = Client.sharedInstance.pinEventsDelegate {
-                delegate.itemUnpinned(event.item!, channel: Client.sharedInstance.channels![id]!)
+                delegate.itemUnpinned(event.item!, channel: Client.sharedInstance.channels[id]!)
             }
         }
     }
@@ -301,11 +307,11 @@ internal struct EventHandler {
     //MARK: - Stars
     static func messageStarred(event: Event, star: Bool) {
         if let item = event.item {
-            if let message = Client.sharedInstance.channels?[item.channel!]?.messages[item.message!.ts!] {
+            if let message = Client.sharedInstance.channels[item.channel!]?.messages[item.message!.ts!] {
                 message.isStarred = star
                 
                 if let delegate = Client.sharedInstance.starEventsDelegate {
-                    delegate.messageStarred(Client.sharedInstance.channels![item.channel!]!, message: message, star: star)
+                    delegate.messageStarred(Client.sharedInstance.channels[item.channel!]!, message: message, star: star)
                 }
             }
         }
@@ -314,7 +320,7 @@ internal struct EventHandler {
     //MARK: - Reactions
     static func addedReaction(event: Event) {
         if let channel = event.item?.channel {
-            if let message = Client.sharedInstance.channels?[channel]?.messages[event.item!.ts!] {
+            if let message = Client.sharedInstance.channels[channel]?.messages[event.item!.ts!] {
                 if (message.reactions[event.reaction!]) == nil {
                     message.reactions[event.reaction!] = Reaction(name: event.reaction, user: event.user!.id!)
                 } else {
@@ -322,7 +328,7 @@ internal struct EventHandler {
                 }
                 
                 if let delegate = Client.sharedInstance.reactionEventsDelegate {
-                    delegate.reactionAdded(message.reactions[event.reaction!]!, channel: Client.sharedInstance.channels![channel]!, message: message)
+                    delegate.reactionAdded(message.reactions[event.reaction!]!, channel: Client.sharedInstance.channels[channel]!, message: message)
                 }
             }
         }
@@ -330,7 +336,7 @@ internal struct EventHandler {
     
     static func removedReaction(event: Event) {
         if let channel = event.item?.channel {
-            if let message = Client.sharedInstance.channels?[channel]?.messages[event.item!.ts!] {
+            if let message = Client.sharedInstance.channels[channel]?.messages[event.item!.ts!] {
                 let reaction = message.reactions[event.reaction!]
                 if (message.reactions[event.reaction!]) != nil {
                     message.reactions[event.reaction!]?.users.removeValueForKey(event.user!.id!)
@@ -340,7 +346,7 @@ internal struct EventHandler {
                 }
                 
                 if let delegate = Client.sharedInstance.reactionEventsDelegate {
-                    delegate.reactionRemoved(reaction!, channel: Client.sharedInstance.channels![channel]!, message: message)
+                    delegate.reactionRemoved(reaction!, channel: Client.sharedInstance.channels[channel]!, message: message)
                 }
             }
         }
@@ -362,8 +368,8 @@ internal struct EventHandler {
     //Mark: - User Change
     static func userChange(event: Event) {
         if var user = event.user {
-            user.preferences = Client.sharedInstance.users?[user.id!]?.preferences
-            Client.sharedInstance.users?[user.id!] = user
+            user.preferences = Client.sharedInstance.users[user.id!]?.preferences
+            Client.sharedInstance.users[user.id!] = user
             
             if let delegate = Client.sharedInstance.slackEventsDelegate {
                 delegate.userChanged(user)
@@ -374,7 +380,7 @@ internal struct EventHandler {
     //MARK: - User Presence
     static func presenceChange(event: Event) {
         if let user = event.user {
-            Client.sharedInstance.users?[user.id!]?.presence = event.presence
+            Client.sharedInstance.users[user.id!]?.presence = event.presence
             
             if let delegate = Client.sharedInstance.slackEventsDelegate {
                 delegate.presenceChanged(user, presence: event.presence!)
@@ -385,7 +391,7 @@ internal struct EventHandler {
     //MARK: - Team
     static func teamJoin(event: Event) {
         if let user = event.user {
-            Client.sharedInstance.users?[user.id!] = user
+            Client.sharedInstance.users[user.id!] = user
             
             if let delegate = Client.sharedInstance.teamEventsDelegate {
                 delegate.teamJoined(user)
@@ -453,10 +459,10 @@ internal struct EventHandler {
         }
     }
     
-    //Mark: - Bots
+    //MARK: - Bots
     static func bot(event: Event) {
         if let bot = event.bot {
-            Client.sharedInstance.bots?[bot.id!] = bot
+            Client.sharedInstance.bots[bot.id!] = bot
             
             if let delegate = Client.sharedInstance.slackEventsDelegate {
                 delegate.botEvent(bot)
