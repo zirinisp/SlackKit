@@ -25,12 +25,12 @@ public struct Bot {
     
     public let id: String?
     internal(set) public var name: String?
-    internal(set) public var icons: Dictionary<String, AnyObject>?
+    internal(set) public var icons: [String: AnyObject]?
     
-    internal init?(bot:Dictionary<String, AnyObject>?) {
+    internal init?(bot: [String: AnyObject]?) {
         id = bot?["id"] as? String
         name = bot?["name"] as? String
-        icons = bot?["icons"] as? Dictionary<String, AnyObject>
+        icons = bot?["icons"] as? [String: AnyObject]
     }
     
 }

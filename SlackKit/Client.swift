@@ -71,7 +71,7 @@ public class Client: WebSocketDelegate {
                 return
             }
             do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! Dictionary<String, AnyObject>
+                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
                 if (result["ok"] as! Bool == true) {
                     self.initialSetup(result)
                     let socketURL = NSURL(string: result["url"] as! String)
@@ -96,7 +96,7 @@ public class Client: WebSocketDelegate {
     }
     
     private func formatMessageToSlackJsonString(message: (msg: String, channel: String)) -> NSData? {
-        let json: Dictionary<String, AnyObject> = [
+        let json: [String: AnyObject] = [
             "id": NSDate().timeIntervalSince1970,
             "type": "message",
             "channel": message.channel,
@@ -112,7 +112,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func addSentMessage(dictionary:Dictionary<String, AnyObject>) {
+    private func addSentMessage(dictionary: [String: AnyObject]) {
         var message = dictionary
         let ts = message["id"] as? NSNumber
         message.removeValueForKey("id")
@@ -206,8 +206,7 @@ public class Client: WebSocketDelegate {
             return
         }
         do {
-            try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! Dictionary<String, AnyObject>)
-            print(try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary)
+            try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
         }
         catch _ {
             

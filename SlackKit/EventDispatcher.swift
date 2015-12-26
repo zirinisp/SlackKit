@@ -23,7 +23,7 @@
 
 internal struct EventDispatcher {
     
-    static func eventDispatcher(event:Dictionary<String, AnyObject>) {
+    static func eventDispatcher(event: [String: AnyObject]) {
         let event = Event(event: event)
         switch event.type {
         case .Hello:

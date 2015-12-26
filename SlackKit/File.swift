@@ -64,7 +64,7 @@ public struct File {
     internal(set) public lazy var comments = [Comment]()
     internal(set) public lazy var reactions = [String: Reaction]()
     
-    init?(file:Dictionary<String, AnyObject>?) {
+    init?(file:[String: AnyObject]?) {
         id = file?["id"] as? String
         created = file?["created"] as? String
         name = file?["name"] as? String
@@ -98,9 +98,9 @@ public struct File {
         publicSharedURL = file?["public_url_shared"] as? Bool
         channels = file?["channels"] as? [String]
         groups = file?["groups"] as? [String]
-        dms = file?["ims"] as? [String]
-        initialComment = Comment(comment: file?["initial_comment"] as? Dictionary<String, AnyObject>)
-        stars = file?["stars"] as? Int
+        ims = file?["ims"] as? [String]
+        initialComment = Comment(comment: file?["initial_comment"] as? [String: AnyObject])
+        stars = file?["num_stars"] as? Int
         isStarred = file?["is_starred"] as? Bool
         pinnedTo = file?["pinned_to"] as? [String]
     }

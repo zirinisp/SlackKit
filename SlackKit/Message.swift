@@ -54,7 +54,7 @@ public class Message {
     public let file: File?
     internal(set) public lazy var reactions = [String: Reaction]()
     
-    init?(message: Dictionary<String, AnyObject>?) {
+    init?(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
         ts = message?["ts"] as? String
         user = message?["user"] as? String
@@ -63,7 +63,7 @@ public class Message {
         text = message?["text"] as? String
         botID = message?["bot_id"] as? String
         username = message?["username"] as? String
-        icons = message?["icons"] as? Dictionary<String, AnyObject>
+        icons = message?["icons"] as? [String: AnyObject]
         deletedTs = message?["deleted_ts"] as? String
         purpose = message?["purpose"] as? String
         topic = message?["topic"] as? String
@@ -74,9 +74,9 @@ public class Message {
         itemType = message?["item_type"] as? String
         isStarred = message?["is_starred"] as? Bool
         pinnedTo = message?["pinned_to"] as? [String]
-        comment = Comment(comment: message?["comment"] as? Dictionary<String, AnyObject>)
-        file = File(file: message?["file"] as? Dictionary<String, AnyObject>)
-        if let messageReactions = message?["reactions"] as? [Dictionary<String, AnyObject>] {
+        comment = Comment(comment: message?["comment"] as? [String: AnyObject])
+        file = File(file: message?["file"] as? [String: AnyObject])
+        if let messageReactions = message?["reactions"] as? [[String: AnyObject]] {
             for react in messageReactions {
                 let reaction = Reaction(reaction: react)
                 self.reactions[reaction!.name!] = reaction

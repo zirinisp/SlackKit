@@ -26,7 +26,7 @@ public struct Edited {
     public let user: String?
     public let ts: String?
     
-    internal init?(edited:Dictionary<String, AnyObject>?) {
+    internal init?(edited:[String: AnyObject]?) {
         user = edited?["user"] as? String
         ts = edited?["ts"] as? String
     }
@@ -34,10 +34,10 @@ public struct Edited {
 
 // MARK: - Reaction
 public struct Reaction {
-    internal(set) public lazy var users = Dictionary<String, String>()
     public let name: String?
+    internal(set) public lazy var users = [String: String]()
     
-    internal init?(reaction:Dictionary<String, AnyObject>?) {
+    internal init?(reaction:[String: AnyObject]?) {
         name = reaction?["name"] as? String
     }
     
@@ -60,7 +60,7 @@ public struct Comment {
     internal(set) public var timestamp: String?
     internal(set) public var comment: String?
     
-    internal init?(comment:Dictionary<String, AnyObject>?) {
+    internal init?(comment:[String: AnyObject]?) {
         id = comment?["id"] as? String
         timestamp = comment?["timestamp"] as? String
         user = comment?["user"] as? String
@@ -90,13 +90,13 @@ public struct Item {
     public let file: File?
     public let comment: Comment?
     
-    internal init?(item:Dictionary<String, AnyObject>?) {
+    internal init?(item:[String: AnyObject]?) {
         type = item?["type"] as? String
         ts = item?["ts"] as? String
         channel = item?["channel"] as? String
-        message = Message(message: item?["message"] as? Dictionary<String, AnyObject>)
-        file = File(file: item?["file"] as? Dictionary<String, AnyObject>)
-        comment = Comment(comment: item?["comment"] as? Dictionary<String, AnyObject>)
+        message = Message(message: item?["message"] as? [String: AnyObject])
+        file = File(file: item?["file"] as? [String: AnyObject])
+        comment = Comment(comment: item?["comment"] as? [String: AnyObject])
     }
 }
 
@@ -112,7 +112,7 @@ public struct Topic {
     public let creator: String?
     public let lastSet: String?
     
-    internal init?(topic: Dictionary<String, AnyObject>?) {
+    internal init?(topic: [String: AnyObject]?) {
         value = topic?["value"] as? String
         creator = topic?["creator"] as? String
         lastSet = topic?["last_set"] as? String

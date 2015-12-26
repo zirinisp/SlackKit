@@ -46,9 +46,9 @@ public struct Channel {
     // Client use
     internal(set) public lazy var pinnedItems = [Item]()
     internal(set) public lazy var usersTyping = [String]()
-    internal(set) public lazy var messages = Dictionary<String, Message>()
+    internal(set) public lazy var messages = [String: Message]()
     
-    internal init?(channel:Dictionary<String, AnyObject>?) {
+    internal init?(channel: [String: AnyObject]?) {
         id = channel?["id"] as? String
         name = channel?["name"] as? String
         created = channel?["created"] as? String
@@ -60,11 +60,11 @@ public struct Channel {
         isUserDeleted = channel?["is_user_deleted"] as? Bool
         user = channel?["user"] as? String
         isOpen = channel?["is_open"] as? Bool
-        topic = Topic(topic: channel?["topic"] as? Dictionary<String, AnyObject>)
-        purpose = Topic(topic: channel?["purpose"] as? Dictionary<String, AnyObject>)
+        topic = Topic(topic: channel?["topic"] as? [String: AnyObject])
+        purpose = Topic(topic: channel?["purpose"] as? [String: AnyObject])
         isMember = channel?["is_member"] as? Bool
         lastRead = channel?["last_read"] as? String
-        latest = Message(message: channel?["message"] as? Dictionary<String, AnyObject>)
+        latest = Message(message: channel?["message"] as? [String: AnyObject])
         unread = channel?["unread_count"] as? Int
         unreadCountDisplay = channel?["unread_count_display"] as? Int
         hasPins = channel?["has_pins"] as? Bool

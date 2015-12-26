@@ -133,7 +133,7 @@ internal struct Event {
     let emailDomain: String?
     let reaction: String?
     let replyTo: String?
-    let reactions: [Dictionary<String, AnyObject>]?
+    let reactions: [[String: AnyObject]]?
     let edited: Edited?
     let bot: Bot?
     let channel: Channel?
@@ -144,7 +144,7 @@ internal struct Event {
     let nestedMessage: Message?
     let item: Item?
     
-    init(event:Dictionary<String, AnyObject>) {
+    init(event:[String: AnyObject]) {
         if let eventType = event["type"] as? String {
             type = EventType(rawValue:eventType)!
         } else {
@@ -170,36 +170,36 @@ internal struct Event {
         emailDomain = event["email_domain"] as? String
         reaction = event["reaction"] as? String
         replyTo = event["reply_to"] as? String
-        reactions = event["reactions"] as? [Dictionary<String, AnyObject>]
-        bot = Bot(bot: event["bot"] as? Dictionary<String, AnyObject>)
-        edited = Edited(edited:event["edited"] as? Dictionary<String, AnyObject>)
-        item = Item(item: event["item"] as? Dictionary<String, AnyObject>)
+        reactions = event["reactions"] as? [[String: AnyObject]]
+        bot = Bot(bot: event["bot"] as? [String: AnyObject])
+        edited = Edited(edited:event["edited"] as? [String: AnyObject])
+        item = Item(item: event["item"] as? [String: AnyObject])
         message = Message(message: event)
-        nestedMessage = Message(message: event["message"] as? Dictionary<String, AnyObject>)
+        nestedMessage = Message(message: event["message"] as? [String: AnyObject])
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
-        if (Comment(comment: event["comment"] as? Dictionary<String, AnyObject>) == nil) {
+        if (Comment(comment: event["comment"] as? [String: AnyObject]) == nil) {
             comment = Comment(id: event["comment"] as? String)
         } else {
-            comment = Comment(comment: event["comment"] as? Dictionary<String, AnyObject>)
+            comment = Comment(comment: event["comment"] as? [String: AnyObject])
         }
         
-        if (User(user: event["user"] as? Dictionary<String, AnyObject>)?.id == nil) {
+        if (User(user: event["user"] as? [String: AnyObject])?.id == nil) {
             user = User(id: event["user"] as? String)
         } else {
-            user = User(user: event["user"] as? Dictionary<String, AnyObject>)
+            user = User(user: event["user"] as? [String: AnyObject])
         }
         
-        if (File(file: event["file"] as? Dictionary<String, AnyObject>)?.id == nil) {
+        if (File(file: event["file"] as? [String: AnyObject])?.id == nil) {
             file = File(id: event["file"] as? String)
         } else {
-            file = File(file: event["file"] as? Dictionary<String, AnyObject>)
+            file = File(file: event["file"] as? [String: AnyObject])
         }
         
-        if (Channel(channel: event["channel"] as? Dictionary<String, AnyObject>)?.id == nil) {
+        if (Channel(channel: event["channel"] as? [String: AnyObject])?.id == nil) {
             channel = Channel(id: event["channel"] as? String)
         } else {
-            channel = Channel(channel: event["channel"] as? Dictionary<String, AnyObject>)
+            channel = Channel(channel: event["channel"] as? [String: AnyObject])
         }
     }
     

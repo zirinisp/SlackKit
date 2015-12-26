@@ -23,7 +23,7 @@
 
 public struct User {
     
-     public struct Profile {
+    public struct Profile {
         internal(set) public var firstName: String?
         internal(set) public var lastName: String?
         internal(set) public var realName: String?
@@ -36,7 +36,7 @@ public struct User {
         internal(set) public var image72: String?
         internal(set) public var image192: String?
         
-        internal init?(profile: Dictionary<String, AnyObject>?) {
+        internal init?(profile: [String: AnyObject]?) {
             firstName = profile?["first_name"] as? String
             lastName = profile?["last_name"] as? String
             realName = profile?["real_name"] as? String
@@ -69,13 +69,13 @@ public struct User {
     internal(set) public var timeZone: String?
     internal(set) public var timeZoneLabel: String?
     internal(set) public var timeZoneOffSet: Int?
-    internal(set) public var preferences: Dictionary<String, AnyObject>?
+    internal(set) public var preferences: [String: AnyObject]?
     
-    internal init?(user: Dictionary<String, AnyObject>?) {
+    internal init?(user: [String: AnyObject]?) {
         id = user?["id"] as? String
         name = user?["name"] as? String
         deleted = user?["deleted"] as? Bool
-        profile = Profile(profile: user?["profile"] as? Dictionary<String, AnyObject>)
+        profile = Profile(profile: user?["profile"] as? [String: AnyObject])
         color = user?["color"] as? String
         isAdmin = user?["is_admin"] as? Bool
         isOwner = user?["is_owner"] as? Bool
@@ -90,7 +90,7 @@ public struct User {
         timeZone = user?["tz"] as? String
         timeZoneLabel = user?["tz_label"] as? String
         timeZoneOffSet = user?["tz_offset"] as? Int
-        preferences = user?["prefs"] as? Dictionary<String, AnyObject>
+        preferences = user?["prefs"] as? [String: AnyObject]
     }
     
     internal init?(id: String?) {
