@@ -80,6 +80,10 @@ internal enum EventType: String {
     case BotChanged = "bot_changed"
     case AccountsChanged = "accounts_changed"
     case TeamMigrationStarted = "team_migration_started"
+    case SubteamCreated = "subteam_created"
+    case SubteamUpdated = "subteam_updated"
+    case SubteamSelfAdded = "subteam_self_added"
+    case SubteamSelfRemoved = "subteam_self_removed"
     case Ok = "ok"
     case Error = "error"
 }
@@ -143,6 +147,8 @@ internal struct Event {
     let message: Message?
     let nestedMessage: Message?
     let item: Item?
+    let subteam: UserGroup?
+    let subteamID: String?
     
     init(event:[String: AnyObject]) {
         if let eventType = event["type"] as? String {
@@ -174,6 +180,8 @@ internal struct Event {
         bot = Bot(bot: event["bot"] as? [String: AnyObject])
         edited = Edited(edited:event["edited"] as? [String: AnyObject])
         item = Item(item: event["item"] as? [String: AnyObject])
+        subteam = UserGroup(userGroup: event["subteam"] as? [String: AnyObject])
+        subteamID = event["subteam_id"] as? String
         message = Message(message: event)
         nestedMessage = Message(message: event["message"] as? [String: AnyObject])
         

@@ -48,6 +48,7 @@ public class Client: WebSocketDelegate {
     public var starEventsDelegate: StarEventsDelegate?
     public var reactionEventsDelegate: ReactionEventsDelegate?
     public var teamEventsDelegate: TeamEventsDelegate?
+    public var subteamEventsDelegate: SubteamEventsDelegate?
     
     private var token = "SLACK_AUTH_TOKEN"
     public func setAuthToken(token: String) {
@@ -137,6 +138,7 @@ public class Client: WebSocketDelegate {
         enumerateGroups(json["groups"] as? Array)
         enumerateIMs(json["ims"] as? Array)
         enumerateBots(json["bots"] as? Array)
+        enumerateSubteams(json["subteams"] as? [String: AnyObject])
     }
     
     private func enumerateUsers(users: [AnyObject]?) {
@@ -185,6 +187,21 @@ public class Client: WebSocketDelegate {
             }
         }
     }
+    
+    private func enumerateSubteams(subteams: [String: AnyObject]?) {
+        if let subteams = subteams {
+            if let all = subteams["all"] as? [[String: AnyObject]] {
+                for item in all {
+                    let u = UserGroup(userGroup: item)
+                    self.userGroups[u!.id!] = u
+                }
+            }
+            if let auth = subteams["self"] as? [String] {
+                for item in auth {
+                    authenticatedUser?.userGroups = [String: String]()
+                    authenticatedUser?.userGroups![item] = item
+                }
+            }
         }
     }
     

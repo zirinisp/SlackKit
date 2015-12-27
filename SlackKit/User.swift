@@ -70,6 +70,8 @@ public struct User {
     internal(set) public var timeZoneLabel: String?
     internal(set) public var timeZoneOffSet: Int?
     internal(set) public var preferences: [String: AnyObject]?
+    // Client use
+    internal(set) public var userGroups: [String: String]?
     
     internal init?(user: [String: AnyObject]?) {
         id = user?["id"] as? String

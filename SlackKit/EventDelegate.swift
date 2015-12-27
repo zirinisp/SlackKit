@@ -87,3 +87,9 @@ public protocol TeamEventsDelegate {
     func teamEmailDomainChanged(domain: String)
     func teamEmojiChanged()
 }
+
+public protocol SubteamEventsDelegate {
+    func subteamEvent(userGroup: UserGroup)
+    func subteamSelfAdded(subteamID: String)
+    func subteamSelfRemoved(subteamID: String)
+}

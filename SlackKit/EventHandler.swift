@@ -470,6 +470,38 @@ internal struct EventHandler {
         }
     }
     
+    //MARK: - Subteams
+    static func subteam(event: Event) {
+        if let subteam = event.subteam {
+            Client.sharedInstance.userGroups[subteam.id!] = subteam
+            
+            if let delegate = Client.sharedInstance.subteamEventsDelegate {
+                delegate.subteamEvent(subteam)
+            }
+        }
+        
+    }
+    
+    static func subteamAddedSelf(event: Event) {
+        if let subteamID = event.subteamID {
+            Client.sharedInstance.authenticatedUser?.userGroups![subteamID] = subteamID
+            
+            if let delegate = Client.sharedInstance.subteamEventsDelegate {
+                delegate.subteamSelfAdded(subteamID)
+            }
+        }
+    }
+    
+    static func subteamRemovedSelf(event: Event) {
+        if let subteamID = event.subteamID {
+            Client.sharedInstance.authenticatedUser?.userGroups?.removeValueForKey(subteamID)
+            
+            if let delegate = Client.sharedInstance.subteamEventsDelegate {
+                delegate.subteamSelfRemoved(subteamID)
+            }
+        }
+    }
+    
     //MARK: - Authenticated User
     static func manualPresenceChange(event: Event) {
         Client.sharedInstance.authenticatedUser?.presence = event.presence

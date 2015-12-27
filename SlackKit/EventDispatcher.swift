@@ -171,6 +171,15 @@ internal struct EventDispatcher {
         case .TeamMigrationStarted:
             Client.sharedInstance.connect()
             break
+        case .SubteamCreated, .SubteamUpdated:
+            EventHandler.subteam(event)
+            break
+        case .SubteamSelfAdded:
+            EventHandler.subteamAddedSelf(event)
+            break
+        case.SubteamSelfRemoved:
+            EventHandler.subteamRemovedSelf(event)
+            break
         case .Error:
             
             break
