@@ -116,7 +116,7 @@ internal enum MessageSubtype: String {
 
 internal struct Event {
     
-    let type: EventType
+    let type: EventType?
     let ts: String?
     let subtype: String?
     let channelID: String?
@@ -152,9 +152,9 @@ internal struct Event {
     
     init(event:[String: AnyObject]) {
         if let eventType = event["type"] as? String {
-            type = EventType(rawValue:eventType)!
+            type = EventType(rawValue:eventType)
         } else {
-            type = EventType(rawValue: "ok")!
+            type = EventType(rawValue: "ok")
         }
         ts = event["ts"] as? String
         subtype = event["subtype"] as? String
