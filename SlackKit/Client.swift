@@ -37,10 +37,11 @@ public class Client: WebSocketDelegate {
     internal(set) public var bots = [String: Bot]()
     internal(set) public var files = [String: File]()
     internal(set) public lazy var sentMessages = [String: Message]()
-    
+
     //MARK: - Delegates
     public var slackEventsDelegate: SlackEventsDelegate?
     public var messageEventsDelegate: MessageEventsDelegate?
+    public var doNotDisturbEventsDelegate: DoNotDisturbEventsDelegate?
     public var channelEventsDelegate: ChannelEventsDelegate?
     public var groupEventsDelegate: GroupEventsDelegate?
     public var fileEventsDelegate: FileEventsDelegate?
@@ -49,7 +50,7 @@ public class Client: WebSocketDelegate {
     public var reactionEventsDelegate: ReactionEventsDelegate?
     public var teamEventsDelegate: TeamEventsDelegate?
     public var subteamEventsDelegate: SubteamEventsDelegate?
-    
+
     private var token = "SLACK_AUTH_TOKEN"
     public func setAuthToken(token: String) {
         self.token = token
@@ -133,6 +134,7 @@ public class Client: WebSocketDelegate {
     private func initialSetup(json: [String: AnyObject]) {
         team = Team(team: json["team"] as? [String: AnyObject])
         authenticatedUser = User(user: json["self"] as? [String: AnyObject])
+        authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: AnyObject])
         enumerateUsers(json["users"] as? Array)
         enumerateChannels(json["channels"] as? Array)
         enumerateGroups(json["groups"] as? Array)

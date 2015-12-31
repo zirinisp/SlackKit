@@ -51,6 +51,11 @@ public protocol ChannelEventsDelegate {
     func channelLeft(channel: Channel, user: User)
 }
 
+public protocol DoNotDisturbEventsDelegate {
+    func doNotDisturbUpdated(dndStatus: DoNotDisturbStatus)
+    func doNotDisturbUserUpdated(dndStatus: DoNotDisturbStatus, user: User?)
+}
+
 public protocol GroupEventsDelegate {
     func groupOpened(group: Channel)
 }

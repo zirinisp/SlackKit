@@ -55,6 +55,7 @@ public struct User {
     internal(set) public var name: String?
     internal(set) public var deleted: Bool?
     internal(set) public var profile: Profile?
+    internal(set) public var doNotDisturbStatus: DoNotDisturbStatus?
     internal(set) public var presence: String?
     internal(set) public var color: String?
     public let isBot: Bool?

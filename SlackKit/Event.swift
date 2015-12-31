@@ -34,6 +34,8 @@ internal enum EventType: String {
     case ChannelArchive = "channel_archive"
     case ChannelUnarchive = "channel_unarchive"
     case ChannelHistoryChanged = "channel_history_changed"
+    case DNDUpdated = "dnd_updated"
+    case DNDUpatedUser = "dnd_updated_user"
     case IMCreated = "im_created"
     case IMOpen = "im_open"
     case IMClose = "im_close"
@@ -147,6 +149,7 @@ internal struct Event {
     let message: Message?
     let nestedMessage: Message?
     let item: Item?
+    let dndStatus: DoNotDisturbStatus?
     let subteam: UserGroup?
     let subteamID: String?
     
@@ -179,6 +182,7 @@ internal struct Event {
         reactions = event["reactions"] as? [[String: AnyObject]]
         bot = Bot(bot: event["bot"] as? [String: AnyObject])
         edited = Edited(edited:event["edited"] as? [String: AnyObject])
+        dndStatus = DoNotDisturbStatus(status: event["dnd_status"] as? [String: AnyObject])
         item = Item(item: event["item"] as? [String: AnyObject])
         subteam = UserGroup(userGroup: event["subteam"] as? [String: AnyObject])
         subteamID = event["subteam_id"] as? String

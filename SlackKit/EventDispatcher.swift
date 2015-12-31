@@ -70,6 +70,10 @@ internal struct EventDispatcher {
             case .ChannelHistoryChanged, .IMHistoryChanged, .GroupHistoryChanged:
                 EventHandler.channelHistoryChanged(event)
                 break
+            case .DNDUpdated:
+                EventHandler.doNotDisturbUpdated(event)
+            case .DNDUpatedUser:
+                EventHandler.doNotDisturbUserUpdated(event)
             case .IMOpen, .GroupOpen:
                 EventHandler.open(event, open: true)
                 break

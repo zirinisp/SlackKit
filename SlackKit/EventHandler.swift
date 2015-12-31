@@ -189,6 +189,26 @@ internal struct EventHandler {
     }
     
     //MARK: - DM & Group Open/Close
+    //MARK: - Do Not Disturb
+    static func doNotDisturbUpdated(event: Event) {
+        if let dndStatus = event.dndStatus {
+            Client.sharedInstance.authenticatedUser?.doNotDisturbStatus = dndStatus
+            
+            if let delegate = Client.sharedInstance.doNotDisturbEventsDelegate {
+                delegate.doNotDisturbUpdated(dndStatus)
+            }
+        }
+    }
+    
+    static func doNotDisturbUserUpdated(event: Event) {
+        if let dndStatus = event.dndStatus, user = event.user, id = user.id {
+            Client.sharedInstance.users[id]?.doNotDisturbStatus = dndStatus
+            
+            if let delegate = Client.sharedInstance.doNotDisturbEventsDelegate {
+                delegate.doNotDisturbUserUpdated(dndStatus, user: Client.sharedInstance.users[id])
+            }
+        }
+    }
     static func open(event: Event, open: Bool) {
         if let channel = event.channel {
             Client.sharedInstance.channels[channel.id!]?.isOpen = open
