@@ -29,164 +29,116 @@ internal struct EventDispatcher {
             switch type {
             case .Hello:
                 EventHandler.connected()
-                break
             case .Ok:
                 EventHandler.messageSent(event)
-                break
             case .Message:
                 if (event.subtype != nil) {
                     messageDispatcher(event)
                 } else {
                     EventHandler.messageReceived(event)
                 }
-                break
             case .UserTyping:
                 EventHandler.userTyping(event)
-                break
             case .ChannelMarked, .IMMarked, .GroupMarked:
                 EventHandler.channelMarked(event)
-                break
             case .ChannelCreated, .IMCreated:
                 EventHandler.channelCreated(event)
-                break
             case .ChannelJoined, .GroupJoined:
                 EventHandler.channelJoined(event)
-                break
             case .ChannelLeft, .GroupLeft:
                 EventHandler.channelLeft(event)
-                break
             case .ChannelDeleted:
                 EventHandler.channelDeleted(event)
-                break
             case .ChannelRenamed, .GroupRename:
                 EventHandler.channelRenamed(event)
-                break
             case .ChannelArchive, .GroupArchive:
                 EventHandler.channelArchived(event, archived: true)
-                break
             case .ChannelUnarchive, .GroupUnarchive:
                 EventHandler.channelArchived(event, archived: false)
-                break
             case .ChannelHistoryChanged, .IMHistoryChanged, .GroupHistoryChanged:
                 EventHandler.channelHistoryChanged(event)
-                break
             case .DNDUpdated:
                 EventHandler.doNotDisturbUpdated(event)
             case .DNDUpatedUser:
                 EventHandler.doNotDisturbUserUpdated(event)
             case .IMOpen, .GroupOpen:
                 EventHandler.open(event, open: true)
-                break
             case .IMClose, .GroupClose:
                 EventHandler.open(event, open: false)
-                break
             case .FileCreated:
                 EventHandler.processFile(event)
-                break
             case .FileShared:
                 EventHandler.processFile(event)
-                break
             case .FileUnshared:
                 EventHandler.processFile(event)
-                break
             case .FilePublic:
                 EventHandler.processFile(event)
-                break
             case .FilePrivate:
                 EventHandler.filePrivate(event)
-                break
             case .FileChanged:
                 EventHandler.processFile(event)
-                break
             case .FileDeleted:
                 EventHandler.deleteFile(event)
-                break
             case .FileCommentAdded:
                 EventHandler.fileCommentAdded(event)
-                break
             case .FileCommentEdited:
                 EventHandler.fileCommentEdited(event)
-                break
             case .FileCommentDeleted:
                 EventHandler.fileCommentDeleted(event)
-                break
             case .PinAdded:
                 EventHandler.pinAdded(event)
-                break
             case .PinRemoved:
                 EventHandler.pinRemoved(event)
-                break
             case .PresenceChange:
                 EventHandler.presenceChange(event)
-                break
             case .ManualPresenceChange:
                 EventHandler.manualPresenceChange(event)
-                break
             case .PrefChange:
                 EventHandler.changePreference(event)
-                break
             case .UserChange:
                 EventHandler.userChange(event)
-                break
             case .TeamJoin:
                 EventHandler.teamJoin(event)
-                break
             case .StarAdded:
                 EventHandler.messageStarred(event, star: true)
-                break
             case .StarRemoved:
                 EventHandler.messageStarred(event, star: false)
-                break
             case .ReactionAdded:
                 EventHandler.addedReaction(event)
-                break
             case .ReactionRemoved:
                 EventHandler.removedReaction(event)
-                break
             case .EmojiChanged:
                 EventHandler.emojiChanged(event)
-                break
             case .CommandsChanged:
                 // Not implemented per Slack documentation.
                 break
             case .TeamPlanChange:
                 EventHandler.teamPlanChange(event)
-                break
             case .TeamPrefChange:
                 EventHandler.teamPreferenceChange(event)
-                break
             case .TeamRename:
                 EventHandler.teamNameChange(event)
-                break
             case .TeamDomainChange:
                 EventHandler.teamDomainChange(event)
-                break
             case .EmailDomainChange:
                 EventHandler.emailDomainChange(event)
-                break
             case .BotAdded:
                 EventHandler.bot(event)
-                break
             case .BotChanged:
                 EventHandler.bot(event)
-                break
             case .AccountsChanged:
                 // Not implemented per Slack documentation.
                 break
             case .TeamMigrationStarted:
                 Client.sharedInstance.connect()
-                break
             case .SubteamCreated, .SubteamUpdated:
                 EventHandler.subteam(event)
-                break
             case .SubteamSelfAdded:
                 EventHandler.subteamAddedSelf(event)
-                break
             case.SubteamSelfRemoved:
                 EventHandler.subteamRemovedSelf(event)
-                break
             case .Error:
-                
+                print("Error: \(event)")
                 break
             }
         }
@@ -197,13 +149,10 @@ internal struct EventDispatcher {
         switch subtype {
         case .MessageChanged:
             EventHandler.messageChanged(event)
-            break
         case .MessageDeleted:
             EventHandler.messageDeleted(event)
-            break
         default:
             EventHandler.messageReceived(event)
-            break
         }
     }
     
