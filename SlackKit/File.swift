@@ -24,7 +24,7 @@
 public struct File {
     
     public let id: String?
-    public let created: String?
+    public let created: Int?
     public let name: String?
     public let title: String?
     public let mimeType: String?
@@ -66,7 +66,7 @@ public struct File {
     
     init?(file:[String: AnyObject]?) {
         id = file?["id"] as? String
-        created = file?["created"] as? String
+        created = file?["created"] as? Int
         name = file?["name"] as? String
         title = file?["title"] as? String
         mimeType = file?["mimetype"] as? String

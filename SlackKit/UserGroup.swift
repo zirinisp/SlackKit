@@ -32,9 +32,9 @@ public struct UserGroup {
     internal(set) public var description: String?
     internal(set) public var handle: String?
     internal(set) public var isExternal: Bool?
-    public let dateCreated: String?
-    internal(set) public var dateUpdated: String?
-    internal(set) public var dateDeleted: String?
+    public let dateCreated: Int?
+    internal(set) public var dateUpdated: Int?
+    internal(set) public var dateDeleted: Int?
     internal(set) public var autoType: String?
     public let createdBy: String?
     internal(set) public var updatedBy: String?
@@ -51,16 +51,18 @@ public struct UserGroup {
         description = userGroup?["description"] as? String
         handle = userGroup?["handle"] as? String
         isExternal = userGroup?["is_external"] as? Bool
-        dateCreated = userGroup?["date_create"] as? String
-        dateUpdated = userGroup?["date_update"] as? String
-        dateDeleted = userGroup?["date_delete"] as? String
+        dateCreated = userGroup?["date_create"] as? Int
+        dateUpdated = userGroup?["date_update"] as? Int
+        dateDeleted = userGroup?["date_delete"] as? Int
         autoType = userGroup?["auto_type"] as? String
         createdBy = userGroup?["created_by"] as? String
         updatedBy = userGroup?["updated_by"] as? String
         deletedBy = userGroup?["deleted_by"] as? String
         preferences = userGroup?["prefs"] as? [String: AnyObject]
         users = userGroup?["users"] as? [String]
-        userCount = userGroup?["user_count"] as? Int
+        if let count = userGroup?["user_count"] as? String {
+            userCount = Int(count)
+        }
     }
     
 }
