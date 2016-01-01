@@ -27,8 +27,8 @@ public protocol SlackEventsDelegate {
     func clientConnected()
     func preferenceChanged(preference: String, value: AnyObject)
     func userChanged(user: User)
-    func presenceChanged(user: User, presence: String)
-    func manualPresenceChanged(user: User, presence: String)
+    func presenceChanged(user: User?, presence: String?)
+    func manualPresenceChanged(user: User?, presence: String?)
     func botEvent(bot: Bot)
 }
 
@@ -40,15 +40,15 @@ public protocol MessageEventsDelegate {
 }
 
 public protocol ChannelEventsDelegate {
-    func userTyping(channel: Channel, user: User)
-    func channelMarked(channel: Channel, timestamp: String)
+    func userTyping(channel: Channel?, user: User?)
+    func channelMarked(channel: Channel, timestamp: String?)
     func channelCreated(channel: Channel)
     func channelDeleted(channel: Channel)
     func channelRenamed(channel: Channel)
     func channelArchived(channel: Channel)
     func channelHistoryChanged(channel: Channel)
-    func channelJoined(channel: Channel, user: User)
-    func channelLeft(channel: Channel, user: User)
+    func channelJoined(channel: Channel, user: User?)
+    func channelLeft(channel: Channel, user: User?)
 }
 
 public protocol DoNotDisturbEventsDelegate {
@@ -70,17 +70,17 @@ public protocol FileEventsDelegate {
 }
 
 public protocol PinEventsDelegate {
-    func itemPinned(item: Item, channel: Channel)
-    func itemUnpinned(item: Item, channel: Channel)
+    func itemPinned(item: Item?, channel: Channel?)
+    func itemUnpinned(item: Item?, channel: Channel?)
 }
 
 public protocol StarEventsDelegate {
-    func messageStarred(channel: Channel, message: Message, star: Bool)
+    func messageStarred(channel: Channel?, message: Message, star: Bool)
 }
 
 public protocol ReactionEventsDelegate {
-    func reactionAdded(reaction: Reaction, channel: Channel, message: Message)
-    func reactionRemoved(reaction: Reaction, channel: Channel, message: Message)
+    func reactionAdded(reaction: Reaction?, channel: Channel?, message: Message)
+    func reactionRemoved(reaction: Reaction?, channel: Channel?, message: Message)
 }
 
 public protocol TeamEventsDelegate {
