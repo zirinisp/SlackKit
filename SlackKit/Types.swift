@@ -57,12 +57,12 @@ public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
 public struct Comment {
     public let id: String?
     public let user: String?
-    internal(set) public var timestamp: String?
+    internal(set) public var timestamp: Int?
     internal(set) public var comment: String?
     
     internal init?(comment:[String: AnyObject]?) {
         id = comment?["id"] as? String
-        timestamp = comment?["timestamp"] as? String
+        timestamp = comment?["timestamp"] as? Int
         user = comment?["user"] as? String
         self.comment = comment?["comment"] as? String
     }
@@ -110,12 +110,12 @@ public func ==(lhs: Item, rhs: Item) -> Bool {
 public struct Topic {
     public let value: String?
     public let creator: String?
-    public let lastSet: String?
+    public let lastSet: Int?
     
     internal init?(topic: [String: AnyObject]?) {
         value = topic?["value"] as? String
         creator = topic?["creator"] as? String
-        lastSet = topic?["last_set"] as? String
+        lastSet = topic?["last_set"] as? Int
     }
 }
 
@@ -134,5 +134,5 @@ public struct DoNotDisturbStatus {
         snoozeEnabled = status?["snooze_enabled"] as? Bool
         snoozeEndtime = status?["snooze_endtime"] as? Int
     }
-
+    
 }

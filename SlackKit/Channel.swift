@@ -24,13 +24,14 @@
 public struct Channel {
     
     public let id: String?
-    public let created: String?
+    public let created: Int?
     public let creator: String?
     internal(set) public var name: String?
     internal(set) public var isArchived: Bool?
     internal(set) public var isGeneral: Bool?
     public let isGroup: Bool?
     public let isIM: Bool?
+    public let isMPIM: Bool?
     internal(set) public var user: String?
     internal(set) public var isUserDeleted: Bool?
     internal(set) public var isOpen: Bool?
