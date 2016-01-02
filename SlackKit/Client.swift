@@ -217,14 +217,12 @@ public class Client: WebSocketDelegate {
     
     // MARK: - WebSocketDelegate
     public func websocketDidConnect(socket: WebSocket) {
-        print("Connected.")
     }
     
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         connected = false
         authenticated = false
         webSocket = nil
-        print("Disconnected: \(error)")
         if let delegate = slackEventsDelegate {
             delegate.clientDisconnected()
         }
@@ -236,7 +234,6 @@ public class Client: WebSocketDelegate {
         }
         do {
             try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
-            print(try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments))
         }
         catch _ {
             
@@ -244,7 +241,6 @@ public class Client: WebSocketDelegate {
     }
     
     public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-        print("Data: \(data)")
     }
     
 }
