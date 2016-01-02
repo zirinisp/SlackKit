@@ -52,7 +52,7 @@ public struct Channel {
     internal init?(channel: [String: AnyObject]?) {
         id = channel?["id"] as? String
         name = channel?["name"] as? String
-        created = channel?["created"] as? String
+        created = channel?["created"] as? Int
         creator = channel?["creator"] as? String
         isArchived = channel?["is_archived"] as? Bool
         isGeneral = channel?["is_general"] as? Bool
@@ -66,7 +66,7 @@ public struct Channel {
         purpose = Topic(topic: channel?["purpose"] as? [String: AnyObject])
         isMember = channel?["is_member"] as? Bool
         lastRead = channel?["last_read"] as? String
-        latest = Message(message: channel?["message"] as? [String: AnyObject])
+        latest = Message(message: channel?["latest"] as? [String: AnyObject])
         unread = channel?["unread_count"] as? Int
         unreadCountDisplay = channel?["unread_count_display"] as? Int
         hasPins = channel?["has_pins"] as? Bool
@@ -74,7 +74,7 @@ public struct Channel {
         if let members = channel?["members"] as? [String] {
             self.members = members
         }
-
+        
     }
     
     internal init?(id:String?) {
