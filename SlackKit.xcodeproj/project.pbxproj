@@ -20,7 +20,7 @@
 		2661A69B1BBF60E60026F67B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68E1BBF60E60026F67B /* User.swift */; };
 		26EB95961C285CEE00BD1F13 /* EventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB95951C285CEE00BD1F13 /* EventDelegate.swift */; };
 		26EB959D1C2F10CA00BD1F13 /* UserGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */; };
-		FFE3AC870D1C42EF276CCA2D /* Pods_SlackKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407A2ABFC0611867E2BE34D0 /* Pods_SlackKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
+		FFE3AC870D1C42EF276CCA2D /* Pods_SlackKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407A2ABFC0611867E2BE34D0 /* Pods_SlackKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
