@@ -138,6 +138,7 @@ public class Client: WebSocketDelegate {
         enumerateUsers(json["users"] as? Array)
         enumerateChannels(json["channels"] as? Array)
         enumerateGroups(json["groups"] as? Array)
+        enumerateMPIMs(json["mpims"] as? Array)
         enumerateIMs(json["ims"] as? Array)
         enumerateBots(json["bots"] as? Array)
         enumerateSubteams(json["subteams"] as? [String: AnyObject])
@@ -178,6 +179,13 @@ public class Client: WebSocketDelegate {
             }
         }
     }
+    
+    private func enumerateMPIMs(mpims: [AnyObject]?) {
+        if let mpims = mpims {
+            for mpim in mpims {
+                let m = Channel(channel: mpim as? [String: AnyObject])
+                self.channels[m!.id!] = m
+            }
         }
     }
     

@@ -58,6 +58,7 @@ public struct Channel {
         isGeneral = channel?["is_general"] as? Bool
         isGroup = channel?["is_group"] as? Bool
         isIM = channel?["is_im"] as? Bool
+        isMPIM = channel?["is_mpim"] as? Bool
         isUserDeleted = channel?["is_user_deleted"] as? Bool
         user = channel?["user"] as? String
         isOpen = channel?["is_open"] as? Bool
@@ -82,5 +83,6 @@ public struct Channel {
         creator = nil
         isGroup = false
         isIM = false
+        isMPIM = false
     }
 }
