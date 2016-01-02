@@ -235,6 +235,11 @@ internal struct EventHandler {
     
     static func filePrivate(event: Event) {
         if let file =  event.file, id = file.id {
+            //Add file to client if it doesn't exist
+            if (Client.sharedInstance.files[id] == nil) {
+                addFileToClient(file)
+            }
+            
             Client.sharedInstance.files[id]?.isPublic = false
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
@@ -257,6 +262,11 @@ internal struct EventHandler {
     
     static func fileCommentAdded(event: Event) {
         if let file = event.file, id = file.id, comment = event.comment {
+            //Add file to client if it doesn't exist
+            if (Client.sharedInstance.files[id] == nil) {
+                addFileToClient(file)
+            }
+            
             Client.sharedInstance.files[id]?.comments.append(comment)
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
@@ -267,6 +277,11 @@ internal struct EventHandler {
     
     static func fileCommentEdited(event: Event) {
         if let file = event.file, id = file.id, commentEdit = event.comment {
+            //Add file to client if it doesn't exist
+            if (Client.sharedInstance.files[id] == nil) {
+                addFileToClient(file)
+            }
+            
             if let comments = Client.sharedInstance.files[id]?.comments.filter({$0.id == commentEdit.id}) {
                 if var comment = comments.first {
                     comment.comment = commentEdit.comment
@@ -282,6 +297,11 @@ internal struct EventHandler {
     
     static func fileCommentDeleted(event: Event) {
         if let file = event.file, id = file.id, comment = event.comment {
+            //Add file to client if it doesn't exist
+            if (Client.sharedInstance.files[id] == nil) {
+                addFileToClient(file)
+            }
+            
             if let comments = Client.sharedInstance.files[id]?.comments.filter({$0.id != comment.id}) {
                 Client.sharedInstance.files[id]?.comments = comments
             }
@@ -289,6 +309,12 @@ internal struct EventHandler {
             if let delegate = Client.sharedInstance.fileEventsDelegate {
                 delegate.fileCommentDeleted(file, comment: comment)
             }
+        }
+    }
+    
+    static func addFileToClient(file: File) {
+        if let id = file.id {
+            Client.sharedInstance.files[id] = file
         }
     }
     
