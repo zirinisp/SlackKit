@@ -45,6 +45,28 @@ public struct Reaction {
         self.name = name
         users[user] = user
     }
+    
+    internal init?(name: String?, users: [String: String]) {
+        self.name = name
+        self.users = users
+    }
+    
+    static func reactionsFromArray(array: [[String: AnyObject]]) -> [String: Reaction] {
+        var reactions = [String: Reaction]()
+        var userDictionary = [String: String]()
+        for reaction in array {
+            if let users = reaction["users"] as? [String] {
+                for user in users {
+                    userDictionary[user] = user
+                }
+            }
+            if let name = reaction["name"] as? String {
+                reactions[name] = Reaction(name: name, users: userDictionary)
+            }
+        }
+        return reactions
+    }
+    
 }
 
 extension Reaction: Equatable {}
@@ -57,20 +79,23 @@ public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
 public struct Comment {
     public let id: String?
     public let user: String?
-    internal(set) public var timestamp: Int?
+    internal(set) public var created: Int?
     internal(set) public var comment: String?
+    internal(set) public var starred: Bool?
+    internal(set) public var stars: Int?
+    internal(set) public var reactions = [String: Reaction]()
     
     internal init?(comment:[String: AnyObject]?) {
         id = comment?["id"] as? String
-        timestamp = comment?["timestamp"] as? Int
+        created = comment?["created"] as? Int
         user = comment?["user"] as? String
+        starred = comment?["is_starred"] as? Bool
+        stars = comment?["num_stars"] as? Int
         self.comment = comment?["comment"] as? String
     }
     
     internal init?(id: String?) {
         self.id = id
-        self.comment = nil
-        self.timestamp = nil
         self.user = nil
     }
 }
@@ -89,14 +114,28 @@ public struct Item {
     public let message: Message?
     public let file: File?
     public let comment: Comment?
+    public let fileCommentID: String?
     
     internal init?(item:[String: AnyObject]?) {
         type = item?["type"] as? String
         ts = item?["ts"] as? String
         channel = item?["channel"] as? String
+        
         message = Message(message: item?["message"] as? [String: AnyObject])
-        file = File(file: item?["file"] as? [String: AnyObject])
-        comment = Comment(comment: item?["comment"] as? [String: AnyObject])
+        
+        // Comment and File can come across as Strings or Dictionaries
+        if (Comment(comment: item?["comment"] as? [String: AnyObject])?.id == nil) {
+            comment = Comment(id: item?["comment"] as? String)
+        } else {
+            comment = Comment(comment: item?["comment"] as? [String: AnyObject])
+        }
+        if (File(file: item?["file"] as? [String: AnyObject])?.id == nil) {
+            file = File(id: item?["file"] as? String)
+        } else {
+            file = File(file: item?["file"] as? [String: AnyObject])
+        }
+        
+        fileCommentID = item?["file_comment"] as? String
     }
 }
 

@@ -218,13 +218,13 @@ internal struct EventHandler {
     
     //MARK: - Files
     static func processFile(event: Event) {
-        if var file = event.file, let id = file.id {
-            if let comment = file.initialComment {
-                let exists = Client.sharedInstance.files[id]?.comments.filter({$0.timestamp == comment.timestamp}).count
-                if (comment.comment?.isEmpty == false && exists == 0) {
-                    file.comments.append(comment)
+        if let file = event.file, id = file.id {
+            if let comment = file.initialComment, commentID = comment.id {
+                if Client.sharedInstance.files[id]?.comments[commentID] == nil {
+                    Client.sharedInstance.files[id]?.comments[commentID] = comment
                 }
             }
+            
             Client.sharedInstance.files[id] = file
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
@@ -235,11 +235,6 @@ internal struct EventHandler {
     
     static func filePrivate(event: Event) {
         if let file =  event.file, id = file.id {
-            //Add file to client if it doesn't exist
-            if (Client.sharedInstance.files[id] == nil) {
-                addFileToClient(file)
-            }
-            
             Client.sharedInstance.files[id]?.isPublic = false
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
@@ -261,13 +256,8 @@ internal struct EventHandler {
     }
     
     static func fileCommentAdded(event: Event) {
-        if let file = event.file, id = file.id, comment = event.comment {
-            //Add file to client if it doesn't exist
-            if (Client.sharedInstance.files[id] == nil) {
-                addFileToClient(file)
-            }
-            
-            Client.sharedInstance.files[id]?.comments.append(comment)
+        if let file = event.file, id = file.id, comment = event.comment, commentID = comment.id {
+            Client.sharedInstance.files[id]?.comments[commentID] = comment
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
                 delegate.fileCommentAdded(file, comment: comment)
@@ -276,45 +266,22 @@ internal struct EventHandler {
     }
     
     static func fileCommentEdited(event: Event) {
-        if let file = event.file, id = file.id, commentEdit = event.comment {
-            //Add file to client if it doesn't exist
-            if (Client.sharedInstance.files[id] == nil) {
-                addFileToClient(file)
-            }
+        if let file = event.file, id = file.id, comment = event.comment, commentID = comment.id {
+            Client.sharedInstance.files[id]?.comments[commentID]?.comment = comment.comment
             
-            if let comments = Client.sharedInstance.files[id]?.comments.filter({$0.id == commentEdit.id}) {
-                if var comment = comments.first {
-                    comment.comment = commentEdit.comment
-                    comment.timestamp = commentEdit.timestamp
-                    
-                    if let delegate = Client.sharedInstance.fileEventsDelegate {
-                        delegate.fileCommentEdited(file, comment: comment)
-                    }
-                }
+            if let delegate = Client.sharedInstance.fileEventsDelegate {
+                delegate.fileCommentEdited(file, comment: comment)
             }
         }
     }
     
     static func fileCommentDeleted(event: Event) {
-        if let file = event.file, id = file.id, comment = event.comment {
-            //Add file to client if it doesn't exist
-            if (Client.sharedInstance.files[id] == nil) {
-                addFileToClient(file)
-            }
-            
-            if let comments = Client.sharedInstance.files[id]?.comments.filter({$0.id != comment.id}) {
-                Client.sharedInstance.files[id]?.comments = comments
-            }
+        if let file = event.file, id = file.id, comment = event.comment, commentID = comment.id {
+            Client.sharedInstance.files[id]?.comments.removeValueForKey(commentID)
             
             if let delegate = Client.sharedInstance.fileEventsDelegate {
                 delegate.fileCommentDeleted(file, comment: comment)
             }
-        }
-    }
-    
-    static func addFileToClient(file: File) {
-        if let id = file.id {
-            Client.sharedInstance.files[id] = file
         }
     }
     
@@ -343,31 +310,16 @@ internal struct EventHandler {
     
     //MARK: - Stars
     static func itemStarred(event: Event, star: Bool) {
-        if let item = event.item {
-            // Star message
-            if let message = item.message, ts = message.ts, channel = item.channel {
-                if let _ = Client.sharedInstance.channels[channel]?.messages[ts] {
-                    Client.sharedInstance.channels[channel]?.messages[ts]?.isStarred = star
-                }
-            }
-            
-            // Star file
-            if let file = item.file, id = file.id {
-                // Add file to Client if it doesn't exist
-                if (Client.sharedInstance.files[id] == nil) {
-                    addFileToClient(file)
-                }
-                
-                Client.sharedInstance.files[id]?.isStarred = star
-                if let stars = Client.sharedInstance.files[id]?.stars {
-                    if star == true {
-                        Client.sharedInstance.files[id]?.stars = stars + 1
-                    } else {
-                        if stars > 0 {
-                            Client.sharedInstance.files[id]?.stars = stars - 1
-                        }
-                    }
-                }
+        if let item = event.item, type = item.type {
+            switch type {
+            case "message":
+                starMessage(item, star: star)
+            case "file":
+                starFile(item, star: star)
+            case "file_comment":
+                starComment(item)
+            default:
+                break
             }
             
             if let delegate = Client.sharedInstance.starEventsDelegate {
@@ -376,37 +328,115 @@ internal struct EventHandler {
         }
     }
     
-    //MARK: - Reactions
-    static func addedReaction(event: Event) {
-        if let channel = event.item?.channel, ts = event.item?.ts, key = event.reaction, userID = event.user?.id {
-            if let message = Client.sharedInstance.channels[channel]?.messages[ts] {
-                if (message.reactions[key]) == nil {
-                    message.reactions[key] = Reaction(name: event.reaction, user: userID)
+    static func starMessage(item: Item, star: Bool) {
+        if let message = item.message, ts = message.ts, channel = item.channel {
+            if let _ = Client.sharedInstance.channels[channel]?.messages[ts] {
+                Client.sharedInstance.channels[channel]?.messages[ts]?.isStarred = star
+            }
+        }
+    }
+    
+    static func starFile(item: Item, star: Bool) {
+        if let file = item.file, id = file.id {
+            Client.sharedInstance.files[id]?.isStarred = star
+            if let stars = Client.sharedInstance.files[id]?.stars {
+                if star == true {
+                    Client.sharedInstance.files[id]?.stars = stars + 1
                 } else {
-                    message.reactions[key]?.users[userID] = userID
-                }
-                
-                if let delegate = Client.sharedInstance.reactionEventsDelegate {
-                    delegate.reactionAdded(message.reactions[key], channel: Client.sharedInstance.channels[channel], message: message)
+                    if stars > 0 {
+                        Client.sharedInstance.files[id]?.stars = stars - 1
+                    }
                 }
             }
         }
     }
     
+    static func starComment(item: Item) {
+        if let file = item.file, id = file.id, comment = item.comment, commentID = comment.id {
+            Client.sharedInstance.files[id]?.comments[commentID] = comment
+        }
+    }
+    
+    //MARK: - Reactions
+    static func addedReaction(event: Event) {
+        if let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id {
+            switch type {
+            case "message":
+                if let channel = item.channel, ts = item.ts {
+                    if let message = Client.sharedInstance.channels[channel]?.messages[ts] {
+                        if (message.reactions[key]) == nil {
+                            message.reactions[key] = Reaction(name: event.reaction, user: userID)
+                        } else {
+                            message.reactions[key]?.users[userID] = userID
+                        }
+                    }
+                }
+            case "file":
+                if let id = item.file?.id, var file = Client.sharedInstance.files[id] {
+                    if file.reactions[key] == nil {
+                        Client.sharedInstance.files[id]?.reactions[key] = Reaction(name: event.reaction, user: userID)
+                    } else {
+                        Client.sharedInstance.files[id]?.reactions[key]?.users[userID] = userID
+                    }
+                }
+            case "file_comment":
+                if let id = item.file?.id, var file = Client.sharedInstance.files[id], let commentID = item.fileCommentID {
+                    if file.comments[commentID]?.reactions[key] == nil {
+                        Client.sharedInstance.files[id]?.comments[commentID]?.reactions[key] = Reaction(name: event.reaction, user: userID)
+                    } else {
+                        Client.sharedInstance.files[id]?.comments[commentID]?.reactions[key]?.users[userID] = userID
+                    }
+                }
+                break
+            default:
+                break
+            }
+            
+            if let delegate = Client.sharedInstance.reactionEventsDelegate {
+                delegate.reactionAdded(event.reaction, item: event.item)
+            }
+        }
+    }
+    
     static func removedReaction(event: Event) {
-        if let channel = event.item?.channel, ts = event.item?.ts, key = event.reaction, userID = event.user?.id {
-            if let message = Client.sharedInstance.channels[channel]?.messages[ts] {
-                let reaction = message.reactions[key]
-                if (message.reactions[key]) != nil {
-                    message.reactions[key]?.users.removeValueForKey(userID)
+        if let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id {
+            switch type {
+            case "message":
+                if let channel = item.channel, ts = item.ts {
+                    if let message = Client.sharedInstance.channels[channel]?.messages[ts] {
+                        if (message.reactions[key]) != nil {
+                            message.reactions[key]?.users.removeValueForKey(userID)
+                        }
+                        if (message.reactions[key]?.users.count == 0) {
+                            message.reactions.removeValueForKey(key)
+                        }
+                    }
                 }
-                if (message.reactions[key]?.users.count == 0) {
-                    message.reactions.removeValueForKey(key)
+            case "file":
+                if let itemFile = item.file, id = itemFile.id, var file = Client.sharedInstance.files[id] {
+                    if file.reactions[key] != nil {
+                        Client.sharedInstance.files[id]?.reactions[key]?.users.removeValueForKey(userID)
+                    }
+                    if Client.sharedInstance.files[id]?.reactions[key]?.users.count == 0 {
+                        Client.sharedInstance.files[id]?.reactions.removeValueForKey(key)
+                    }
                 }
-                
-                if let delegate = Client.sharedInstance.reactionEventsDelegate {
-                    delegate.reactionRemoved(reaction, channel: Client.sharedInstance.channels[channel], message: message)
+            case "file_comment":
+                if let id = item.file?.id, var file = Client.sharedInstance.files[id], let commentID = item.fileCommentID {
+                    if file.comments[commentID]?.reactions[key] != nil {
+                        Client.sharedInstance.files[id]?.comments[commentID]?.reactions[key]?.users.removeValueForKey(userID)
+                    }
+                    if Client.sharedInstance.files[id]?.comments[commentID]?.reactions[key]?.users.count == 0 {
+                        Client.sharedInstance.files[id]?.comments[commentID]?.reactions.removeValueForKey(key)
+                    }
                 }
+                break
+            default:
+                break
+            }
+            
+            if let delegate = Client.sharedInstance.reactionEventsDelegate {
+                delegate.reactionAdded(event.reaction, item: event.item)
             }
         }
     }
