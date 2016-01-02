@@ -1,7 +1,7 @@
 //
 // Channel.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -24,13 +24,14 @@
 public struct Channel {
     
     public let id: String?
-    public let created: String?
+    public let created: Int?
     public let creator: String?
     internal(set) public var name: String?
     internal(set) public var isArchived: Bool?
     internal(set) public var isGeneral: Bool?
     public let isGroup: Bool?
-    public let isDM: Bool?
+    public let isIM: Bool?
+    public let isMPIM: Bool?
     internal(set) public var user: String?
     internal(set) public var isUserDeleted: Bool?
     internal(set) public var isOpen: Bool?
@@ -42,29 +43,30 @@ public struct Channel {
     internal(set) public var unread: Int?
     internal(set) public var unreadCountDisplay: Int?
     internal(set) public var hasPins: Bool?
-    internal(set) public lazy var members = [String]()
+    internal(set) public var members = [String]()
     // Client use
-    internal(set) public lazy var pinnedItems = [Item]()
-    internal(set) public lazy var usersTyping = [String]()
-    internal(set) public lazy var messages = Dictionary<String, Message>()
+    internal(set) public var pinnedItems = [Item]()
+    internal(set) public var usersTyping = [String]()
+    internal(set) public var messages = [String: Message]()
     
-    internal init?(channel:Dictionary<String, AnyObject>?) {
+    internal init?(channel: [String: AnyObject]?) {
         id = channel?["id"] as? String
         name = channel?["name"] as? String
-        created = channel?["created"] as? String
+        created = channel?["created"] as? Int
         creator = channel?["creator"] as? String
         isArchived = channel?["is_archived"] as? Bool
         isGeneral = channel?["is_general"] as? Bool
         isGroup = channel?["is_group"] as? Bool
-        isDM = channel?["is_im"] as? Bool
+        isIM = channel?["is_im"] as? Bool
+        isMPIM = channel?["is_mpim"] as? Bool
         isUserDeleted = channel?["is_user_deleted"] as? Bool
         user = channel?["user"] as? String
         isOpen = channel?["is_open"] as? Bool
-        topic = Topic(topic: channel?["topic"] as? Dictionary<String, AnyObject>)
-        purpose = Topic(topic: channel?["purpose"] as? Dictionary<String, AnyObject>)
+        topic = Topic(topic: channel?["topic"] as? [String: AnyObject])
+        purpose = Topic(topic: channel?["purpose"] as? [String: AnyObject])
         isMember = channel?["is_member"] as? Bool
         lastRead = channel?["last_read"] as? String
-        latest = Message(message: channel?["message"] as? Dictionary<String, AnyObject>)
+        latest = Message(message: channel?["latest"] as? [String: AnyObject])
         unread = channel?["unread_count"] as? Int
         unreadCountDisplay = channel?["unread_count_display"] as? Int
         hasPins = channel?["has_pins"] as? Bool
@@ -72,7 +74,7 @@ public struct Channel {
         if let members = channel?["members"] as? [String] {
             self.members = members
         }
-
+        
     }
     
     internal init?(id:String?) {
@@ -80,6 +82,7 @@ public struct Channel {
         created = nil
         creator = nil
         isGroup = false
-        isDM = false
+        isIM = false
+        isMPIM = false
     }
 }

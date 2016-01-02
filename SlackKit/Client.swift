@@ -1,7 +1,7 @@
 //
 // Client.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,18 +26,31 @@ import Starscream
 
 public class Client: WebSocketDelegate {
     
-    public var connected = false
-    public var authenticated = false
-    public var authenticatedUser: User?
-    public var team: Team?
+    internal(set) public var connected = false
+    internal(set) public var authenticated = false
+    internal(set) public var authenticatedUser: User?
+    internal(set) public var team: Team?
     
-    public var channels: [String: Channel]?
-    public var users: [String: User]?
-    public var bots: [String: Bot]?
-    public var files: [String: File]?
+    internal(set) public var channels = [String: Channel]()
+    internal(set) public var users = [String: User]()
+    internal(set) public var userGroups = [String: UserGroup]()
+    internal(set) public var bots = [String: Bot]()
+    internal(set) public var files = [String: File]()
+    internal(set) public var sentMessages = [String: Message]()
     
-    internal lazy var sentMessages = [String: Message]()
-    
+    //MARK: - Delegates
+    public var slackEventsDelegate: SlackEventsDelegate?
+    public var messageEventsDelegate: MessageEventsDelegate?
+    public var doNotDisturbEventsDelegate: DoNotDisturbEventsDelegate?
+    public var channelEventsDelegate: ChannelEventsDelegate?
+    public var groupEventsDelegate: GroupEventsDelegate?
+    public var fileEventsDelegate: FileEventsDelegate?
+    public var pinEventsDelegate: PinEventsDelegate?
+    public var starEventsDelegate: StarEventsDelegate?
+    public var reactionEventsDelegate: ReactionEventsDelegate?
+    public var teamEventsDelegate: TeamEventsDelegate?
+    public var subteamEventsDelegate: SubteamEventsDelegate?
+
     private var token = "SLACK_AUTH_TOKEN"
     public func setAuthToken(token: String) {
         self.token = token
@@ -60,7 +73,7 @@ public class Client: WebSocketDelegate {
                 return
             }
             do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! Dictionary<String, AnyObject>
+                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
                 if (result["ok"] as! Bool == true) {
                     self.initialSetup(result)
                     let socketURL = NSURL(string: result["url"] as! String)
@@ -85,7 +98,7 @@ public class Client: WebSocketDelegate {
     }
     
     private func formatMessageToSlackJsonString(message: (msg: String, channel: String)) -> NSData? {
-        let json: Dictionary<String, AnyObject> = [
+        let json: [String: AnyObject] = [
             "id": NSDate().timeIntervalSince1970,
             "type": "message",
             "channel": message.channel,
@@ -101,7 +114,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func addSentMessage(dictionary:Dictionary<String, AnyObject>) {
+    private func addSentMessage(dictionary: [String: AnyObject]) {
         var message = dictionary
         let ts = message["id"] as? NSNumber
         message.removeValueForKey("id")
@@ -118,65 +131,89 @@ public class Client: WebSocketDelegate {
     }
     
     //MARK: - Client setup
-    private func initialSetup(json: Dictionary<String, AnyObject>) {
-        team = Team(team: json["team"] as? Dictionary<String, AnyObject>)
-        authenticatedUser = User(user: json["self"] as? Dictionary<String, AnyObject>)
+    private func initialSetup(json: [String: AnyObject]) {
+        team = Team(team: json["team"] as? [String: AnyObject])
+        authenticatedUser = User(user: json["self"] as? [String: AnyObject])
+        authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: AnyObject])
         enumerateUsers(json["users"] as? Array)
         enumerateChannels(json["channels"] as? Array)
         enumerateGroups(json["groups"] as? Array)
-        enumerateDMs(json["ims"] as? Array)
+        enumerateMPIMs(json["mpims"] as? Array)
+        enumerateIMs(json["ims"] as? Array)
         enumerateBots(json["bots"] as? Array)
+        enumerateSubteams(json["subteams"] as? [String: AnyObject])
     }
     
-    private func enumerateUsers(users: Array<AnyObject>?) {
-        self.users = [String: User]()
-        for (var i=0; i < users!.count; i++) {
-            let user = User(user: users?[i] as? Dictionary<String, AnyObject>)
-            self.users?[user!.id!] = user
-        }
-    }
-    
-    private func enumerateChannels(channels: Array<AnyObject>?) {
-        self.channels = [String: Channel]()
-        for (var i=0; i < channels!.count; i++) {
-            let channel = Channel(channel: channels?[i] as? Dictionary<String, AnyObject>)
-            self.channels?[channel!.id!] = channel
-        }
-    }
-    
-    private func enumerateGroups(groups: Array<AnyObject>?) {
-        for (var i=0; i < groups!.count; i++) {
-            let group = Channel(channel: groups?[i] as? Dictionary<String, AnyObject>)
-            self.channels?[group!.id!] = group
-        }
-    }
-    
-    private func enumerateDMs(dms: Array<AnyObject>?) {
-        for (var i=0; i < dms!.count; i++) {
-            let dm = Channel(channel: dms?[i] as? Dictionary<String, AnyObject>)
-            self.channels?[dm!.id!] = dm
-        }
-    }
-    
-    private func enumerateBots(bots: Array<AnyObject>?) {
-        self.bots = [String: Bot]()
-        for (var i=0; i < bots?.count; i++) {
-            let bot = Bot(bot: bots?[i] as? Dictionary<String, AnyObject>)
-            self.bots?[bot!.id!] = bot
-        }
-    }
-    
-    // MARK: - Convenience methods
-    
-    public func IDForChannelName(name: String) -> String? {
-        for channel in channels! {
-            if (channel.1.name == name) {
-                return channel.1.id!
+    private func enumerateUsers(users: [AnyObject]?) {
+        if let users = users {
+            for user in users {
+                let u = User(user: user as? [String: AnyObject])
+                self.users[u!.id!] = u
             }
         }
-        return nil
     }
     
+    private func enumerateChannels(channels: [AnyObject]?) {
+        if let channels = channels {
+            for channel in channels {
+                let c = Channel(channel: channel as? [String: AnyObject])
+                self.channels[c!.id!] = c
+            }
+        }
+    }
+    
+    private func enumerateGroups(groups: [AnyObject]?) {
+        if let groups = groups {
+            for group in groups {
+                let g = Channel(channel: group as? [String: AnyObject])
+                self.channels[g!.id!] = g
+            }
+        }
+    }
+    
+    private func enumerateIMs(ims: [AnyObject]?) {
+        if let ims = ims {
+            for im in ims {
+                let i = Channel(channel: im as? [String: AnyObject])
+                self.channels[i!.id!] = i
+            }
+        }
+    }
+    
+    private func enumerateMPIMs(mpims: [AnyObject]?) {
+        if let mpims = mpims {
+            for mpim in mpims {
+                let m = Channel(channel: mpim as? [String: AnyObject])
+                self.channels[m!.id!] = m
+            }
+        }
+    }
+    
+    private func enumerateBots(bots: [AnyObject]?) {
+        if let bots = bots {
+            for bot in bots {
+                let b = Bot(bot: bot as? [String: AnyObject])
+                self.bots[b!.id!] = b
+            }
+        }
+    }
+    
+    private func enumerateSubteams(subteams: [String: AnyObject]?) {
+        if let subteams = subteams {
+            if let all = subteams["all"] as? [[String: AnyObject]] {
+                for item in all {
+                    let u = UserGroup(userGroup: item)
+                    self.userGroups[u!.id!] = u
+                }
+            }
+            if let auth = subteams["self"] as? [String] {
+                for item in auth {
+                    authenticatedUser?.userGroups = [String: String]()
+                    authenticatedUser?.userGroups![item] = item
+                }
+            }
+        }
+    }
     
     // MARK: - WebSocketDelegate
     public func websocketDidConnect(socket: WebSocket) {
@@ -188,6 +225,9 @@ public class Client: WebSocketDelegate {
         authenticated = false
         webSocket = nil
         print("Disconnected: \(error)")
+        if let delegate = slackEventsDelegate {
+            delegate.clientDisconnected()
+        }
     }
     
     public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
@@ -195,8 +235,8 @@ public class Client: WebSocketDelegate {
             return
         }
         do {
-            try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! Dictionary<String, AnyObject>)
-            print(try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! NSDictionary)
+            try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
+            print(try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments))
         }
         catch _ {
             

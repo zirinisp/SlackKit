@@ -1,7 +1,7 @@
 //
 // User.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,7 @@
 
 public struct User {
     
-     public struct Profile {
+    public struct Profile {
         internal(set) public var firstName: String?
         internal(set) public var lastName: String?
         internal(set) public var realName: String?
@@ -36,7 +36,7 @@ public struct User {
         internal(set) public var image72: String?
         internal(set) public var image192: String?
         
-        internal init?(profile: Dictionary<String, AnyObject>?) {
+        internal init?(profile: [String: AnyObject]?) {
             firstName = profile?["first_name"] as? String
             lastName = profile?["last_name"] as? String
             realName = profile?["real_name"] as? String
@@ -51,13 +51,14 @@ public struct User {
         }
     }
     
-    let id: String?
+    public let id: String?
     internal(set) public var name: String?
     internal(set) public var deleted: Bool?
     internal(set) public var profile: Profile?
+    internal(set) public var doNotDisturbStatus: DoNotDisturbStatus?
     internal(set) public var presence: String?
     internal(set) public var color: String?
-    let isBot: Bool?
+    public let isBot: Bool?
     internal(set) public var isAdmin: Bool?
     internal(set) public var isOwner: Bool?
     internal(set) public var isPrimaryOwner: Bool?
@@ -69,13 +70,15 @@ public struct User {
     internal(set) public var timeZone: String?
     internal(set) public var timeZoneLabel: String?
     internal(set) public var timeZoneOffSet: Int?
-    internal(set) public var preferences: Dictionary<String, AnyObject>?
+    internal(set) public var preferences: [String: AnyObject]?
+    // Client use
+    internal(set) public var userGroups: [String: String]?
     
-    internal init?(user: Dictionary<String, AnyObject>?) {
+    internal init?(user: [String: AnyObject]?) {
         id = user?["id"] as? String
         name = user?["name"] as? String
         deleted = user?["deleted"] as? Bool
-        profile = Profile(profile: user?["profile"] as? Dictionary<String, AnyObject>)
+        profile = Profile(profile: user?["profile"] as? [String: AnyObject])
         color = user?["color"] as? String
         isAdmin = user?["is_admin"] as? Bool
         isOwner = user?["is_owner"] as? Bool
@@ -90,7 +93,7 @@ public struct User {
         timeZone = user?["tz"] as? String
         timeZoneLabel = user?["tz_label"] as? String
         timeZoneOffSet = user?["tz_offset"] as? Int
-        preferences = user?["prefs"] as? Dictionary<String, AnyObject>
+        preferences = user?["prefs"] as? [String: AnyObject]
     }
     
     internal init?(id: String?) {

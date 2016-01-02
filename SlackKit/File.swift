@@ -1,7 +1,7 @@
 //
 // File.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,51 +23,50 @@
 
 public struct File {
     
-    let id: String?
-    let created: String?
-    let timeStamp: String?
-    let name: String?
-    let title: String?
-    let mimeType: String?
-    let fileType: String?
-    let prettyType: String?
-    let user: String?
-    let mode: String?
-    let editable: Bool?
-    let isExternal: Bool?
-    let externalType: String?
-    let size: Int?
-    let url: String?
-    let urlDownload: String?
-    let urlPrivate: String?
-    let urlPrivateDownload: String?
-    let thumb64: String?
-    let thumb80: String?
-    let thumb360: String?
-    let thumb360gif: String?
-    let thumb360w: String?
-    let thumb360h: String?
-    let permalink: String?
-    let editLink: String?
-    let preview: String?
-    let previewHighlight: String?
-    let lines: Int?
-    let linesMore: Int?
+    public let id: String?
+    public let created: Int?
+    public let name: String?
+    public let title: String?
+    public let mimeType: String?
+    public let fileType: String?
+    public let prettyType: String?
+    public let user: String?
+    public let mode: String?
+    internal(set) public var editable: Bool?
+    public let isExternal: Bool?
+    public let externalType: String?
+    public let size: Int?
+    public let url: String?
+    public let urlDownload: String?
+    public let urlPrivate: String?
+    public let urlPrivateDownload: String?
+    public let thumb64: String?
+    public let thumb80: String?
+    public let thumb360: String?
+    public let thumb360gif: String?
+    public let thumb360w: String?
+    public let thumb360h: String?
+    public let permalink: String?
+    public let editLink: String?
+    public let preview: String?
+    public let previewHighlight: String?
+    public let lines: Int?
+    public let linesMore: Int?
     internal(set) public var isPublic: Bool?
-    let publicSharedURL: Bool?
-    let channels: [String]?
-    let groups: [String]?
-    let dms: [String]?
-    let initialComment: Comment?
-    let stars: Int?
-    let isStarred: Bool?
-    let pinnedTo: [String]?
-    internal(set) public lazy var comments = [Comment]?()
+    internal(set) public var publicSharedURL: Bool?
+    internal(set) public var channels: [String]?
+    internal(set) public var groups: [String]?
+    internal(set) public var ims: [String]?
+    public let initialComment: Comment?
+    internal(set) public var stars: Int?
+    internal(set) public var isStarred: Bool?
+    internal(set) public var pinnedTo: [String]?
+    internal(set) public var comments = [String: Comment]()
+    internal(set) public var reactions = [String: Reaction]()
     
-    init?(file:Dictionary<String, AnyObject>?) {
+    init?(file:[String: AnyObject]?) {
         id = file?["id"] as? String
-        created = file?["created"] as? String
-        timeStamp = file?["timestamp"] as? String
+        created = file?["created"] as? Int
         name = file?["name"] as? String
         title = file?["title"] as? String
         mimeType = file?["mimetype"] as? String
@@ -99,17 +98,20 @@ public struct File {
         publicSharedURL = file?["public_url_shared"] as? Bool
         channels = file?["channels"] as? [String]
         groups = file?["groups"] as? [String]
-        dms = file?["ims"] as? [String]
-        initialComment = Comment(comment: file?["initial_comment"] as? Dictionary<String, AnyObject>)
-        stars = file?["stars"] as? Int
+        ims = file?["ims"] as? [String]
+        initialComment = Comment(comment: file?["initial_comment"] as? [String: AnyObject])
+        stars = file?["num_stars"] as? Int
         isStarred = file?["is_starred"] as? Bool
         pinnedTo = file?["pinned_to"] as? [String]
+        if let reactions = file?["reactions"] as? [[String: AnyObject]] {
+            self.reactions = Reaction.reactionsFromArray(reactions)
+        }
+        
     }
     
     init?(id:String?) {
         self.id = id
         created = nil
-        timeStamp = nil
         name = nil
         title = nil
         mimeType = nil
@@ -117,7 +119,6 @@ public struct File {
         prettyType = nil
         user = nil
         mode = nil
-        editable = nil
         isExternal = nil
         externalType = nil
         size = nil
@@ -137,14 +138,7 @@ public struct File {
         previewHighlight = nil
         lines = nil
         linesMore = nil
-        publicSharedURL = nil
-        channels = nil
-        groups = nil
-        dms = nil
         initialComment = nil
-        stars = nil
-        isStarred = nil
-        pinnedTo = nil
     }
 }
 

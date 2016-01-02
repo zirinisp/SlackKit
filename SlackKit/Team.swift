@@ -1,7 +1,7 @@
 //
 // Team.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,23 +23,23 @@
 
 public struct Team {
     
-    let id: String
+    public let id: String
     internal(set) public var name: String?
     internal(set) public var emailDomain: String?
     internal(set) public var domain: String?
     internal(set) public var messageEditWindowMinutes: Int?
     internal(set) public var overStorageLimit: Bool?
-    internal(set) public var prefs: Dictionary<String, AnyObject>?
+    internal(set) public var prefs: [String: AnyObject]?
     internal(set) public var plan: String?
     
-    internal init?(team: Dictionary<String, AnyObject>?) {
+    internal init?(team: [String: AnyObject]?) {
         id = team?["id"] as! String
         name = team?["id"] as? String
         emailDomain = team?["email_domain"] as? String
         domain = team?["domain"] as? String
         messageEditWindowMinutes = team?["mesg_edit_window_mins"] as? Int
         overStorageLimit = team?["over_storage_limit"] as? Bool
-        prefs = team?["prefs"] as? Dictionary<String, AnyObject>
+        prefs = team?["prefs"] as? [String: AnyObject]
         plan = team?["plan"] as? String
     }
 }

@@ -1,7 +1,7 @@
 //
 // Message.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,11 +34,13 @@ internal enum EventType: String {
     case ChannelArchive = "channel_archive"
     case ChannelUnarchive = "channel_unarchive"
     case ChannelHistoryChanged = "channel_history_changed"
-    case DMCreated = "im_created"
-    case DMOpen = "im_open"
-    case DMClose = "im_close"
-    case DMMarked = "im_marked"
-    case DMHistoryChanged = "im_history_changed"
+    case DNDUpdated = "dnd_updated"
+    case DNDUpatedUser = "dnd_updated_user"
+    case IMCreated = "im_created"
+    case IMOpen = "im_open"
+    case IMClose = "im_close"
+    case IMMarked = "im_marked"
+    case IMHistoryChanged = "im_history_changed"
     case GroupJoined = "group_joined"
     case GroupLeft = "group_left"
     case GroupOpen = "group_open"
@@ -80,6 +82,10 @@ internal enum EventType: String {
     case BotChanged = "bot_changed"
     case AccountsChanged = "accounts_changed"
     case TeamMigrationStarted = "team_migration_started"
+    case SubteamCreated = "subteam_created"
+    case SubteamUpdated = "subteam_updated"
+    case SubteamSelfAdded = "subteam_self_added"
+    case SubteamSelfRemoved = "subteam_self_removed"
     case Ok = "ok"
     case Error = "error"
 }
@@ -112,7 +118,7 @@ internal enum MessageSubtype: String {
 
 internal struct Event {
     
-    let type: EventType
+    let type: EventType?
     let ts: String?
     let subtype: String?
     let channelID: String?
@@ -126,14 +132,14 @@ internal struct Event {
     let fileID: String?
     let presence: String?
     let name: String?
-    let value: String?
+    let value: AnyObject?
     let plan: String?
     let url: String?
     let domain: String?
     let emailDomain: String?
     let reaction: String?
     let replyTo: String?
-    let reactions: [Dictionary<String, AnyObject>]?
+    let reactions: [[String: AnyObject]]?
     let edited: Edited?
     let bot: Bot?
     let channel: Channel?
@@ -143,12 +149,15 @@ internal struct Event {
     let message: Message?
     let nestedMessage: Message?
     let item: Item?
+    let dndStatus: DoNotDisturbStatus?
+    let subteam: UserGroup?
+    let subteamID: String?
     
-    init(event:Dictionary<String, AnyObject>) {
+    init(event:[String: AnyObject]) {
         if let eventType = event["type"] as? String {
-            type = EventType(rawValue:eventType)!
+            type = EventType(rawValue:eventType)
         } else {
-            type = EventType(rawValue: "ok")!
+            type = EventType(rawValue: "ok")
         }
         ts = event["ts"] as? String
         subtype = event["subtype"] as? String
@@ -163,43 +172,46 @@ internal struct Event {
         fileID = event["file_id"] as? String
         presence = event["presence"] as? String
         name = event["name"] as? String
-        value = event["value"] as? String
+        value = event["value"]
         plan = event["plan"] as? String
         url = event["url"] as? String
         domain = event["domain"] as? String
         emailDomain = event["email_domain"] as? String
         reaction = event["reaction"] as? String
         replyTo = event["reply_to"] as? String
-        reactions = event["reactions"] as? [Dictionary<String, AnyObject>]
-        bot = Bot(bot: event["bot"] as? Dictionary<String, AnyObject>)
-        edited = Edited(edited:event["edited"] as? Dictionary<String, AnyObject>)
-        item = Item(item: event["item"] as? Dictionary<String, AnyObject>)
+        reactions = event["reactions"] as? [[String: AnyObject]]
+        bot = Bot(bot: event["bot"] as? [String: AnyObject])
+        edited = Edited(edited:event["edited"] as? [String: AnyObject])
+        dndStatus = DoNotDisturbStatus(status: event["dnd_status"] as? [String: AnyObject])
+        item = Item(item: event["item"] as? [String: AnyObject])
+        subteam = UserGroup(userGroup: event["subteam"] as? [String: AnyObject])
+        subteamID = event["subteam_id"] as? String
         message = Message(message: event)
-        nestedMessage = Message(message: event["message"] as? Dictionary<String, AnyObject>)
+        nestedMessage = Message(message: event["message"] as? [String: AnyObject])
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
-        if (Comment(comment: event["comment"] as? Dictionary<String, AnyObject>) == nil) {
+        if (Comment(comment: event["comment"] as? [String: AnyObject])?.id == nil) {
             comment = Comment(id: event["comment"] as? String)
         } else {
-            comment = Comment(comment: event["comment"] as? Dictionary<String, AnyObject>)
+            comment = Comment(comment: event["comment"] as? [String: AnyObject])
         }
         
-        if (User(user: event["user"] as? Dictionary<String, AnyObject>)?.id == nil) {
+        if (User(user: event["user"] as? [String: AnyObject])?.id == nil) {
             user = User(id: event["user"] as? String)
         } else {
-            user = User(user: event["user"] as? Dictionary<String, AnyObject>)
+            user = User(user: event["user"] as? [String: AnyObject])
         }
         
-        if (File(file: event["file"] as? Dictionary<String, AnyObject>)?.id == nil) {
+        if (File(file: event["file"] as? [String: AnyObject])?.id == nil) {
             file = File(id: event["file"] as? String)
         } else {
-            file = File(file: event["file"] as? Dictionary<String, AnyObject>)
+            file = File(file: event["file"] as? [String: AnyObject])
         }
         
-        if (Channel(channel: event["channel"] as? Dictionary<String, AnyObject>)?.id == nil) {
+        if (Channel(channel: event["channel"] as? [String: AnyObject])?.id == nil) {
             channel = Channel(id: event["channel"] as? String)
         } else {
-            channel = Channel(channel: event["channel"] as? Dictionary<String, AnyObject>)
+            channel = Channel(channel: event["channel"] as? [String: AnyObject])
         }
     }
     

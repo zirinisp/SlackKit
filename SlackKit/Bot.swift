@@ -1,7 +1,7 @@
 //
 // Bot.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,14 +23,14 @@
 
 public struct Bot {
     
-    let id: String?
+    public let id: String?
     internal(set) public var name: String?
-    internal(set) public var icons: Dictionary<String, AnyObject>?
+    internal(set) public var icons: [String: AnyObject]?
     
-    internal init?(bot:Dictionary<String, AnyObject>?) {
+    internal init?(bot: [String: AnyObject]?) {
         id = bot?["id"] as? String
         name = bot?["name"] as? String
-        icons = bot?["icons"] as? Dictionary<String, AnyObject>
+        icons = bot?["icons"] as? [String: AnyObject]
     }
     
 }

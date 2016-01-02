@@ -1,7 +1,7 @@
 //
 // Types.swift
 //
-// Copyright © 2015 Peter Zignego. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,10 @@
 
 // MARK: - Edited
 public struct Edited {
-    let user: String?
-    let ts: String?
+    public let user: String?
+    public let ts: String?
     
-    internal init?(edited:Dictionary<String, AnyObject>?) {
+    internal init?(edited:[String: AnyObject]?) {
         user = edited?["user"] as? String
         ts = edited?["ts"] as? String
     }
@@ -34,10 +34,10 @@ public struct Edited {
 
 // MARK: - Reaction
 public struct Reaction {
-    let name: String?
-    internal(set) public lazy var users = Dictionary<String, String>()
+    public let name: String?
+    internal(set) public var users = [String: String]()
     
-    internal init?(reaction:Dictionary<String, AnyObject>?) {
+    internal init?(reaction:[String: AnyObject]?) {
         name = reaction?["name"] as? String
     }
     
@@ -45,6 +45,28 @@ public struct Reaction {
         self.name = name
         users[user] = user
     }
+    
+    internal init?(name: String?, users: [String: String]) {
+        self.name = name
+        self.users = users
+    }
+    
+    static func reactionsFromArray(array: [[String: AnyObject]]) -> [String: Reaction] {
+        var reactions = [String: Reaction]()
+        var userDictionary = [String: String]()
+        for reaction in array {
+            if let users = reaction["users"] as? [String] {
+                for user in users {
+                    userDictionary[user] = user
+                }
+            }
+            if let name = reaction["name"] as? String {
+                reactions[name] = Reaction(name: name, users: userDictionary)
+            }
+        }
+        return reactions
+    }
+    
 }
 
 extension Reaction: Equatable {}
@@ -55,22 +77,25 @@ public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
 
 // MARK: - Comment
 public struct Comment {
-    let id: String?
-    let user: String?
-    internal(set) public var timestamp: String?
+    public let id: String?
+    public let user: String?
+    internal(set) public var created: Int?
     internal(set) public var comment: String?
+    internal(set) public var starred: Bool?
+    internal(set) public var stars: Int?
+    internal(set) public var reactions = [String: Reaction]()
     
-    internal init?(comment:Dictionary<String, AnyObject>?) {
+    internal init?(comment:[String: AnyObject]?) {
         id = comment?["id"] as? String
-        timestamp = comment?["timestamp"] as? String
+        created = comment?["created"] as? Int
         user = comment?["user"] as? String
+        starred = comment?["is_starred"] as? Bool
+        stars = comment?["num_stars"] as? Int
         self.comment = comment?["comment"] as? String
     }
     
     internal init?(id: String?) {
         self.id = id
-        self.comment = nil
-        self.timestamp = nil
         self.user = nil
     }
 }
@@ -83,20 +108,34 @@ public func ==(lhs: Comment, rhs: Comment) -> Bool {
 
 // MARK: - Item
 public struct Item {
-    let type: String?
-    let ts: String?
-    let channel: String?
-    let message: Message?
-    let file: File?
-    let comment: Comment?
+    public let type: String?
+    public let ts: String?
+    public let channel: String?
+    public let message: Message?
+    public let file: File?
+    public let comment: Comment?
+    public let fileCommentID: String?
     
-    internal init?(item:Dictionary<String, AnyObject>?) {
+    internal init?(item:[String: AnyObject]?) {
         type = item?["type"] as? String
         ts = item?["ts"] as? String
         channel = item?["channel"] as? String
-        message = Message(message: item?["message"] as? Dictionary<String, AnyObject>)
-        file = File(file: item?["file"] as? Dictionary<String, AnyObject>)
-        comment = Comment(comment: item?["comment"] as? Dictionary<String, AnyObject>)
+        
+        message = Message(message: item?["message"] as? [String: AnyObject])
+        
+        // Comment and File can come across as Strings or Dictionaries
+        if (Comment(comment: item?["comment"] as? [String: AnyObject])?.id == nil) {
+            comment = Comment(id: item?["comment"] as? String)
+        } else {
+            comment = Comment(comment: item?["comment"] as? [String: AnyObject])
+        }
+        if (File(file: item?["file"] as? [String: AnyObject])?.id == nil) {
+            file = File(id: item?["file"] as? String)
+        } else {
+            file = File(file: item?["file"] as? [String: AnyObject])
+        }
+        
+        fileCommentID = item?["file_comment"] as? String
     }
 }
 
@@ -108,13 +147,31 @@ public func ==(lhs: Item, rhs: Item) -> Bool {
 
 // MARK: - Topic
 public struct Topic {
-    let value: String?
-    let creator: String?
-    let lastSet: String?
+    public let value: String?
+    public let creator: String?
+    public let lastSet: Int?
     
-    internal init?(topic: Dictionary<String, AnyObject>?) {
+    internal init?(topic: [String: AnyObject]?) {
         value = topic?["value"] as? String
         creator = topic?["creator"] as? String
-        lastSet = topic?["last_set"] as? String
+        lastSet = topic?["last_set"] as? Int
     }
+}
+
+// MARK: - Do Not Disturb Status
+public struct DoNotDisturbStatus {
+    internal(set) public var enabled: Bool?
+    internal(set) public var nextDoNotDisturbStart: Int?
+    internal(set) public var nextDoNotDisturbEnd: Int?
+    internal(set) public var snoozeEnabled: Bool?
+    internal(set) public var snoozeEndtime: Int?
+    
+    internal init?(status: [String: AnyObject]?) {
+        enabled = status?["dnd_enabled"] as? Bool
+        nextDoNotDisturbStart = status?["next_dnd_start_ts"] as? Int
+        nextDoNotDisturbEnd = status?["next_dnd_end_ts"] as? Int
+        snoozeEnabled = status?["snooze_enabled"] as? Bool
+        snoozeEndtime = status?["snooze_endtime"] as? Int
+    }
+    
 }
