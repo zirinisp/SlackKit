@@ -19,6 +19,7 @@
 		2661A69A1BBF60E60026F67B /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68D1BBF60E60026F67B /* Types.swift */; };
 		2661A69B1BBF60E60026F67B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68E1BBF60E60026F67B /* User.swift */; };
 		26EB95961C285CEE00BD1F13 /* EventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB95951C285CEE00BD1F13 /* EventDelegate.swift */; };
+		26EB959D1C2F10CA00BD1F13 /* UserGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */; };
 		FFE3AC870D1C42EF276CCA2D /* Pods_SlackKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407A2ABFC0611867E2BE34D0 /* Pods_SlackKit.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 /* End PBXBuildFile section */
 
@@ -38,6 +39,7 @@
 		2661A6A41BBF62FF0026F67B /* SlackKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlackKit.h; sourceTree = "<group>"; };
 		266E05F01BBF780C00840D76 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		26EB95951C285CEE00BD1F13 /* EventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDelegate.swift; sourceTree = "<group>"; };
+		26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserGroup.swift; sourceTree = "<group>"; };
 		407A2ABFC0611867E2BE34D0 /* Pods_SlackKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SlackKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4347F92F3932C96C23B10B2A /* Pods-SlackKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-SlackKit/Pods-SlackKit.release.xcconfig"; sourceTree = "<group>"; };
 		F59B6A12F1C4C4E24C58E1BF /* Pods-SlackKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackKit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SlackKit/Pods-SlackKit.debug.xcconfig"; sourceTree = "<group>"; };
@@ -97,6 +99,7 @@
 				2661A68C1BBF60E60026F67B /* Team.swift */,
 				2661A68D1BBF60E60026F67B /* Types.swift */,
 				2661A68E1BBF60E60026F67B /* User.swift */,
+				26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */,
 				2661A6A41BBF62FF0026F67B /* SlackKit.h */,
 				266E05F01BBF780C00840D76 /* Info.plist */,
 			);
@@ -235,6 +238,7 @@
 				2661A6911BBF60E60026F67B /* Client.swift in Sources */,
 				2661A6941BBF60E60026F67B /* EventHandler.swift in Sources */,
 				2661A68F1BBF60E60026F67B /* Bot.swift in Sources */,
+				26EB959D1C2F10CA00BD1F13 /* UserGroup.swift in Sources */,
 				26EB95961C285CEE00BD1F13 /* EventDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
