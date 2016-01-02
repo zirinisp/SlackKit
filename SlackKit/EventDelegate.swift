@@ -49,7 +49,7 @@ public protocol ChannelEventsDelegate {
     func channelArchived(channel: Channel)
     func channelHistoryChanged(channel: Channel)
     func channelJoined(channel: Channel)
-    func channelLeft(channel: Channel, user: User?)
+    func channelLeft(channel: Channel)
 }
 
 public protocol DoNotDisturbEventsDelegate {

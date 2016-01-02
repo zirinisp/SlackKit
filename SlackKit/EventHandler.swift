@@ -148,7 +148,7 @@ internal struct EventHandler {
                 Client.sharedInstance.channels[id]?.members.removeAtIndex(index)
                 
                 if let delegate = Client.sharedInstance.channelEventsDelegate {
-                    delegate.channelLeft(channel, user: Client.sharedInstance.authenticatedUser)
+                    delegate.channelLeft(channel)
                 }
             }
         }
@@ -200,7 +200,7 @@ internal struct EventHandler {
             Client.sharedInstance.users[id]?.doNotDisturbStatus = dndStatus
             
             if let delegate = Client.sharedInstance.doNotDisturbEventsDelegate {
-                delegate.doNotDisturbUserUpdated(dndStatus, user: Client.sharedInstance.users[id])
+                delegate.doNotDisturbUserUpdated(dndStatus, user: user)
             }
         }
     }
