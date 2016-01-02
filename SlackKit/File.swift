@@ -61,8 +61,8 @@ public struct File {
     internal(set) public var stars: Int?
     internal(set) public var isStarred: Bool?
     internal(set) public var pinnedTo: [String]?
-    internal(set) public lazy var comments = [Comment]()
-    internal(set) public lazy var reactions = [String: Reaction]()
+    internal(set) public var comments = [String: Comment]()
+    internal(set) public var reactions = [String: Reaction]()
     
     init?(file:[String: AnyObject]?) {
         id = file?["id"] as? String

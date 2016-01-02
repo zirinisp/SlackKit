@@ -35,7 +35,7 @@ public struct Edited {
 // MARK: - Reaction
 public struct Reaction {
     public let name: String?
-    internal(set) public lazy var users = [String: String]()
+    internal(set) public var users = [String: String]()
     
     internal init?(reaction:[String: AnyObject]?) {
         name = reaction?["name"] as? String

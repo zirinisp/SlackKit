@@ -52,7 +52,7 @@ public class Message {
     internal(set) var pinnedTo: [String]?
     public let comment: Comment?
     public let file: File?
-    internal(set) public lazy var reactions = [String: Reaction]()
+    internal(set) public var reactions = [String: Reaction]()
     
     init?(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String

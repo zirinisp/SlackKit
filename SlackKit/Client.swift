@@ -36,8 +36,8 @@ public class Client: WebSocketDelegate {
     internal(set) public var userGroups = [String: UserGroup]()
     internal(set) public var bots = [String: Bot]()
     internal(set) public var files = [String: File]()
-    internal(set) public lazy var sentMessages = [String: Message]()
-
+    internal(set) public var sentMessages = [String: Message]()
+    
     //MARK: - Delegates
     public var slackEventsDelegate: SlackEventsDelegate?
     public var messageEventsDelegate: MessageEventsDelegate?

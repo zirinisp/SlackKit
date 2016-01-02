@@ -43,11 +43,11 @@ public struct Channel {
     internal(set) public var unread: Int?
     internal(set) public var unreadCountDisplay: Int?
     internal(set) public var hasPins: Bool?
-    internal(set) public lazy var members = [String]()
+    internal(set) public var members = [String]()
     // Client use
-    internal(set) public lazy var pinnedItems = [Item]()
-    internal(set) public lazy var usersTyping = [String]()
-    internal(set) public lazy var messages = [String: Message]()
+    internal(set) public var pinnedItems = [Item]()
+    internal(set) public var usersTyping = [String]()
+    internal(set) public var messages = [String: Message]()
     
     internal init?(channel: [String: AnyObject]?) {
         id = channel?["id"] as? String
