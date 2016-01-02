@@ -133,11 +133,11 @@ internal struct EventHandler {
     }
     
     static func channelJoined(event: Event) {
-        if let channel = event.channel, id = channel.id, userID = Client.sharedInstance.authenticatedUser?.id {
-            Client.sharedInstance.channels[id]?.members.append(userID)
+        if let channel = event.channel, id = channel.id {
+            Client.sharedInstance.channels[id] = event.channel
             
             if let delegate = Client.sharedInstance.channelEventsDelegate {
-                delegate.channelJoined(channel, user: Client.sharedInstance.authenticatedUser)
+                delegate.channelJoined(channel)
             }
         }
     }

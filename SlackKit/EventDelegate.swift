@@ -47,7 +47,7 @@ public protocol ChannelEventsDelegate {
     func channelRenamed(channel: Channel)
     func channelArchived(channel: Channel)
     func channelHistoryChanged(channel: Channel)
-    func channelJoined(channel: Channel, user: User?)
+    func channelJoined(channel: Channel)
     func channelLeft(channel: Channel, user: User?)
 }
 
