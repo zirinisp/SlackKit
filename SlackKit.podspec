@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = "SlackKit"
-  s.version          = "0.9.0"
+  s.version          = "0.9.5"
   s.summary          = "a Slack client library for iOS and OS X written in Swift"
   s.homepage         = "https://github.com/pvzig/SlackKit"
   s.license          = 'MIT'
@@ -12,5 +12,5 @@ Pod::Spec.new do |s|
   s.requires_arc = true
   s.source_files = 'SlackKit/*.swift'  
   s.frameworks = 'Foundation'
-  s.dependency 'Starscream', '~> 1.0.1'
+  s.dependency 'Starscream', '~> 1.0.2'
 end
