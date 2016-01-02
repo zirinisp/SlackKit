@@ -76,7 +76,7 @@ public protocol PinEventsDelegate {
 }
 
 public protocol StarEventsDelegate {
-    func messageStarred(channel: Channel?, message: Message, star: Bool)
+    func itemStarred(item: Item, star: Bool)
 }
 
 public protocol ReactionEventsDelegate {

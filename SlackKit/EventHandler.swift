@@ -316,14 +316,36 @@ internal struct EventHandler {
     }
     
     //MARK: - Stars
-    static func messageStarred(event: Event, star: Bool) {
-        if let item = event.item, channel = item.channel, message = item.message, ts = message.ts {
-            if let message = Client.sharedInstance.channels[channel]?.messages[ts] {
-                message.isStarred = star
-                
-                if let delegate = Client.sharedInstance.starEventsDelegate {
-                    delegate.messageStarred(Client.sharedInstance.channels[channel], message: message, star: star)
+    static func itemStarred(event: Event, star: Bool) {
+        if let item = event.item {
+            // Star message
+            if let message = item.message, ts = message.ts, channel = item.channel {
+                if let _ = Client.sharedInstance.channels[channel]?.messages[ts] {
+                    Client.sharedInstance.channels[channel]?.messages[ts]?.isStarred = star
                 }
+            }
+            
+            // Star file
+            if let file = item.file, id = file.id {
+                // Add file to Client if it doesn't exist
+                if (Client.sharedInstance.files[id] == nil) {
+                    addFileToClient(file)
+                }
+                
+                Client.sharedInstance.files[id]?.isStarred = star
+                if let stars = Client.sharedInstance.files[id]?.stars {
+                    if star == true {
+                        Client.sharedInstance.files[id]?.stars = stars + 1
+                    } else {
+                        if stars > 0 {
+                            Client.sharedInstance.files[id]?.stars = stars - 1
+                        }
+                    }
+                }
+            }
+            
+            if let delegate = Client.sharedInstance.starEventsDelegate {
+                delegate.itemStarred(item, star: star)
             }
         }
     }

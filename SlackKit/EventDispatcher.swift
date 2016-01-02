@@ -100,9 +100,9 @@ internal struct EventDispatcher {
             case .TeamJoin:
                 EventHandler.teamJoin(event)
             case .StarAdded:
-                EventHandler.messageStarred(event, star: true)
+                EventHandler.itemStarred(event, star: true)
             case .StarRemoved:
-                EventHandler.messageStarred(event, star: false)
+                EventHandler.itemStarred(event, star: false)
             case .ReactionAdded:
                 EventHandler.addedReaction(event)
             case .ReactionRemoved:
