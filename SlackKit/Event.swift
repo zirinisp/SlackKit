@@ -190,7 +190,7 @@ internal struct Event {
         nestedMessage = Message(message: event["message"] as? [String: AnyObject])
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
-        if (Comment(comment: event["comment"] as? [String: AnyObject]) == nil) {
+        if (Comment(comment: event["comment"] as? [String: AnyObject])?.id == nil) {
             comment = Comment(id: event["comment"] as? String)
         } else {
             comment = Comment(comment: event["comment"] as? [String: AnyObject])
