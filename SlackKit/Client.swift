@@ -237,6 +237,9 @@ public class Client: WebSocketDelegate {
         authenticated = false
         webSocket = nil
         print("Disconnected: \(error)")
+        if let delegate = slackEventsDelegate {
+            delegate.clientDisconnected()
+        }
     }
     
     public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
@@ -245,6 +248,7 @@ public class Client: WebSocketDelegate {
         }
         do {
             try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
+            print(try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments))
         }
         catch _ {
             

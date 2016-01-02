@@ -25,6 +25,7 @@ import Foundation
 
 public protocol SlackEventsDelegate {
     func clientConnected()
+    func clientDisconnected()
     func preferenceChanged(preference: String, value: AnyObject)
     func userChanged(user: User)
     func presenceChanged(user: User?, presence: String?)
