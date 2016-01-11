@@ -1,5 +1,5 @@
 //
-// SlackKit.h
+// Package.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,10 +21,13 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-#import <Foundation/Foundation.h>
+import PackageDescription
 
-//! Project version number for SlackKit.
-FOUNDATION_EXPORT double SlackKitVersionNumber;
-
-//! Project version string for SlackKit.
-FOUNDATION_EXPORT const unsigned char SlackKitVersionString[];
+let package = Package(
+    name: "SlackKit",
+    targets: [],
+    dependencies: [
+        .Package(url: "https://github.com/pvzig/Starscream.git",
+            majorVersion: 1),
+    ]
+)

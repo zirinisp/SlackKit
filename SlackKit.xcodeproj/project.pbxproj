@@ -7,39 +7,39 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		2661A68F1BBF60E60026F67B /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6821BBF60E60026F67B /* Bot.swift */; };
-		2661A6901BBF60E60026F67B /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6831BBF60E60026F67B /* Channel.swift */; };
-		2661A6911BBF60E60026F67B /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6841BBF60E60026F67B /* Client.swift */; };
-		2661A6921BBF60E60026F67B /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6851BBF60E60026F67B /* Event.swift */; };
-		2661A6931BBF60E60026F67B /* EventDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6861BBF60E60026F67B /* EventDispatcher.swift */; };
-		2661A6941BBF60E60026F67B /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6871BBF60E60026F67B /* EventHandler.swift */; };
-		2661A6951BBF60E60026F67B /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A6881BBF60E60026F67B /* File.swift */; };
-		2661A6971BBF60E60026F67B /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68A1BBF60E60026F67B /* Message.swift */; };
-		2661A6991BBF60E60026F67B /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68C1BBF60E60026F67B /* Team.swift */; };
-		2661A69A1BBF60E60026F67B /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68D1BBF60E60026F67B /* Types.swift */; };
-		2661A69B1BBF60E60026F67B /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2661A68E1BBF60E60026F67B /* User.swift */; };
-		26EB95961C285CEE00BD1F13 /* EventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB95951C285CEE00BD1F13 /* EventDelegate.swift */; };
-		26EB959D1C2F10CA00BD1F13 /* UserGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */; };
+		26BBA1941C398E3C00BF7225 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1871C398E3C00BF7225 /* Bot.swift */; };
+		26BBA1951C398E3C00BF7225 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1881C398E3C00BF7225 /* Channel.swift */; };
+		26BBA1961C398E3C00BF7225 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1891C398E3C00BF7225 /* Client.swift */; };
+		26BBA1971C398E3C00BF7225 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18A1C398E3C00BF7225 /* Event.swift */; };
+		26BBA1981C398E3C00BF7225 /* EventDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18B1C398E3C00BF7225 /* EventDelegate.swift */; };
+		26BBA1991C398E3C00BF7225 /* EventDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18C1C398E3C00BF7225 /* EventDispatcher.swift */; };
+		26BBA19A1C398E3C00BF7225 /* EventHandler.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18D1C398E3C00BF7225 /* EventHandler.swift */; };
+		26BBA19B1C398E3C00BF7225 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18E1C398E3C00BF7225 /* File.swift */; };
+		26BBA19C1C398E3C00BF7225 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18F1C398E3C00BF7225 /* Message.swift */; };
+		26BBA19D1C398E3C00BF7225 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1901C398E3C00BF7225 /* Team.swift */; };
+		26BBA19E1C398E3C00BF7225 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1911C398E3C00BF7225 /* Types.swift */; };
+		26BBA19F1C398E3C00BF7225 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1921C398E3C00BF7225 /* User.swift */; };
+		26BBA1A01C398E3C00BF7225 /* UserGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1931C398E3C00BF7225 /* UserGroup.swift */; };
 		FFE3AC870D1C42EF276CCA2D /* Pods_SlackKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 407A2ABFC0611867E2BE34D0 /* Pods_SlackKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		26072A341BB48B3A00CD650C /* SlackKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SlackKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		2661A6821BBF60E60026F67B /* Bot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Bot.swift; sourceTree = "<group>"; };
-		2661A6831BBF60E60026F67B /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Channel.swift; sourceTree = "<group>"; };
-		2661A6841BBF60E60026F67B /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Client.swift; sourceTree = "<group>"; };
-		2661A6851BBF60E60026F67B /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Event.swift; sourceTree = "<group>"; };
-		2661A6861BBF60E60026F67B /* EventDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDispatcher.swift; sourceTree = "<group>"; };
-		2661A6871BBF60E60026F67B /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventHandler.swift; sourceTree = "<group>"; };
-		2661A6881BBF60E60026F67B /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = File.swift; sourceTree = "<group>"; };
-		2661A68A1BBF60E60026F67B /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Message.swift; sourceTree = "<group>"; };
-		2661A68C1BBF60E60026F67B /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Team.swift; sourceTree = "<group>"; };
-		2661A68D1BBF60E60026F67B /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Types.swift; sourceTree = "<group>"; };
-		2661A68E1BBF60E60026F67B /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		2661A6A41BBF62FF0026F67B /* SlackKit.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SlackKit.h; sourceTree = "<group>"; };
 		266E05F01BBF780C00840D76 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		26EB95951C285CEE00BD1F13 /* EventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EventDelegate.swift; sourceTree = "<group>"; };
-		26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserGroup.swift; sourceTree = "<group>"; };
+		26BBA1871C398E3C00BF7225 /* Bot.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Bot.swift; path = Sources/Bot.swift; sourceTree = "<group>"; };
+		26BBA1881C398E3C00BF7225 /* Channel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Channel.swift; path = Sources/Channel.swift; sourceTree = "<group>"; };
+		26BBA1891C398E3C00BF7225 /* Client.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Client.swift; path = Sources/Client.swift; sourceTree = "<group>"; };
+		26BBA18A1C398E3C00BF7225 /* Event.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Event.swift; path = Sources/Event.swift; sourceTree = "<group>"; };
+		26BBA18B1C398E3C00BF7225 /* EventDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventDelegate.swift; path = Sources/EventDelegate.swift; sourceTree = "<group>"; };
+		26BBA18C1C398E3C00BF7225 /* EventDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventDispatcher.swift; path = Sources/EventDispatcher.swift; sourceTree = "<group>"; };
+		26BBA18D1C398E3C00BF7225 /* EventHandler.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = EventHandler.swift; path = Sources/EventHandler.swift; sourceTree = "<group>"; };
+		26BBA18E1C398E3C00BF7225 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = Sources/File.swift; sourceTree = "<group>"; };
+		26BBA18F1C398E3C00BF7225 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Sources/Message.swift; sourceTree = "<group>"; };
+		26BBA1901C398E3C00BF7225 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Team.swift; path = Sources/Team.swift; sourceTree = "<group>"; };
+		26BBA1911C398E3C00BF7225 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = Sources/Types.swift; sourceTree = "<group>"; };
+		26BBA1921C398E3C00BF7225 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Sources/User.swift; sourceTree = "<group>"; };
+		26BBA1931C398E3C00BF7225 /* UserGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserGroup.swift; path = Sources/UserGroup.swift; sourceTree = "<group>"; };
 		407A2ABFC0611867E2BE34D0 /* Pods_SlackKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_SlackKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		4347F92F3932C96C23B10B2A /* Pods-SlackKit.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackKit.release.xcconfig"; path = "Pods/Target Support Files/Pods-SlackKit/Pods-SlackKit.release.xcconfig"; sourceTree = "<group>"; };
 		F59B6A12F1C4C4E24C58E1BF /* Pods-SlackKit.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-SlackKit.debug.xcconfig"; path = "Pods/Target Support Files/Pods-SlackKit/Pods-SlackKit.debug.xcconfig"; sourceTree = "<group>"; };
@@ -87,19 +87,19 @@
 		2661A6811BBF60E60026F67B /* SlackKit */ = {
 			isa = PBXGroup;
 			children = (
-				2661A6821BBF60E60026F67B /* Bot.swift */,
-				2661A6831BBF60E60026F67B /* Channel.swift */,
-				2661A6841BBF60E60026F67B /* Client.swift */,
-				2661A6851BBF60E60026F67B /* Event.swift */,
-				2661A6861BBF60E60026F67B /* EventDispatcher.swift */,
-				2661A6871BBF60E60026F67B /* EventHandler.swift */,
-				26EB95951C285CEE00BD1F13 /* EventDelegate.swift */,
-				2661A6881BBF60E60026F67B /* File.swift */,
-				2661A68A1BBF60E60026F67B /* Message.swift */,
-				2661A68C1BBF60E60026F67B /* Team.swift */,
-				2661A68D1BBF60E60026F67B /* Types.swift */,
-				2661A68E1BBF60E60026F67B /* User.swift */,
-				26EB959C1C2F10CA00BD1F13 /* UserGroup.swift */,
+				26BBA1871C398E3C00BF7225 /* Bot.swift */,
+				26BBA1881C398E3C00BF7225 /* Channel.swift */,
+				26BBA1891C398E3C00BF7225 /* Client.swift */,
+				26BBA18A1C398E3C00BF7225 /* Event.swift */,
+				26BBA18B1C398E3C00BF7225 /* EventDelegate.swift */,
+				26BBA18C1C398E3C00BF7225 /* EventDispatcher.swift */,
+				26BBA18D1C398E3C00BF7225 /* EventHandler.swift */,
+				26BBA18E1C398E3C00BF7225 /* File.swift */,
+				26BBA18F1C398E3C00BF7225 /* Message.swift */,
+				26BBA1901C398E3C00BF7225 /* Team.swift */,
+				26BBA1911C398E3C00BF7225 /* Types.swift */,
+				26BBA1921C398E3C00BF7225 /* User.swift */,
+				26BBA1931C398E3C00BF7225 /* UserGroup.swift */,
 				2661A6A41BBF62FF0026F67B /* SlackKit.h */,
 				266E05F01BBF780C00840D76 /* Info.plist */,
 			);
@@ -227,19 +227,19 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2661A69A1BBF60E60026F67B /* Types.swift in Sources */,
-				2661A6901BBF60E60026F67B /* Channel.swift in Sources */,
-				2661A6921BBF60E60026F67B /* Event.swift in Sources */,
-				2661A6971BBF60E60026F67B /* Message.swift in Sources */,
-				2661A6991BBF60E60026F67B /* Team.swift in Sources */,
-				2661A69B1BBF60E60026F67B /* User.swift in Sources */,
-				2661A6951BBF60E60026F67B /* File.swift in Sources */,
-				2661A6931BBF60E60026F67B /* EventDispatcher.swift in Sources */,
-				2661A6911BBF60E60026F67B /* Client.swift in Sources */,
-				2661A6941BBF60E60026F67B /* EventHandler.swift in Sources */,
-				2661A68F1BBF60E60026F67B /* Bot.swift in Sources */,
-				26EB959D1C2F10CA00BD1F13 /* UserGroup.swift in Sources */,
-				26EB95961C285CEE00BD1F13 /* EventDelegate.swift in Sources */,
+				26BBA1991C398E3C00BF7225 /* EventDispatcher.swift in Sources */,
+				26BBA1951C398E3C00BF7225 /* Channel.swift in Sources */,
+				26BBA19F1C398E3C00BF7225 /* User.swift in Sources */,
+				26BBA19E1C398E3C00BF7225 /* Types.swift in Sources */,
+				26BBA1961C398E3C00BF7225 /* Client.swift in Sources */,
+				26BBA19A1C398E3C00BF7225 /* EventHandler.swift in Sources */,
+				26BBA1971C398E3C00BF7225 /* Event.swift in Sources */,
+				26BBA1941C398E3C00BF7225 /* Bot.swift in Sources */,
+				26BBA19B1C398E3C00BF7225 /* File.swift in Sources */,
+				26BBA19C1C398E3C00BF7225 /* Message.swift in Sources */,
+				26BBA19D1C398E3C00BF7225 /* Team.swift in Sources */,
+				26BBA1A01C398E3C00BF7225 /* UserGroup.swift in Sources */,
+				26BBA1981C398E3C00BF7225 /* EventDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
