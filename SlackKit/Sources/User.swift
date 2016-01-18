@@ -71,7 +71,7 @@ public struct User {
     internal(set) public var timeZoneLabel: String?
     internal(set) public var timeZoneOffSet: Int?
     internal(set) public var preferences: [String: AnyObject]?
-    // Client use
+    // Client properties
     internal(set) public var userGroups: [String: String]?
     
     internal init?(user: [String: AnyObject]?) {
