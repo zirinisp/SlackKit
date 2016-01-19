@@ -1,5 +1,5 @@
 //
-//  WebAPI.swift
+//  SlackWebAPI.swift
 //  SlackKit
 //
 //  Created by Peter Zignego on 1/18/16.
@@ -9,16 +9,16 @@
 import Foundation
 import Starscream
 
-enum SlackWebAPI: String {
+enum SlackAPIEndpoint: String {
     case RTMStart = "rtm.start"
     case IMOpen = "im.open"
 }
 
-public struct WebAPI {
+public struct SlackWebAPI {
 
     //MARK: - Connection
     public static func connect() {
-        NetworkInterface.slackAPIRequest(SlackWebAPI.RTMStart.rawValue, parameters: nil) {
+        Client.sharedInstance.api.request(SlackAPIEndpoint.RTMStart, parameters: nil) {
             (response) -> Void in
             Client.sharedInstance.initialSetup(response)
             if let socketURL = response["url"] as? String {
@@ -31,8 +31,8 @@ public struct WebAPI {
     }
     
     //MARK: - IM
-    public static func imOpen(userID: String, callback: (String?) -> Void) {
-        NetworkInterface.slackAPIRequest(SlackWebAPI.IMOpen.rawValue, parameters: ["user":userID]) {
+    public static func imOpen(userID: String, completion: (imID: String?) -> Void) {
+        Client.sharedInstance.api.request(SlackAPIEndpoint.IMOpen, parameters: ["user":userID]) {
             (response) -> Void in
             if let channel = response["channel"] as? [String: AnyObject], id = channel["id"] as? String {
                 let exists = Client.sharedInstance.channels.filter{$0.0 == id}.count > 0
@@ -41,6 +41,7 @@ public struct WebAPI {
                 } else {
                     Client.sharedInstance.channels[id] = Channel(channel: channel)
                 }
+                completion(imID: id)
                 
                 if let delegate = Client.sharedInstance.groupEventsDelegate {
                     delegate.groupOpened(Client.sharedInstance.channels[id]!)

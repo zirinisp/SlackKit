@@ -1,5 +1,5 @@
 //
-//  ClientActions.swift
+//  ClientExtensions.swift
 //  SlackKit
 //
 //  Created by Peter Zignego on 1/18/16.
@@ -28,13 +28,13 @@ extension Client {
         return users.filter{$0.1.name == stripString(name)}.first?.0
     }
     
-    public func getImIDForUserWithID(id: String, callback: (String?) -> Void) {
+    public func getImIDForUserWithID(id: String, completion: (imID: String?) -> Void) {
         let ims = Client.sharedInstance.channels.filter{$0.1.isIM == true}
         let channel = ims.filter{$0.1.user == id}.first
-        if let channel = channel, user = channel.1.user {
-            callback(user)
+        if let channel = channel {
+            completion(imID: channel.0)
         } else {
-            WebAPI.imOpen(id, callback: callback)
+            SlackWebAPI.imOpen(id, completion: completion)
         }
     }
     

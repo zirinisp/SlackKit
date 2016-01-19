@@ -130,7 +130,7 @@ internal struct EventDispatcher {
                 // Not implemented per Slack documentation.
                 break
             case .TeamMigrationStarted:
-                WebAPI.connect()
+                Client.sharedInstance.connect()
             case .SubteamCreated, .SubteamUpdated:
                 EventHandler.subteam(event)
             case .SubteamSelfAdded:

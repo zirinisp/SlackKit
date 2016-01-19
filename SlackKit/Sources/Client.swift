@@ -58,10 +58,14 @@ public class Client: WebSocketDelegate {
     }
     
     internal var webSocket: WebSocket?
-
+    internal let api = NetworkInterface()
     public static let sharedInstance = Client()
 
     required public init() {}
+    
+    public func connect() {
+        SlackWebAPI.connect()
+    }
     
     //MARK: - Message send
     public func sendMessage(message: String, channelID: String) {

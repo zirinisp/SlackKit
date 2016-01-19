@@ -10,13 +10,13 @@ import Foundation
 
 public struct NetworkInterface {
     
-    private static let apiUrl = "https://slack.com/api/"
-    private static let token = Client.sharedInstance.token
+    private let apiUrl = "https://slack.com/api/"
     
-    static public func slackAPIRequest(endpoint: String, parameters: [String: AnyObject]?, json: ([String: AnyObject]) -> Void) {
-        var requestString = "\(apiUrl)\(endpoint)?token=\(token)"
+    internal func request(endpoint: SlackAPIEndpoint, parameters: [String: AnyObject]?, json: ([String: AnyObject]) -> Void) {
+        let token = Client.sharedInstance.token
+        var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
-            requestString = requestString + NetworkInterface.requestStringFromParameters(params)
+            requestString = requestString + requestStringFromParameters(params)
         }
         let request = NSURLRequest(URL: NSURL(string: requestString)!)
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -29,18 +29,20 @@ public struct NetworkInterface {
                 if (result["ok"] as! Bool == true) {
                     json(result)
                 } else {
-                    //TODO: ERROR
+                    //Error
                 }
             } catch _ {
                 print(error)
             }
-        }
+        }.resume()
     }
     
-    static private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
+    private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
         var requestString = ""
         for key in parameters.keys {
-            requestString = requestString + "&\(key)=\(parameters[key])"
+            if let value = parameters[key] as? String {
+                requestString = requestString + "&\(key)=\(value)"
+            }
         }
         
         return requestString
