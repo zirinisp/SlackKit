@@ -37,7 +37,7 @@ internal struct EventHandler {
     //MARK: - Messages
     
     static func messageSent(event: Event) {
-        if let reply = event.replyTo, message = Client.sharedInstance.sentMessages[reply], channel = message.channel, ts = message.ts {
+        if let reply = event.replyTo, message = Client.sharedInstance.sentMessages[NSNumber(double: reply).stringValue], channel = message.channel, ts = message.ts {
             message.ts = event.ts
             message.text = event.text
             Client.sharedInstance.channels[channel]?.messages[ts] = message

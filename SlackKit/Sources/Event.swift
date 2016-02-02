@@ -138,7 +138,7 @@ internal struct Event {
     let domain: String?
     let emailDomain: String?
     let reaction: String?
-    let replyTo: String?
+    let replyTo: Double?
     let reactions: [[String: AnyObject]]?
     let edited: Edited?
     let bot: Bot?
@@ -178,7 +178,7 @@ internal struct Event {
         domain = event["domain"] as? String
         emailDomain = event["email_domain"] as? String
         reaction = event["reaction"] as? String
-        replyTo = event["reply_to"] as? String
+        replyTo = event["reply_to"] as? Double
         reactions = event["reactions"] as? [[String: AnyObject]]
         bot = Bot(bot: event["bot"] as? [String: AnyObject])
         edited = Edited(edited:event["edited"] as? [String: AnyObject])
