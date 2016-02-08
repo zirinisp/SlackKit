@@ -12,7 +12,7 @@ public struct NetworkInterface {
     
     private let apiUrl = "https://slack.com/api/"
     
-    internal func request(endpoint: SlackAPIEndpoint, parameters: [String: AnyObject]?, json: ([String: AnyObject]) -> Void) {
+    internal func request(endpoint: SlackAPIEndpoint, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         let token = Client.sharedInstance.token
         var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
@@ -20,19 +20,27 @@ public struct NetworkInterface {
         }
         let request = NSURLRequest(URL: NSURL(string: requestString)!)
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
-            (data, response, error) -> Void in
+            (data, response, internalError) -> Void in
             guard let data = data else {
                 return
             }
             do {
                 let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
                 if (result["ok"] as! Bool == true) {
-                    json(result)
+                    successClosure(result)
                 } else {
-                    //Error
+                    if let errorString = result["error"] as? String {
+                        throw ErrorDispatcher.dispatch(errorString)
+                    } else {
+                        throw SlackError.UnknownError
+                    }
                 }
-            } catch _ {
-                print(error)
+            } catch let error {
+                if let slackError = error as? SlackError {
+                    errorClosure(slackError)
+                } else {
+                    errorClosure(SlackError.UnknownError)
+                }
             }
         }.resume()
     }
