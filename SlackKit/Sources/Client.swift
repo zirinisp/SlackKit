@@ -57,15 +57,16 @@ public class Client: WebSocketDelegate {
     }
     
     private var webSocket: WebSocket?
-    
+    private var dispatcher: EventDispatcher?
+
     required public init() {
-        
     }
     
     public static let sharedInstance = Client()
     
     //MARK: - Connection
     public func connect() {
+        dispatcher = EventDispatcher(client: self)
         let request = NSURLRequest(URL: NSURL(string:"https://slack.com/api/rtm.start?token="+token)!)
         NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()!) {
             (response, data, error) -> Void in
@@ -233,7 +234,7 @@ public class Client: WebSocketDelegate {
             return
         }
         do {
-            try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
+            try dispatcher?.dispatch(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
         }
         catch _ {
             
