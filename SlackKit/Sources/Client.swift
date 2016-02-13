@@ -57,14 +57,24 @@ public class Client: WebSocketDelegate {
         self.token = token
     }
     
-    internal var webSocket: WebSocket?
-    internal let api = NetworkInterface()
-    public static let sharedInstance = Client()
+    public var slackWebAPI: SlackWebAPI?
 
+    internal var webSocket: WebSocket?
+    private var dispatcher: EventDispatcher?
+    
+    internal let api = NetworkInterface()
+    
     required public init() {}
     
     public func connect() {
-        SlackWebAPI.connect()
+        dispatcher = EventDispatcher(client: self)
+        slackWebAPI = SlackWebAPI(client: self)
+        slackWebAPI?.connect(success: {
+            (connecting) -> Void in
+            
+            },
+            failure: { (error) -> Void in
+        })
     }
     
     //MARK: - Message send
@@ -72,7 +82,7 @@ public class Client: WebSocketDelegate {
         if (connected) {
             if let data = formatMessageToSlackJsonString(msg: message, channel: channelID) {
                 let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-                self.webSocket?.writeString(string as! String)
+                webSocket?.writeString(string as! String)
             }
         }
     }
@@ -212,7 +222,7 @@ public class Client: WebSocketDelegate {
             return
         }
         do {
-            try EventDispatcher.eventDispatcher(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
+            try dispatcher?.dispatch(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
         }
         catch _ {
             
