@@ -70,10 +70,15 @@ public class Client: WebSocketDelegate {
         dispatcher = EventDispatcher(client: self)
         slackWebAPI = SlackWebAPI(client: self)
         slackWebAPI?.connect(success: {
-            (connecting) -> Void in
-            
-            },
-            failure: { (error) -> Void in
+            (response) -> Void in
+            self.initialSetup(response)
+            if let socketURL = response["url"] as? String {
+                let url = NSURL(string: socketURL)
+                self.webSocket = WebSocket(url: url!)
+                self.webSocket?.delegate = self
+                self.webSocket?.connect()
+            }
+            }, failure: {(error) -> Void in
         })
     }
     

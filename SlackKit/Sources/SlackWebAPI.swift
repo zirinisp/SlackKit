@@ -22,7 +22,6 @@
 // THE SOFTWARE.
 
 import Foundation
-import Starscream
 
 internal enum SlackAPIEndpoint: String {
     case APITest = "api.test"
@@ -99,17 +98,10 @@ public class SlackWebAPI {
     }
     
     //MARK: - Connection
-    public func connect(success success: (connecting: Bool)->Void, failure: (error: SlackError)->Void) {
+    public func connect(success success: (response: [String: AnyObject])->Void, failure: (error: SlackError)->Void) {
         client.api.request(.RTMStart, token: client.token, parameters: nil, successClosure: {
                 (response) -> Void in
-                self.client.initialSetup(response)
-                if let socketURL = response["url"] as? String {
-                    let url = NSURL(string: socketURL)
-                    self.client.webSocket = WebSocket(url: url!)
-                    self.client.webSocket?.delegate = self.client
-                    self.client.webSocket?.connect()
-                    success(connecting: true)
-                }
+                success(response: response)
             }) {(error) -> Void in
                 failure(error: error)
             }
