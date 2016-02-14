@@ -336,20 +336,8 @@ public class SlackWebAPI {
     public func openIM(userID: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {
         client.api.request(.IMOpen, token: client.token, parameters: ["user":userID], successClosure: {
             (response) -> Void in
-            if let channel = response["channel"] as? [String: AnyObject], id = channel["id"] as? String {
-                let exists = self.client.channels.filter{$0.0 == id}.count > 0
-                if exists == true {
-                    self.client.channels[id]?.isOpen = true
-                } else {
-                    self.client.channels[id] = Channel(channel: channel)
-                }
-                success(imID: id)
-                
-                if let delegate = self.client.groupEventsDelegate {
-                    delegate.groupOpened(self.client.channels[id]!)
-                }
-            }
-
+                let group = response["channel"] as? [String: AnyObject]
+                success(imID: group?["id"] as? String)
             }) {(error) -> Void in
                 failure(error: error)
         }
