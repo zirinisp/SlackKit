@@ -64,3 +64,13 @@ extension Client {
     }
     
 }
+
+extension String {
+    
+    func slackFormatEscaping() -> String {
+        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
+        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
+        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
+        return escapedString
+    }
+}

@@ -97,7 +97,7 @@ public class Client: WebSocketDelegate {
             "id": NSDate().timeIntervalSince1970,
             "type": "message",
             "channel": message.channel,
-            "text": slackFormatEscaping(message.msg)
+            "text": message.msg.slackFormatEscaping()
         ]
         addSentMessage(json)
         do {
@@ -116,13 +116,6 @@ public class Client: WebSocketDelegate {
         message["ts"] = ts?.stringValue
         message["user"] = self.authenticatedUser?.id
         sentMessages[ts!.stringValue] = Message(message: message)
-    }
-    
-    private func slackFormatEscaping(string: String) -> String {
-        var escapedString = string.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = escapedString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = escapedString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
     }
     
     //MARK: - Client setup
