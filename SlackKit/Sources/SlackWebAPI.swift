@@ -182,8 +182,20 @@ public class SlackWebAPI {
         }
     }
     
-    public func sendMessage() {
-        //TODO: Send message
+    public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool = false, parse: ParseMode = .Full, linkNames: Bool = false, attachments: [[String: AnyObject]]? = nil, unfurlLinks: Bool = false, unfurlMedia: Bool = false, iconURL: String? = nil, iconEmoji: String? = nil, success: ((ts: String?, channel: String?))->Void, failure: (error: SlackError)->Void) {
+        var parameters: [String: AnyObject] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia]
+        let optionalParameters: [String: AnyObject?] = ["username":username, "attachments":attachments, "icon_url":iconURL, "icon_emoji":iconEmoji]
+        for key in optionalParameters.keys {
+            if optionalParameters[key] != nil {
+                parameters[key] = optionalParameters[key]!
+            }
+        }
+        client.api.request(.ChatPostMessage, token: client.token, parameters: parameters, successClosure: {
+            (response) -> Void in
+                success((ts: response["ts"] as? String, response["channel"] as? String))
+            }) {(error) -> Void in
+                failure(error: error)
+        }
     }
     
     public func updateMessage(channel: String, ts: String, message: String, attachments: [[String: AnyObject]]? = nil, parse:ParseMode = .None, linkNames: Bool = false, success: (updated: Bool)->Void, failure: (error: SlackError)->Void) {
