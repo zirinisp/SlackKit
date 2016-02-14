@@ -1,5 +1,5 @@
 //
-//  SlackWebAPIErrorHandling.swift
+// SlackWebAPIErrorHandling.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
