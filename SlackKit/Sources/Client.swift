@@ -78,8 +78,7 @@ public class Client: WebSocketDelegate {
                 self.webSocket?.delegate = self
                 self.webSocket?.connect()
             }
-            }, failure: {(error) -> Void in
-        })
+            }, failure:nil)
     }
     
     //MARK: - Message send

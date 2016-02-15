@@ -73,7 +73,6 @@ internal enum SlackAPIEndpoint: String {
     case UsersSetPresence = "users.setPresence"
 }
 
-
 public class SlackWebAPI {
     
     public typealias FailureClosure = (error: SlackError)->Void
@@ -91,6 +90,12 @@ public class SlackWebAPI {
     public enum Presence: String {
         case Auto = "auto"
         case Away = "away"
+    }
+    
+    private enum ChannelType: String {
+        case Channel = "channel"
+        case Group = "group"
+        case IM = "im"
     }
     
     private let client: Client
@@ -130,7 +135,7 @@ public class SlackWebAPI {
     }
     
     public func channelInfo(id: String, success: ((channel: Channel?)->Void)?, failure: FailureClosure?) {
-        info(.ChannelsInfo, id: id, success: {
+        info(.ChannelsInfo, type:ChannelType.Channel, id: id, success: {
             (channel) -> Void in
                 success?(channel: channel)
             }) { (error) -> Void in
@@ -139,7 +144,7 @@ public class SlackWebAPI {
     }
     
     public func channelsList(excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
-        list(.ChannelsList, excludeArchived: excludeArchived, success: {
+        list(.ChannelsList, type:ChannelType.Channel, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
             }) {(error) -> Void in
@@ -255,7 +260,7 @@ public class SlackWebAPI {
     }
     
     public func groupInfo(id: String, success: ((channel: Channel?)->Void)?, failure: FailureClosure?) {
-        info(.GroupsInfo, id: id, success: {
+        info(.GroupsInfo, type:ChannelType.Group, id: id, success: {
             (channel) -> Void in
                 success?(channel: channel)
             }) {(error) -> Void in
@@ -264,7 +269,7 @@ public class SlackWebAPI {
     }
     
     public func groupsList(excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
-        list(.GroupsList, excludeArchived: excludeArchived, success: {
+        list(.GroupsList, type:ChannelType.Group, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
             }) {(error) -> Void in
@@ -329,7 +334,7 @@ public class SlackWebAPI {
     }
     
     public func imsList(excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
-        list(.IMList, excludeArchived: excludeArchived, success: {
+        list(.IMList, type:ChannelType.IM, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
             }) {(error) -> Void in
@@ -377,7 +382,7 @@ public class SlackWebAPI {
     }
     
     public func mpimsList(excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
-        list(.MPIMList, excludeArchived: excludeArchived, success: {
+        list(.MPIMList, type:ChannelType.Group, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
             }) {(error) -> Void in
@@ -578,21 +583,21 @@ public class SlackWebAPI {
         }
     }
     
-    private func info(endpoint: SlackAPIEndpoint, id: String, success: ((channel: Channel?)->Void)?, failure: FailureClosure?) {
+    private func info(endpoint: SlackAPIEndpoint, type: ChannelType, id: String, success: ((channel: Channel?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": id]
         client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
-                success?(channel: Channel(channel: response["channel"] as? [String: AnyObject]))
+                success?(channel: Channel(channel: response[type.rawValue] as? [String: AnyObject]))
             }) {(error) -> Void in
                 failure?(error: error)
         }
     }
     
-    private func list(endpoint: SlackAPIEndpoint, excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
+    private func list(endpoint: SlackAPIEndpoint, type: ChannelType, excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["exclude_archived": excludeArchived]
         client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
-                success?(channels: response["channels"] as? [[String: AnyObject]])
+                success?(channels: response[type.rawValue+"s"] as? [[String: AnyObject]])
             }) {(error) -> Void in
                 failure?(error: error)
         }
