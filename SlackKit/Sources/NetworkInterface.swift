@@ -118,8 +118,8 @@ internal struct NetworkInterface {
     private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
         var requestString = ""
         for key in parameters.keys {
-            if let value = parameters[key] as? String {
-                requestString = requestString + "&\(key)=\(value)"
+            if let value = parameters[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
+                requestString = requestString + "&"+key+"="+encodedValue
             }
         }
         
