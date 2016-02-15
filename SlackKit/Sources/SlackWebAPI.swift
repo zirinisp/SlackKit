@@ -496,7 +496,7 @@ public class SlackWebAPI {
 
     
     //MARK: - Team
-    public func getTeamInfo(success: (info: [String: AnyObject]?)->Void, failure: (error: SlackError)->Void) {
+    public func teamInfo(success: (info: [String: AnyObject]?)->Void, failure: (error: SlackError)->Void) {
         client.api.request(.TeamInfo, token: client.token, parameters: nil, successClosure: {
             (response) -> Void in
                 success(info: response["team"] as? [String: AnyObject])
@@ -506,7 +506,7 @@ public class SlackWebAPI {
     }
     
     //MARK: - Users
-    public func getUserPresence(user: String, success: (presence: String?)->Void, failure: (error: SlackError)->Void) {
+    public func userPresence(user: String, success: (presence: String?)->Void, failure: (error: SlackError)->Void) {
         let parameters: [String: AnyObject] = ["user":user]
         client.api.request(.UsersGetPresence, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
@@ -516,7 +516,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func getUserInfo(id: String, success: (user: User?)->Void, failure: (error: SlackError)->Void) {
+    public func userInfo(id: String, success: (user: User?)->Void, failure: (error: SlackError)->Void) {
         let parameters: [String: AnyObject] = ["user":id]
         client.api.request(.UsersInfo, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
@@ -526,7 +526,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func getUserList(includePresence: Bool = false, success: (userList: [[String: AnyObject]]?)->Void, failure: (error: SlackError)->Void) {
+    public func userList(includePresence: Bool = false, success: (userList: [[String: AnyObject]]?)->Void, failure: (error: SlackError)->Void) {
         let parameters: [String: AnyObject] = ["presence":includePresence]
         client.api.request(.UsersList, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
