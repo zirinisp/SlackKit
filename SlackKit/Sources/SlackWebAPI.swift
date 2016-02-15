@@ -223,10 +223,9 @@ public class SlackWebAPI {
         }
     }
     
-    public func uploadFile(file: NSData, filename: String, content: NSData? = nil, filetype: String = "auto", title: String? = nil, initialComment: String? = nil, channels: [String]? = nil, success: (file: File?)->Void, failure: (error: SlackError)->Void) {
-        //TODO: BROKEN, FIX THIS
-        let parameters: [String: AnyObject?] = ["file":file, "filename": filename, "filetype":filetype, "content":content, "title":title, "initial_comment":initialComment, "channels":channels?.joinWithSeparator(",")]
-        client.api.request(.FilesUpload, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+    public func uploadFile(file: NSData, filename: String, filetype: String = "auto", title: String? = nil, initialComment: String? = nil, channels: [String]? = nil, success: (file: File?)->Void, failure: (error: SlackError)->Void) {
+        let parameters: [String: AnyObject?] = ["file":file, "filename": filename, "filetype":filetype, "title":title, "initial_comment":initialComment, "channels":channels?.joinWithSeparator(",")]
+        client.api.uploadRequest(client.token, data: file, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success(file: File(file: response["file"] as? [String: AnyObject]))
             }) {(error) -> Void in

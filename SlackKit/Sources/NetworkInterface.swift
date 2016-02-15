@@ -59,6 +59,62 @@ internal struct NetworkInterface {
         }.resume()
     }
     
+    internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+        var requestString = "\(apiUrl)\(SlackAPIEndpoint.FilesUpload.rawValue)?token=\(token)"
+        if let params = parameters {
+            requestString = requestString + requestStringFromParameters(params)
+        }
+        
+        let request = NSMutableURLRequest(URL: NSURL(string: requestString)!)
+        request.HTTPMethod = "POST"
+        let boundaryConstant = randomBoundary()
+        let contentType = "multipart/form-data; boundary=" + boundaryConstant
+        let boundaryStart = "--\(boundaryConstant)\r\n"
+        let boundaryEnd = "--\(boundaryConstant)--\r\n"
+        let contentDispositionString = "Content-Disposition: form-data; name=\"file\"; filename=\"\(parameters!["filename"])\"\r\n"
+        let contentTypeString = "Content-Type: \(parameters!["filetype"])\r\n\r\n"
+
+        let requestBodyData : NSMutableData = NSMutableData()
+        requestBodyData.appendData(boundaryStart.dataUsingEncoding(NSUTF8StringEncoding)!)
+        requestBodyData.appendData(contentDispositionString.dataUsingEncoding(NSUTF8StringEncoding)!)
+        requestBodyData.appendData(contentTypeString.dataUsingEncoding(NSUTF8StringEncoding)!)
+        requestBodyData.appendData(data)
+        requestBodyData.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        requestBodyData.appendData(boundaryEnd.dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = requestBodyData
+
+        NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            (data, response, internalError) -> Void in
+            guard let data = data else {
+                return
+            }
+            do {
+                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
+                if (result["ok"] as! Bool == true) {
+                    successClosure(result)
+                } else {
+                    if let errorString = result["error"] as? String {
+                        throw ErrorDispatcher.dispatch(errorString)
+                    } else {
+                        throw SlackError.UnknownError
+                    }
+                }
+            } catch let error {
+                if let slackError = error as? SlackError {
+                    errorClosure(slackError)
+                } else {
+                    errorClosure(SlackError.UnknownError)
+                }
+            }
+            }.resume()
+    }
+    
+    private func randomBoundary() -> String {
+        return String(format: "slackkit.boundary.%08x%08x", arc4random(), arc4random())
+    }
+    
     private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
         var requestString = ""
         for key in parameters.keys {
