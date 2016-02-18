@@ -1,10 +1,10 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
 ##iOS/OS X Slack Client Library
 ###Description
-This is a Slack client library for iOS and OS X written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm).
+This is a Slack client library for iOS and OS X written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
 ###Installation
-####Swift Package Manager (Swift 2.2 and up)
+####Swift Package Manager
 Add SlackKit to your Package.swift
 
 ```swift
@@ -37,17 +37,88 @@ import SlackKit
 ###Usage
 To use SlackKit you'll need a bearer token which identifies a single user. You can generate a [full access token or create one using OAuth 2](https://api.slack.com/web).
 
-Once you have a token, give it to the Client:
+Once you have a token, initialize a client instance using it:
 ```swift
-Client.sharedInstance.setAuthToken("YOUR_SLACK_AUTH_TOKEN")
+let client = Client(apiToken: "YOUR_SLACK_API_TOKEN")
+
 ```
-and connect:
+
+If you want to receive messages from the Slack RTM API, connect to it.
 ```swift
-Client.sharedInstance.connect()
+client.connect()
 ```
+
 Once connected, the client will begin to consume any messages sent by the Slack RTM API.
 
+####Web API Methods
+SlackKit currently supports the a subset of the Slack Web APIs that is available to bot users:
+
+- api.test
+- auth.test
+- channels.history
+- channels.info
+- channels.list
+- channels.mark
+- channels.setPurpose
+- channels.setTopic
+- chat.delete
+- chat.postMessage
+- chat.update
+- emoji.list
+- files.delete
+- files.upload
+- groups.close
+- groups.history
+- groups.info
+- groups.list
+- groups.mark
+- groups.open
+- groups.setPurpose
+- groups.setTopic
+- im.close
+- im.history
+- im.list
+- im.mark
+- im.open
+- mpim.close
+- mpim.history
+- mpim.list
+- mpim.mark
+- mpim.open
+- pins.add
+- pins.list
+- pins.remove
+- reactions.add
+- reactions.get
+- reactions.list
+- reactions.remove
+- rtm.start
+- stars.add
+- stars.remove
+- team.info
+- users.getPresence
+- users.info
+- users.list
+- users.setActive
+- users.setPresence
+
+They can be accessed through a Client object’s `webAPI` property:
+```swift
+client.webAPI.authenticationTest({
+(authenticated) -> Void in
+		print(authenticated)
+	}){(error) -> Void in
+	    print(error)
+}
+```
+
 ####Delegate methods
+
+To receive delegate callbacks for certain events, register an object as the delegate for those events:
+```swift
+client.slackEventsDelegate = self
+```
+
 There are a number of delegates that you can set to receive callbacks for certain events.
 
 #####SlackEventsDelegate
@@ -136,18 +207,6 @@ func teamEmojiChanged()
 func subteamEvent(userGroup: UserGroup)
 func subteamSelfAdded(subteamID: String)
 func subteamSelfRemoved(subteamID: String)
-```
-
-###Examples
-####Sending a Message:
-```swift
-Client.sharedInstance.sendMessage(message: "Hello, world!", channelID: "CHANNEL_ID")
-```
-
-####Print a List of Users in a Channel:
-```swift
-let users = Client.sharedInstance.channels?["CHANNEL_ID"]?.members
-print(users)
 ```
 
 ###Get In Touch

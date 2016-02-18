@@ -57,19 +57,22 @@ public class Client: WebSocketDelegate {
         self.token = token
     }
     
-    public var webAPI: SlackWebAPI?
+    public var webAPI: SlackWebAPI {
+        return SlackWebAPI(client: self)
+    }
 
     internal var webSocket: WebSocket?
     private var dispatcher: EventDispatcher?
     
     internal let api = NetworkInterface()
     
-    required public init() {}
+    required public init(apiToken: String) {
+        self.token = apiToken
+    }
     
     public func connect() {
         dispatcher = EventDispatcher(client: self)
-        webAPI = SlackWebAPI(client: self)
-        webAPI?.rtmStart(success: {
+        webAPI.rtmStart(success: {
             (response) -> Void in
             self.initialSetup(response)
             if let socketURL = response["url"] as? String {
