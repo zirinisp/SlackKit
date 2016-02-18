@@ -152,10 +152,10 @@ public class SlackWebAPI {
         }
     }
     
-    public func markChannel(channel: String, timestamp: String, success: ((marked: Bool)->Void)?, failure: FailureClosure?) {
+    public func markChannel(channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
         mark(.ChannelsMark, channel: channel, timestamp: timestamp, success: {
-            (marked) -> Void in
-                success?(marked:marked)
+            (ts) -> Void in
+                success?(ts:timestamp)
             }) {(error) -> Void in
                 failure?(error: error)
         }
@@ -277,10 +277,10 @@ public class SlackWebAPI {
         }
     }
     
-    public func markGroup(channel: String, timestamp: String, success: ((marked: Bool)->Void)?, failure: FailureClosure?) {
+    public func markGroup(channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
         mark(.GroupsMark, channel: channel, timestamp: timestamp, success: {
-            (marked) -> Void in
-                success?(marked: marked)
+            (ts) -> Void in
+                success?(ts: timestamp)
             }) {(error) -> Void in
                 failure?(error: error)
         }
@@ -342,10 +342,10 @@ public class SlackWebAPI {
         }
     }
     
-    public func markIM(channel: String, timestamp: String, success: ((marked: Bool)->Void)?, failure: FailureClosure?) {
+    public func markIM(channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
         mark(.IMMark, channel: channel, timestamp: timestamp, success: {
-            (marked) -> Void in
-                success?(marked: marked)
+            (ts) -> Void in
+                success?(ts: timestamp)
             }) {(error) -> Void in
                 failure?(error: error)
         }
@@ -390,21 +390,21 @@ public class SlackWebAPI {
         }
     }
     
-    public func markMPIM(channel: String, timestamp: String, success: ((marked: Bool)->Void)?, failure: FailureClosure?) {
+    public func markMPIM(channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
         mark(.MPIMMark, channel: channel, timestamp: timestamp, success: {
-            (marked) -> Void in
-                success?(marked: marked)
+            (ts) -> Void in
+                success?(ts: timestamp)
             }) {(error) -> Void in
                 failure?(error: error)
         }
     }
     
-    public func openMPIM(userIDs: [String], success: ((imID: String?)->Void)?, failure: FailureClosure?) {
+    public func openMPIM(userIDs: [String], success: ((mpimID: String?)->Void)?, failure: FailureClosure?) {
         let parameters = ["users":userIDs.joinWithSeparator(",")]
         client.api.request(.MPIMOpen, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
                 let group = response["group"] as? [String: AnyObject]
-                success?(imID: group?["id"] as? String)
+                success?(mpimID: group?["id"] as? String)
             }) {(error) -> Void in
                 failure?(error: error)
         }
@@ -452,7 +452,7 @@ public class SlackWebAPI {
     
     // One of file, file_comment, or the combination of channel and timestamp must be specified.
     public func removeReaction(name: String, file: String? = nil, fileComment: String? = nil, channel: String? = nil, timestamp: String? = nil, success: ((unreacted: Bool)->Void)?, failure: FailureClosure?) {
-        react(.ReactionsAdd, name: name, file: file, fileComment: fileComment, channel: channel, timestamp: timestamp, success: {
+        react(.ReactionsRemove, name: name, file: file, fileComment: fileComment, channel: channel, timestamp: timestamp, success: {
             (ok) -> Void in
                 success?(unreacted: ok)
             }) {(error) -> Void in
@@ -473,7 +473,7 @@ public class SlackWebAPI {
     //MARK: - Stars
     // One of file, file_comment, channel, or the combination of channel and timestamp must be specified.
     public func addStar(file: String? = nil, fileComment: String? = nil, channel: String?  = nil, timestamp: String? = nil, success: ((starred: Bool)->Void)?, failure: FailureClosure?) {
-        star(.StarsRemove, file: file, fileComment: fileComment, channel: channel, timestamp: timestamp, success: {
+        star(.StarsAdd, file: file, fileComment: fileComment, channel: channel, timestamp: timestamp, success: {
             (ok) -> Void in
                 success?(starred: ok)
             }) {(error) -> Void in
@@ -533,7 +533,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func userList(includePresence: Bool = false, success: ((userList: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
+    public func usersList(includePresence: Bool = false, success: ((userList: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["presence":includePresence]
         client.api.request(.UsersList, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
@@ -603,11 +603,11 @@ public class SlackWebAPI {
         }
     }
     
-    private func mark(endpoint: SlackAPIEndpoint, channel: String, timestamp: String, success: ((marked: Bool)->Void)?, failure: FailureClosure?) {
+    private func mark(endpoint: SlackAPIEndpoint, channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": channel, "ts": timestamp]
         client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
-                success?(marked: true)
+                success?(ts: timestamp)
             }) {(error) -> Void in
                 failure?(error: error)
         }

@@ -49,7 +49,7 @@ extension Client {
         if let channel = channel {
             success(imID: channel.0)
         } else {
-            slackWebAPI?.openIM(id, success: success, failure: failure)
+            webAPI?.openIM(id, success: success, failure: failure)
         }
     }
     
@@ -65,7 +65,7 @@ extension Client {
     
 }
 
-extension String {
+internal extension String {
     
     func slackFormatEscaping() -> String {
         var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
@@ -73,4 +73,13 @@ extension String {
         escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
         return escapedString
     }
+
+}
+
+public extension NSDate {
+    
+    func slackTimestamp() -> String {
+        return NSNumber(double: timeIntervalSince1970).stringValue
+    }
+
 }
