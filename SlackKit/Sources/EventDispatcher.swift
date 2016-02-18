@@ -137,7 +137,7 @@ internal class EventDispatcher {
                 // Not implemented per Slack documentation.
                 break
             case .TeamMigrationStarted:
-                Client.sharedInstance.connect()
+                client.connect()
             case .SubteamCreated, .SubteamUpdated:
                 handler.subteam(event)
             case .SubteamSelfAdded:

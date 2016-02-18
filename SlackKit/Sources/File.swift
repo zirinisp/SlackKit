@@ -22,7 +22,7 @@
 // THE SOFTWARE.
 
 public struct File {
-    
+
     public let id: String?
     public let created: Int?
     public let name: String?
@@ -36,8 +36,6 @@ public struct File {
     public let isExternal: Bool?
     public let externalType: String?
     public let size: Int?
-    public let url: String?
-    public let urlDownload: String?
     public let urlPrivate: String?
     public let urlPrivateDownload: String?
     public let thumb64: String?
@@ -78,8 +76,6 @@ public struct File {
         isExternal = file?["is_external"] as? Bool
         externalType = file?["external_type"] as? String
         size = file?["size"] as? Int
-        url = file?["url"] as? String
-        urlDownload = file?["url_download"] as? String
         urlPrivate = file?["url_private"] as? String
         urlPrivateDownload = file?["url_private_download"] as? String
         thumb64 = file?["thumb_64"] as? String
@@ -122,8 +118,6 @@ public struct File {
         isExternal = nil
         externalType = nil
         size = nil
-        url = nil
-        urlDownload = nil
         urlPrivate = nil
         urlPrivateDownload = nil
         thumb64 = nil

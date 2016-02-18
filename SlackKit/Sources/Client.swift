@@ -50,42 +50,38 @@ public class Client: WebSocketDelegate {
     public var reactionEventsDelegate: ReactionEventsDelegate?
     public var teamEventsDelegate: TeamEventsDelegate?
     public var subteamEventsDelegate: SubteamEventsDelegate?
+    
+    internal var token = "SLACK_AUTH_TOKEN"
 
-    private var token = "SLACK_AUTH_TOKEN"
     public func setAuthToken(token: String) {
         self.token = token
     }
     
-    private var webSocket: WebSocket?
-    private var dispatcher: EventDispatcher?
+    public var webAPI: SlackWebAPI {
+        return SlackWebAPI(client: self)
+    }
 
-    required public init() {
+    internal var webSocket: WebSocket?
+    private var dispatcher: EventDispatcher?
+    
+    internal let api = NetworkInterface()
+    
+    required public init(apiToken: String) {
+        self.token = apiToken
     }
     
-    public static let sharedInstance = Client()
-    
-    //MARK: - Connection
     public func connect() {
         dispatcher = EventDispatcher(client: self)
-        let request = NSURLRequest(URL: NSURL(string:"https://slack.com/api/rtm.start?token="+token)!)
-        NSURLConnection.sendAsynchronousRequest(request, queue: NSOperationQueue.currentQueue()!) {
-            (response, data, error) -> Void in
-            guard let data = data else {
-                return
+        webAPI.rtmStart(success: {
+            (response) -> Void in
+            self.initialSetup(response)
+            if let socketURL = response["url"] as? String {
+                let url = NSURL(string: socketURL)
+                self.webSocket = WebSocket(url: url!)
+                self.webSocket?.delegate = self
+                self.webSocket?.connect()
             }
-            do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
-                if (result["ok"] as! Bool == true) {
-                    self.initialSetup(result)
-                    let socketURL = NSURL(string: result["url"] as! String)
-                    self.webSocket = WebSocket(url: socketURL!)
-                    self.webSocket?.delegate = self
-                    self.webSocket?.connect()
-                }
-            } catch _ {
-                print(error)
-            }
-        }
+            }, failure:nil)
     }
     
     //MARK: - Message send
@@ -93,7 +89,7 @@ public class Client: WebSocketDelegate {
         if (connected) {
             if let data = formatMessageToSlackJsonString(msg: message, channel: channelID) {
                 let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-                self.webSocket?.writeString(string as! String)
+                webSocket?.writeString(string as! String)
             }
         }
     }
@@ -103,7 +99,7 @@ public class Client: WebSocketDelegate {
             "id": NSDate().timeIntervalSince1970,
             "type": "message",
             "channel": message.channel,
-            "text": slackFormatEscaping(message.msg)
+            "text": message.msg.slackFormatEscaping()
         ]
         addSentMessage(json)
         do {
@@ -124,15 +120,8 @@ public class Client: WebSocketDelegate {
         sentMessages[ts!.stringValue] = Message(message: message)
     }
     
-    private func slackFormatEscaping(string: String) -> String {
-        var escapedString = string.stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = escapedString.stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = escapedString.stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
-    }
-    
     //MARK: - Client setup
-    private func initialSetup(json: [String: AnyObject]) {
+    internal func initialSetup(json: [String: AnyObject]) {
         team = Team(team: json["team"] as? [String: AnyObject])
         authenticatedUser = User(user: json["self"] as? [String: AnyObject])
         authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: AnyObject])
@@ -145,7 +134,7 @@ public class Client: WebSocketDelegate {
         enumerateSubteams(json["subteams"] as? [String: AnyObject])
     }
     
-    private func enumerateUsers(users: [AnyObject]?) {
+    internal func enumerateUsers(users: [AnyObject]?) {
         if let users = users {
             for user in users {
                 let u = User(user: user as? [String: AnyObject])
@@ -154,7 +143,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateChannels(channels: [AnyObject]?) {
+    internal func enumerateChannels(channels: [AnyObject]?) {
         if let channels = channels {
             for channel in channels {
                 let c = Channel(channel: channel as? [String: AnyObject])
@@ -163,7 +152,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateGroups(groups: [AnyObject]?) {
+    internal func enumerateGroups(groups: [AnyObject]?) {
         if let groups = groups {
             for group in groups {
                 let g = Channel(channel: group as? [String: AnyObject])
@@ -172,7 +161,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateIMs(ims: [AnyObject]?) {
+    internal func enumerateIMs(ims: [AnyObject]?) {
         if let ims = ims {
             for im in ims {
                 let i = Channel(channel: im as? [String: AnyObject])
@@ -181,7 +170,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateMPIMs(mpims: [AnyObject]?) {
+    internal func enumerateMPIMs(mpims: [AnyObject]?) {
         if let mpims = mpims {
             for mpim in mpims {
                 let m = Channel(channel: mpim as? [String: AnyObject])
@@ -190,7 +179,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateBots(bots: [AnyObject]?) {
+    internal func enumerateBots(bots: [AnyObject]?) {
         if let bots = bots {
             for bot in bots {
                 let b = Bot(bot: bot as? [String: AnyObject])
@@ -199,7 +188,7 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    private func enumerateSubteams(subteams: [String: AnyObject]?) {
+    internal func enumerateSubteams(subteams: [String: AnyObject]?) {
         if let subteams = subteams {
             if let all = subteams["all"] as? [[String: AnyObject]] {
                 for item in all {
@@ -217,8 +206,7 @@ public class Client: WebSocketDelegate {
     }
     
     // MARK: - WebSocketDelegate
-    public func websocketDidConnect(socket: WebSocket) {
-    }
+    public func websocketDidConnect(socket: WebSocket) {}
     
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         connected = false
@@ -241,7 +229,6 @@ public class Client: WebSocketDelegate {
         }
     }
     
-    public func websocketDidReceiveData(socket: WebSocket, data: NSData) {
-    }
+    public func websocketDidReceiveData(socket: WebSocket, data: NSData) {}
     
 }
