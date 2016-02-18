@@ -51,7 +51,7 @@ client.connect()
 Once connected, the client will begin to consume any messages sent by the Slack RTM API.
 
 ####Web API Methods
-SlackKit currently supports the a subset of the Slack Web APIs that is available to bot users:
+SlackKit currently supports the a subset of the Slack Web APIs that are available to bot users:
 
 - api.test
 - auth.test
