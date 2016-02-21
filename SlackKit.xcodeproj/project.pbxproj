@@ -8,6 +8,9 @@
 
 /* Begin PBXBuildFile section */
 		2601D61B1C7646B80012BF22 /* SlackWebAPIErrorDispatcher.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2601D61A1C7646B80012BF22 /* SlackWebAPIErrorDispatcher.swift */; };
+		2601D6271C7688610012BF22 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2601D6261C7688610012BF22 /* AppDelegate.swift */; };
+		2601D6291C7688610012BF22 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 2601D6281C7688610012BF22 /* Assets.xcassets */; };
+		2601D62C1C7688610012BF22 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 2601D62A1C7688610012BF22 /* MainMenu.xib */; };
 		260EC2331C4DC61D0093B253 /* ClientExtensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260EC2301C4DC61D0093B253 /* ClientExtensions.swift */; };
 		260EC2341C4DC61D0093B253 /* NetworkInterface.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260EC2311C4DC61D0093B253 /* NetworkInterface.swift */; };
 		260EC2351C4DC61D0093B253 /* SlackWebAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = 260EC2321C4DC61D0093B253 /* SlackWebAPI.swift */; };
@@ -29,6 +32,11 @@
 
 /* Begin PBXFileReference section */
 		2601D61A1C7646B80012BF22 /* SlackWebAPIErrorDispatcher.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = SlackWebAPIErrorDispatcher.swift; path = Sources/SlackWebAPIErrorDispatcher.swift; sourceTree = "<group>"; };
+		2601D6241C7688610012BF22 /* OSX-Sample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "OSX-Sample.app"; sourceTree = BUILT_PRODUCTS_DIR; };
+		2601D6261C7688610012BF22 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		2601D6281C7688610012BF22 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		2601D62B1C7688610012BF22 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/MainMenu.xib; sourceTree = "<group>"; };
+		2601D62D1C7688610012BF22 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		26072A341BB48B3A00CD650C /* SlackKit.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = SlackKit.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		260EC2301C4DC61D0093B253 /* ClientExtensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = ClientExtensions.swift; path = Sources/ClientExtensions.swift; sourceTree = "<group>"; };
 		260EC2311C4DC61D0093B253 /* NetworkInterface.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = NetworkInterface.swift; path = Sources/NetworkInterface.swift; sourceTree = "<group>"; };
@@ -54,6 +62,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		2601D6211C7688610012BF22 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26072A301BB48B3A00CD650C /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -74,10 +89,22 @@
 			name = Pods;
 			sourceTree = "<group>";
 		};
+		2601D6251C7688610012BF22 /* OSX-Sample */ = {
+			isa = PBXGroup;
+			children = (
+				2601D6261C7688610012BF22 /* AppDelegate.swift */,
+				2601D6281C7688610012BF22 /* Assets.xcassets */,
+				2601D62A1C7688610012BF22 /* MainMenu.xib */,
+				2601D62D1C7688610012BF22 /* Info.plist */,
+			);
+			path = "OSX-Sample";
+			sourceTree = "<group>";
+		};
 		26072A2A1BB48B3A00CD650C = {
 			isa = PBXGroup;
 			children = (
 				2661A6811BBF60E60026F67B /* SlackKit */,
+				2601D6251C7688610012BF22 /* OSX-Sample */,
 				26072A351BB48B3A00CD650C /* Products */,
 				0C2928E508A686B69F9F0117 /* Pods */,
 				CA70A3A1A9A1A259960DFBCF /* Frameworks */,
@@ -88,6 +115,7 @@
 			isa = PBXGroup;
 			children = (
 				26072A341BB48B3A00CD650C /* SlackKit.framework */,
+				2601D6241C7688610012BF22 /* OSX-Sample.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -139,6 +167,23 @@
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
+		2601D6231C7688610012BF22 /* OSX-Sample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 2601D62E1C7688610012BF22 /* Build configuration list for PBXNativeTarget "OSX-Sample" */;
+			buildPhases = (
+				2601D6201C7688610012BF22 /* Sources */,
+				2601D6211C7688610012BF22 /* Frameworks */,
+				2601D6221C7688610012BF22 /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = "OSX-Sample";
+			productName = "OSX-Sample";
+			productReference = 2601D6241C7688610012BF22 /* OSX-Sample.app */;
+			productType = "com.apple.product-type.application";
+		};
 		26072A331BB48B3A00CD650C /* SlackKit */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 26072A3C1BB48B3B00CD650C /* Build configuration list for PBXNativeTarget "SlackKit" */;
@@ -165,10 +210,13 @@
 		26072A2B1BB48B3A00CD650C /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 0700;
+				LastSwiftUpdateCheck = 0720;
 				LastUpgradeCheck = 0700;
 				ORGANIZATIONNAME = "Launch Software LLC";
 				TargetAttributes = {
+					2601D6231C7688610012BF22 = {
+						CreatedOnToolsVersion = 7.2.1;
+					};
 					26072A331BB48B3A00CD650C = {
 						CreatedOnToolsVersion = 7.0;
 					};
@@ -180,6 +228,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = 26072A2A1BB48B3A00CD650C;
 			productRefGroup = 26072A351BB48B3A00CD650C /* Products */;
@@ -187,11 +236,21 @@
 			projectRoot = "";
 			targets = (
 				26072A331BB48B3A00CD650C /* SlackKit */,
+				2601D6231C7688610012BF22 /* OSX-Sample */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		2601D6221C7688610012BF22 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2601D6291C7688610012BF22 /* Assets.xcassets in Resources */,
+				2601D62C1C7688610012BF22 /* MainMenu.xib in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26072A321BB48B3A00CD650C /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -235,6 +294,14 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		2601D6201C7688610012BF22 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				2601D6271C7688610012BF22 /* AppDelegate.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		26072A2F1BB48B3A00CD650C /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -261,7 +328,44 @@
 		};
 /* End PBXSourcesBuildPhase section */
 
+/* Begin PBXVariantGroup section */
+		2601D62A1C7688610012BF22 /* MainMenu.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				2601D62B1C7688610012BF22 /* Base */,
+			);
+			name = MainMenu.xib;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
 /* Begin XCBuildConfiguration section */
+		2601D62F1C7688610012BF22 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "OSX-Sample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "LS.OSX-Sample";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Debug;
+		};
+		2601D6301C7688610012BF22 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "-";
+				COMBINE_HIDPI_IMAGES = YES;
+				INFOPLIST_FILE = "OSX-Sample/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = "LS.OSX-Sample";
+				PRODUCT_NAME = "$(TARGET_NAME)";
+			};
+			name = Release;
+		};
 		26072A3A1BB48B3B00CD650C /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
@@ -390,6 +494,14 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		2601D62E1C7688610012BF22 /* Build configuration list for PBXNativeTarget "OSX-Sample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				2601D62F1C7688610012BF22 /* Debug */,
+				2601D6301C7688610012BF22 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+		};
 		26072A2E1BB48B3A00CD650C /* Build configuration list for PBXProject "SlackKit" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

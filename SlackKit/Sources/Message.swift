@@ -53,6 +53,7 @@ public class Message {
     public let comment: Comment?
     public let file: File?
     internal(set) public var reactions = [String: Reaction]()
+    internal(set) public var attachments: [Attachment] = []
     
     init?(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
@@ -76,13 +77,34 @@ public class Message {
         pinnedTo = message?["pinned_to"] as? [String]
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
-        if let messageReactions = message?["reactions"] as? [[String: AnyObject]] {
-            for react in messageReactions {
-                let reaction = Reaction(reaction: react)
-                self.reactions[reaction!.name!] = reaction
+        reactions = messageReactions(message?["reactions"] as? [[String: AnyObject]])
+        attachments = messageAttachments(message?["attachments"] as? [[String: AnyObject]])
+    }
+    
+    private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
+        var returnValue = [String: Reaction]()
+        if let r = reactions {
+            for react in r {
+                if let reaction = Reaction(reaction: react), reactionName = reaction.name {
+                    returnValue[reactionName] = reaction
+                }
             }
         }
+        return returnValue
     }
+    
+    private func messageAttachments(attachments: [[String: AnyObject]]?) -> [Attachment] {
+        var returnValue:[Attachment] = []
+        if let a = attachments {
+            for attachment in a {
+                if let attachment = Attachment(attachment: attachment) {
+                    returnValue.append(attachment)
+                }
+            }
+        }
+        return returnValue
+    }
+    
 }
 
 extension Message: Equatable {}
