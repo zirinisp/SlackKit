@@ -189,8 +189,8 @@ public class SlackWebAPI {
         }
     }
     
-    public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool = false, parse: ParseMode = .Full, linkNames: Bool = false, attachments: [[String: AnyObject]]? = nil, unfurlLinks: Bool = false, unfurlMedia: Bool = false, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
-        let parameters: [String: AnyObject?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":attachments, "icon_url":iconURL, "icon_emoji":iconEmoji]
+    public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool = false, parse: ParseMode = .Full, linkNames: Bool = false, attachments: [Attachment?]? = nil, unfurlLinks: Bool = false, unfurlMedia: Bool = false, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":encodeAttachments(attachments), "icon_url":iconURL, "icon_emoji":iconEmoji]
         client.api.request(.ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?((ts: response["ts"] as? String, response["channel"] as? String))
@@ -199,8 +199,8 @@ public class SlackWebAPI {
         }
     }
     
-    public func updateMessage(channel: String, ts: String, message: String, attachments: [[String: AnyObject]]? = nil, parse:ParseMode = .None, linkNames: Bool = false, success: ((updated: Bool)->Void)?, failure: FailureClosure?) {
-        let parameters: [String: AnyObject?] = ["channel": channel, "ts": ts, "text": message.slackFormatEscaping(), "parse": parse.rawValue, "link_names": linkNames, "attachments":attachments]
+    public func updateMessage(channel: String, ts: String, message: String, attachments: [Attachment?]? = nil, parse:ParseMode = .None, linkNames: Bool = false, success: ((updated: Bool)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["channel": channel, "ts": ts, "text": message.slackFormatEscaping(), "parse": parse.rawValue, "link_names": linkNames, "attachments":encodeAttachments(attachments)]
         client.api.request(.ChatUpdate, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(updated: true)
@@ -633,4 +633,24 @@ public class SlackWebAPI {
         }
         return finalParameters
     }
+    
+    private func encodeAttachments(attachments: [Attachment?]?) -> NSString? {
+        if let attachments = attachments {
+            var attachmentArray: [[String: AnyObject]] = []
+            for attachment in attachments {
+                if let attachment = attachment {
+                    attachmentArray.append(attachment.dictionary())
+                }
+            }
+            do {
+                let data = try NSJSONSerialization.dataWithJSONObject(attachmentArray, options: NSJSONWritingOptions.PrettyPrinted)
+                let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+                return string
+            } catch _ {
+                
+            }
+        }
+        return nil
+    }
+    
 }
