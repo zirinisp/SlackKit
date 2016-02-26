@@ -31,15 +31,17 @@ public struct Team {
     internal(set) public var overStorageLimit: Bool?
     internal(set) public var prefs: [String: AnyObject]?
     internal(set) public var plan: String?
+    internal(set) public var icon: TeamIcon?
     
     internal init?(team: [String: AnyObject]?) {
         id = team?["id"] as! String
-        name = team?["id"] as? String
+        name = team?["name"] as? String
         emailDomain = team?["email_domain"] as? String
         domain = team?["domain"] as? String
         messageEditWindowMinutes = team?["mesg_edit_window_mins"] as? Int
         overStorageLimit = team?["over_storage_limit"] as? Bool
         prefs = team?["prefs"] as? [String: AnyObject]
         plan = team?["plan"] as? String
+        icon = TeamIcon(icon: team?["icon"] as? [String: AnyObject])
     }
 }
