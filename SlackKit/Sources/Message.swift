@@ -55,7 +55,7 @@ public class Message {
     internal(set) public var reactions = [String: Reaction]()
     internal(set) public var attachments: [Attachment] = []
     
-    init?(message: [String: AnyObject]?) {
+    public init?(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
         ts = message?["ts"] as? String
         user = message?["user"] as? String
