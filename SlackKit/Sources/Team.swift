@@ -25,8 +25,8 @@ public struct Team {
     
     public let id: String
     internal(set) public var name: String?
-    internal(set) public var emailDomain: String?
     internal(set) public var domain: String?
+    internal(set) public var emailDomain: String?
     internal(set) public var messageEditWindowMinutes: Int?
     internal(set) public var overStorageLimit: Bool?
     internal(set) public var prefs: [String: AnyObject]?
@@ -36,12 +36,35 @@ public struct Team {
     internal init?(team: [String: AnyObject]?) {
         id = team?["id"] as! String
         name = team?["name"] as? String
-        emailDomain = team?["email_domain"] as? String
         domain = team?["domain"] as? String
-        messageEditWindowMinutes = team?["mesg_edit_window_mins"] as? Int
+        emailDomain = team?["email_domain"] as? String
+        messageEditWindowMinutes = team?["msg_edit_window_mins"] as? Int
         overStorageLimit = team?["over_storage_limit"] as? Bool
         prefs = team?["prefs"] as? [String: AnyObject]
         plan = team?["plan"] as? String
         icon = TeamIcon(icon: team?["icon"] as? [String: AnyObject])
     }
 }
+
+public struct TeamIcon {
+    internal(set) public var image34: String?
+    internal(set) public var image44: String?
+    internal(set) public var image68: String?
+    internal(set) public var image88: String?
+    internal(set) public var image102: String?
+    internal(set) public var image132: String?
+    internal(set) public var imageOriginal: String?
+    internal(set) public var imageDefault: Bool?
+    
+    internal init?(icon: [String: AnyObject]?) {
+        image34 = icon?["image_34"] as? String
+        image44 = icon?["image_44"] as? String
+        image68 = icon?["image_68"] as? String
+        image88 = icon?["image_88"] as? String
+        image102 = icon?["image_102"] as? String
+        image132 = icon?["image_132"] as? String
+        imageOriginal = icon?["image_original"] as? String
+        imageDefault = icon?["image_default"] as? Bool
+    }
+}
+
