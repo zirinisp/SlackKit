@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Foundation
+
 // MARK: - Edited
 public struct Edited {
     public let user: String?
@@ -29,6 +31,27 @@ public struct Edited {
     internal init?(edited:[String: AnyObject]?) {
         user = edited?["user"] as? String
         ts = edited?["ts"] as? String
+    }
+}
+
+// MARK: - History
+public struct History {
+    internal(set) public var latest: NSDate?
+    internal(set) public var messages = [Message]()
+    public let hasMore: Bool?
+    
+    internal init?(history: [String: AnyObject]?) {
+        if let latestStr = history?["latest"] as? String, latestDouble = Double(latestStr) {
+            latest = NSDate(timeIntervalSince1970: NSTimeInterval(latestDouble))
+        }
+        if let msgs = history?["messages"] as? [[String: AnyObject]] {
+            for message in msgs {
+                if let message = Message(message: message) {
+                    messages.append(message)
+                }
+            }
+        }
+        hasMore = history?["has_more"] as? Bool
     }
 }
 
