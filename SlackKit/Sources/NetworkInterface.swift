@@ -30,7 +30,7 @@ internal struct NetworkInterface {
     internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
-            requestString = requestString + requestStringFromParameters(params)
+            requestString += requestStringFromParameters(params)
         }
         let request = NSURLRequest(URL: NSURL(string: requestString)!)
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
@@ -119,7 +119,9 @@ internal struct NetworkInterface {
         var requestString = ""
         for key in parameters.keys {
             if let value = parameters[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString = requestString + "&"+key+"="+encodedValue
+                requestString += "&\(key)=\(encodedValue)"
+            } else if let value = parameters[key] as? Int {
+                requestString += "&\(key)=\(value)"
             }
         }
         
