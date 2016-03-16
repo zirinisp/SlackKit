@@ -50,6 +50,7 @@ public class Client: WebSocketDelegate {
     public var reactionEventsDelegate: ReactionEventsDelegate?
     public var teamEventsDelegate: TeamEventsDelegate?
     public var subteamEventsDelegate: SubteamEventsDelegate?
+    public var teamProfileEventsDelegate: TeamProfileEventsDelegate?
     
     internal var token = "SLACK_AUTH_TOKEN"
 

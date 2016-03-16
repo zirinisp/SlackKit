@@ -198,3 +198,76 @@ public struct DoNotDisturbStatus {
     }
     
 }
+
+// MARK - Custom Team Profile
+public struct CustomProfile {
+    internal(set) public var fields = [String: CustomProfileField]()
+    
+    internal init?(profile: [String: AnyObject]?) {
+        if let eventFields = profile?["fields"] as? [AnyObject] {
+            for field in eventFields {
+                if let cpf = CustomProfileField(field: field as? [String: AnyObject]), id = cpf.id {
+                    fields[id] = cpf
+                } else {
+                    if let cpf = CustomProfileField(id: field as? String), id = cpf.id {
+                        fields[id] = cpf
+                    }
+                }
+            }
+        }
+    }
+    
+    internal init?(customFields: [String: AnyObject]?) {
+        if let customFields = customFields {
+            for key in customFields.keys {
+                if let cpf = CustomProfileField(field: customFields[key] as? [String: AnyObject]) {
+                    self.fields[key] = cpf
+                }
+            }
+        }
+    }
+    
+}
+
+public struct CustomProfileField {
+    internal(set) public var id: String?
+    internal(set) public var alt: String?
+    internal(set) public var value: String?
+    internal(set) public var hidden: Bool?
+    internal(set) public var hint: String?
+    internal(set) public var label: String?
+    internal(set) public var options: String?
+    internal(set) public var ordering: Int?
+    internal(set) public var possibleValues: [String]?
+    internal(set) public var type: String?
+    
+    internal init?(field: [String: AnyObject]?) {
+        id = field?["id"] as? String
+        alt = field?["alt"] as? String
+        value = field?["value"] as? String
+        hidden = field?["is_hidden"] as? Bool
+        hint = field?["hint"] as? String
+        label = field?["label"] as? String
+        options = field?["options"] as? String
+        ordering = field?["ordering"] as? Int
+        possibleValues = field?["possible_values"] as? [String]
+        type = field?["type"] as? String
+    }
+    
+    internal init?(id: String?) {
+        self.id = id
+    }
+    
+    internal mutating func updateProfileField(profile: CustomProfileField?) {
+        id = profile?.id != nil ? profile?.id : id
+        alt = profile?.alt != nil ? profile?.alt : alt
+        value = profile?.value != nil ? profile?.value : value
+        hidden = profile?.hidden != nil ? profile?.hidden : hidden
+        hint = profile?.hint != nil ? profile?.hint : hint
+        label = profile?.label != nil ? profile?.label : label
+        options = profile?.options != nil ? profile?.options : options
+        ordering = profile?.ordering != nil ? profile?.ordering : ordering
+        possibleValues = profile?.possibleValues != nil ? profile?.possibleValues : possibleValues
+        type = profile?.type != nil ? profile?.type : type
+    }
+}
