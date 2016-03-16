@@ -152,6 +152,7 @@ internal struct Event {
     let file: File?
     let message: Message?
     let nestedMessage: Message?
+    let itemUser: String?
     let item: Item?
     let dndStatus: DoNotDisturbStatus?
     let subteam: UserGroup?
@@ -188,6 +189,7 @@ internal struct Event {
         bot = Bot(bot: event["bot"] as? [String: AnyObject])
         edited = Edited(edited:event["edited"] as? [String: AnyObject])
         dndStatus = DoNotDisturbStatus(status: event["dnd_status"] as? [String: AnyObject])
+        itemUser = event["item_user"] as? String
         item = Item(item: event["item"] as? [String: AnyObject])
         subteam = UserGroup(userGroup: event["subteam"] as? [String: AnyObject])
         subteamID = event["subteam_id"] as? String
