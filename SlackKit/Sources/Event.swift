@@ -78,10 +78,14 @@ internal enum EventType: String {
     case TeamRename = "team_rename"
     case TeamDomainChange = "team_domain_change"
     case EmailDomainChange = "email_domain_change"
+    case TeamProfileChange = "team_profile_change"
+    case TeamProfileDelete = "team_profile_delete"
+    case TeamProfileReorder = "team_profile_reorder"
     case BotAdded = "bot_added"
     case BotChanged = "bot_changed"
     case AccountsChanged = "accounts_changed"
     case TeamMigrationStarted = "team_migration_started"
+    case ReconnectURL = "reconnect_url"
     case SubteamCreated = "subteam_created"
     case SubteamUpdated = "subteam_updated"
     case SubteamSelfAdded = "subteam_self_added"
@@ -152,6 +156,7 @@ internal struct Event {
     let dndStatus: DoNotDisturbStatus?
     let subteam: UserGroup?
     let subteamID: String?
+    var profile: CustomProfile?
     
     init(event:[String: AnyObject]) {
         if let eventType = event["type"] as? String {
@@ -188,6 +193,7 @@ internal struct Event {
         subteamID = event["subteam_id"] as? String
         message = Message(message: event)
         nestedMessage = Message(message: event["message"] as? [String: AnyObject])
+        profile = CustomProfile(profile: event["profile"] as? [String: AnyObject])
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
         if (Comment(comment: event["comment"] as? [String: AnyObject])?.id == nil) {

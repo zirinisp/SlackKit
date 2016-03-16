@@ -39,7 +39,6 @@ internal class EventHandler {
     }
     
     //MARK: - Messages
-    
     func messageSent(event: Event) {
         if let reply = event.replyTo, message = client.sentMessages[NSNumber(double: reply).stringValue], channel = message.channel, ts = message.ts {
             message.ts = event.ts
@@ -589,6 +588,47 @@ internal class EventHandler {
             if let delegate = client.subteamEventsDelegate {
                 delegate.subteamSelfRemoved(subteamID)
             }
+        }
+    }
+    
+    //MARK: - Team Profiles
+    func teamProfileChange(event: Event) {
+        for user in client.users {
+            if let fields = event.profile?.fields {
+                for key in fields.keys {
+                    client.users[user.0]?.profile?.customProfile?.fields[key]?.updateProfileField(fields[key])
+                }
+            }
+        }
+        
+        if let delegate = client.teamProfileEventsDelegate {
+            delegate.teamProfileChanged(event.profile)
+        }
+    }
+    
+    func teamProfileDeleted(event: Event) {
+        for user in client.users {
+            if let id = event.profile?.fields.first?.0 {
+                client.users[user.0]?.profile?.customProfile?.fields[id] = nil
+            }
+        }
+        
+        if let delegate = client.teamProfileEventsDelegate {
+            delegate.teamProfileDeleted(event.profile)
+        }
+    }
+    
+    func teamProfileReordered(event: Event) {
+        for user in client.users {
+            if let keys = event.profile?.fields.keys {
+                for key in keys {
+                    client.users[user.0]?.profile?.customProfile?.fields[key]?.ordering = event.profile?.fields[key]?.ordering
+                }
+            }
+        }
+        
+        if let delegate = client.teamProfileEventsDelegate {
+            delegate.teamProfileReordered(event.profile)
         }
     }
     

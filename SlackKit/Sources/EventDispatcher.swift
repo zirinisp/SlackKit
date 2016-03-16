@@ -117,7 +117,9 @@ internal class EventDispatcher {
             case .EmojiChanged:
                 handler.emojiChanged(event)
             case .CommandsChanged:
-                // Not implemented per Slack documentation.
+                // This functionality is only used by our web client. 
+                // The other APIs required to support slash command metadata are currently unstable. 
+                // Until they are released other clients should ignore this event.
                 break
             case .TeamPlanChange:
                 handler.teamPlanChange(event)
@@ -129,15 +131,25 @@ internal class EventDispatcher {
                 handler.teamDomainChange(event)
             case .EmailDomainChange:
                 handler.emailDomainChange(event)
+            case .TeamProfileChange:
+                handler.teamProfileChange(event)
+            case .TeamProfileDelete:
+                handler.teamProfileDeleted(event)
+            case .TeamProfileReorder:
+                handler.teamProfileReordered(event)
             case .BotAdded:
                 handler.bot(event)
             case .BotChanged:
                 handler.bot(event)
             case .AccountsChanged:
-                // Not implemented per Slack documentation.
+                // The accounts_changed event is used by our web client to maintain a list of logged-in accounts.
+                // Other clients should ignore this event.
                 break
             case .TeamMigrationStarted:
                 client.connect()
+            case .ReconnectURL:
+                // The reconnect_url event is currently unsupported and experimental.
+                break
             case .SubteamCreated, .SubteamUpdated:
                 handler.subteam(event)
             case .SubteamSelfAdded:

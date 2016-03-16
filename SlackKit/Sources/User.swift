@@ -35,6 +35,7 @@ public struct User {
         internal(set) public var image48: String?
         internal(set) public var image72: String?
         internal(set) public var image192: String?
+        internal(set) public var customProfile: CustomProfile?
         
         internal init?(profile: [String: AnyObject]?) {
             firstName = profile?["first_name"] as? String
@@ -48,8 +49,10 @@ public struct User {
             image48 = profile?["image_48"] as? String
             image72 = profile?["image_72"] as? String
             image192 = profile?["image_192"] as? String
+            customProfile = CustomProfile(customFields: profile?["fields"] as? [String: AnyObject])
         }
     }
+    
     
     public let id: String?
     internal(set) public var name: String?

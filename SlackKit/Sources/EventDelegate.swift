@@ -99,3 +99,9 @@ public protocol SubteamEventsDelegate {
     func subteamSelfAdded(subteamID: String)
     func subteamSelfRemoved(subteamID: String)
 }
+
+public protocol TeamProfileEventsDelegate {
+    func teamProfileChanged(profile: CustomProfile?)
+    func teamProfileDeleted(profile: CustomProfile?)
+    func teamProfileReordered(profile: CustomProfile?)
+}
