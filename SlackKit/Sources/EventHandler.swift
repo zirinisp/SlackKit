@@ -396,7 +396,7 @@ internal class EventHandler {
             }
             
             if let delegate = client.reactionEventsDelegate {
-                delegate.reactionAdded(event.reaction, item: event.item)
+                delegate.reactionAdded(event.reaction, item: event.item, itemUser: event.itemUser)
             }
         }
     }
@@ -439,7 +439,7 @@ internal class EventHandler {
             }
             
             if let delegate = client.reactionEventsDelegate {
-                delegate.reactionAdded(event.reaction, item: event.item)
+                delegate.reactionAdded(event.reaction, item: event.item, itemUser: event.itemUser)
             }
         }
     }

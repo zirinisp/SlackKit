@@ -80,8 +80,8 @@ public protocol StarEventsDelegate {
 }
 
 public protocol ReactionEventsDelegate {
-    func reactionAdded(reaction: String?, item: Item?)
-    func reactionRemoved(reaction: String?, item: Item?)
+    func reactionAdded(reaction: String?, item: Item?, itemUser: String?)
+    func reactionRemoved(reaction: String?, item: Item?, itemUser: String?)
 }
 
 public protocol TeamEventsDelegate {
