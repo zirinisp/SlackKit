@@ -35,6 +35,8 @@ internal enum SlackAPIEndpoint: String {
     case ChatDelete = "chat.delete"
     case ChatPostMessage = "chat.postMessage"
     case ChatUpdate = "chat.update"
+    case DNDInfo = "dnd.info"
+    case DNDTeamInfo = "dnd.teamInfo"
     case EmojiList = "emoji.list"
     case FilesDelete = "files.delete"
     case FilesUpload = "files.upload"
@@ -204,6 +206,27 @@ public class SlackWebAPI {
         client.api.request(.ChatUpdate, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(updated: true)
+            }) {(error) -> Void in
+                failure?(error: error)
+        }
+    }
+    
+    //MARK: - Do Not Disturb
+    public func dndInfo(user: String?, success: ((status: DoNotDisturbStatus?)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["user": user]
+        client.api.request(.DNDInfo, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+            (response) -> Void in
+                success?(status: DoNotDisturbStatus(status: response))
+            }) {(error) -> Void in
+                failure?(error: error)
+        }
+    }
+    
+    public func dndTeamInfo(users: [String]?, success: ((statuses: [String: DoNotDisturbStatus]?)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["users": users]
+        client.api.request(.DNDTeamInfo, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+            (response) -> Void in
+                success?(statuses: self.enumerateDNDStauses(response["users"] as? [String: AnyObject]))
             }) {(error) -> Void in
                 failure?(error: error)
         }
@@ -634,6 +657,7 @@ public class SlackWebAPI {
         return finalParameters
     }
     
+    //MARK: - Encode Attachments
     private func encodeAttachments(attachments: [Attachment?]?) -> NSString? {
         if let attachments = attachments {
             var attachmentArray: [[String: AnyObject]] = []
@@ -651,6 +675,17 @@ public class SlackWebAPI {
             }
         }
         return nil
+    }
+    
+    //MARK: - Enumerate Do Not Distrub Status
+    private func enumerateDNDStauses(statuses: [String: AnyObject]?) -> [String: DoNotDisturbStatus] {
+        var retVal = [String: DoNotDisturbStatus]()
+        if let keys = statuses?.keys {
+            for key in keys {
+                retVal[key] = DoNotDisturbStatus(status: statuses?[key] as? [String: AnyObject])
+            }
+        }
+        return retVal
     }
     
 }
