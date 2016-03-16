@@ -212,7 +212,7 @@ public class SlackWebAPI {
     }
     
     //MARK: - Do Not Disturb
-    public func dndInfo(user: String?, success: ((status: DoNotDisturbStatus?)->Void)?, failure: FailureClosure?) {
+    public func dndInfo(user: String? = nil, success: ((status: DoNotDisturbStatus?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["user": user]
         client.api.request(.DNDInfo, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
@@ -222,8 +222,8 @@ public class SlackWebAPI {
         }
     }
     
-    public func dndTeamInfo(users: [String]?, success: ((statuses: [String: DoNotDisturbStatus]?)->Void)?, failure: FailureClosure?) {
-        let parameters: [String: AnyObject?] = ["users": users]
+    public func dndTeamInfo(users: [String]? = nil, success: ((statuses: [String: DoNotDisturbStatus]?)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["users":users?.joinWithSeparator(",")]
         client.api.request(.DNDTeamInfo, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(statuses: self.enumerateDNDStauses(response["users"] as? [String: AnyObject]))
