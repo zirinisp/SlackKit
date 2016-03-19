@@ -38,6 +38,9 @@ internal enum SlackAPIEndpoint: String {
     case DNDInfo = "dnd.info"
     case DNDTeamInfo = "dnd.teamInfo"
     case EmojiList = "emoji.list"
+    case FilesCommentsAdd = "files.comments.add"
+    case FilesCommentsEdit = "files.comments.edit"
+    case FilesCommentsDelete = "files.comments.delete"
     case FilesDelete = "files.delete"
     case FilesUpload = "files.upload"
     case GroupsClose = "groups.close"
@@ -258,6 +261,37 @@ public class SlackWebAPI {
         client.api.uploadRequest(client.token, data: file, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(file: File(file: response["file"] as? [String: AnyObject]))
+            }) {(error) -> Void in
+                failure?(error: error)
+        }
+    }
+    
+    //MARK: - File Comments
+    public func addFileComment(fileID: String, comment: String, success: ((comment: Comment?)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject] = ["file":fileID, "comment":comment.slackFormatEscaping()]
+        client.api.request(.FilesCommentsAdd, token: client.token, parameters: parameters, successClosure: {
+            (response) -> Void in
+                success?(comment: Comment(comment: response["comment"] as? [String: AnyObject]))
+            }) {(error) -> Void in
+                failure?(error: error)
+        }
+    }
+    
+    public func editFileComment(fileID: String, commentID: String, comment: String, success: ((comment: Comment?)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject] = ["file":fileID, "id":commentID, "comment":comment.slackFormatEscaping()]
+        client.api.request(.FilesCommentsEdit, token: client.token, parameters: parameters, successClosure: {
+            (response) -> Void in
+            success?(comment: Comment(comment: response["comment"] as? [String: AnyObject]))
+            }) {(error) -> Void in
+                failure?(error: error)
+        }
+    }
+    
+    public func deleteFileComment(fileID: String, commentID: String, success: ((deleted: Bool?)->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject] = ["file":fileID, "id": commentID]
+        client.api.request(.FilesCommentsDelete, token: client.token, parameters: parameters, successClosure: {
+            (response) -> Void in
+                success?(deleted: true)
             }) {(error) -> Void in
                 failure?(error: error)
         }
