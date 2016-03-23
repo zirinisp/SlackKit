@@ -70,6 +70,9 @@ SlackKit currently supports the a subset of the Slack Web APIs that are availabl
 - chat.postMessage
 - chat.update
 - emoji.list
+- files.comments.add
+- files.comments.edit
+- files.comments.delete
 - files.delete
 - files.upload
 - groups.close
@@ -192,8 +195,8 @@ func itemStarred(item: Item, star: Bool)
 
 #####ReactionEventsDelegate
 ```swift
-func reactionAdded(reaction: String?, item: Item?)
-func reactionRemoved(reaction: String?, item: Item?)
+func reactionAdded(reaction: String?, item: Item?, itemUser: String?)
+func reactionRemoved(reaction: String?, item: Item?, itemUser: String?)
 ```
 
 #####TeamEventsDelegate
