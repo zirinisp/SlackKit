@@ -43,7 +43,7 @@ public struct Channel {
     internal(set) public var unread: Int?
     internal(set) public var unreadCountDisplay: Int?
     internal(set) public var hasPins: Bool?
-    internal(set) public var members = [String]()
+    internal(set) public var members: [String]?
     // Client use
     internal(set) public var pinnedItems = [Item]()
     internal(set) public var usersTyping = [String]()
@@ -70,11 +70,7 @@ public struct Channel {
         unread = channel?["unread_count"] as? Int
         unreadCountDisplay = channel?["unread_count_display"] as? Int
         hasPins = channel?["has_pins"] as? Bool
-        
-        if let members = channel?["members"] as? [String] {
-            self.members = members
-        }
-        
+        members = channel?["members"] as? [String]
     }
     
     internal init?(id:String?) {

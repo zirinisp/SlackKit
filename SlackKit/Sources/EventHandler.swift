@@ -38,6 +38,11 @@ internal class EventHandler {
         }
     }
     
+    //MARK: - Pong
+    func pong(event: Event) {
+        client.pong = event.replyTo
+    }
+    
     //MARK: - Messages
     func messageSent(event: Event) {
         if let reply = event.replyTo, message = client.sentMessages[NSNumber(double: reply).stringValue], channel = message.channel, ts = message.ts {
@@ -147,8 +152,8 @@ internal class EventHandler {
     
     func channelLeft(event: Event) {
         if let channel = event.channel, id = channel.id, userID = client.authenticatedUser?.id {
-            if let index = client.channels[id]?.members.indexOf(userID) {
-                client.channels[id]?.members.removeAtIndex(index)
+            if let index = client.channels[id]?.members?.indexOf(userID) {
+                client.channels[id]?.members?.removeAtIndex(index)
                 
                 if let delegate = client.channelEventsDelegate {
                     delegate.channelLeft(channel)

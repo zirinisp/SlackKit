@@ -48,6 +48,11 @@ If you want to receive messages from the Slack RTM API, connect to it.
 client.connect()
 ```
 
+You can also set options for a ping/pong interval, timeout interval, and automatic reconnection:
+```swift
+client.connect(pingInterval: 2, timeout: 10, reconnect: false)
+```
+
 Once connected, the client will begin to consume any messages sent by the Slack RTM API.
 
 ####Web API Methods
@@ -65,6 +70,9 @@ SlackKit currently supports the a subset of the Slack Web APIs that are availabl
 - chat.postMessage
 - chat.update
 - emoji.list
+- files.comments.add
+- files.comments.edit
+- files.comments.delete
 - files.delete
 - files.upload
 - groups.close
@@ -187,8 +195,8 @@ func itemStarred(item: Item, star: Bool)
 
 #####ReactionEventsDelegate
 ```swift
-func reactionAdded(reaction: String?, item: Item?)
-func reactionRemoved(reaction: String?, item: Item?)
+func reactionAdded(reaction: String?, item: Item?, itemUser: String?)
+func reactionRemoved(reaction: String?, item: Item?, itemUser: String?)
 ```
 
 #####TeamEventsDelegate

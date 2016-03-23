@@ -62,7 +62,7 @@ public struct File {
     internal(set) public var comments = [String: Comment]()
     internal(set) public var reactions = [String: Reaction]()
     
-    init?(file:[String: AnyObject]?) {
+    public init?(file:[String: AnyObject]?) {
         id = file?["id"] as? String
         created = file?["created"] as? Int
         name = file?["name"] as? String
@@ -105,7 +105,7 @@ public struct File {
         
     }
     
-    init?(id:String?) {
+    internal init?(id:String?) {
         self.id = id
         created = nil
         name = nil
