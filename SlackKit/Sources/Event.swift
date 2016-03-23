@@ -62,6 +62,7 @@ internal enum EventType: String {
     case FileCommentDeleted = "file_comment_deleted"
     case PinAdded = "pin_added"
     case PinRemoved = "pin_removed"
+    case Pong = "pong"
     case PresenceChange = "presence_change"
     case ManualPresenceChange = "manual_presence_change"
     case PrefChange = "pref_change"

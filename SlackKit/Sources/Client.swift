@@ -53,7 +53,7 @@ public class Client: WebSocketDelegate {
     public var teamProfileEventsDelegate: TeamProfileEventsDelegate?
     
     internal var token = "SLACK_AUTH_TOKEN"
-
+    
     public func setAuthToken(token: String) {
         self.token = token
     }
@@ -63,15 +63,25 @@ public class Client: WebSocketDelegate {
     }
 
     internal var webSocket: WebSocket?
+    internal let api = NetworkInterface()
     private var dispatcher: EventDispatcher?
     
-    internal let api = NetworkInterface()
+    private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
+    internal var ping: Double?
+    internal var pong: Double?
+    
+    internal var pingInterval: NSTimeInterval?
+    internal var timeout: NSTimeInterval?
+    internal var reconnect: Bool?
     
     required public init(apiToken: String) {
         self.token = apiToken
     }
     
-    public func connect() {
+    public func connect(pingInterval pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
+        self.pingInterval = pingInterval
+        self.timeout = timeout
+        self.reconnect = reconnect
         dispatcher = EventDispatcher(client: self)
         webAPI.rtmStart(success: {
             (response) -> Void in
@@ -83,6 +93,10 @@ public class Client: WebSocketDelegate {
                 self.webSocket?.connect()
             }
             }, failure:nil)
+    }
+    
+    public func disconnect() {
+        webSocket?.disconnect()
     }
     
     //MARK: - Message send
@@ -97,7 +111,7 @@ public class Client: WebSocketDelegate {
     
     private func formatMessageToSlackJsonString(message: (msg: String, channel: String)) -> NSData? {
         let json: [String: AnyObject] = [
-            "id": NSDate().timeIntervalSince1970,
+            "id": NSDate().slackTimestamp(),
             "type": "message",
             "channel": message.channel,
             "text": message.msg.slackFormatEscaping()
@@ -119,6 +133,52 @@ public class Client: WebSocketDelegate {
         message["ts"] = ts?.stringValue
         message["user"] = self.authenticatedUser?.id
         sentMessages[ts!.stringValue] = Message(message: message)
+    }
+    
+    //MARK: - RTM Ping
+    private func pingRTMServerAtInterval(interval: NSTimeInterval) {
+        let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(interval * Double(NSEC_PER_SEC)))
+        dispatch_after(delay, pingPongQueue, {
+            if self.connected && self.timeoutCheck() {
+                self.sendRTMPing()
+                self.pingRTMServerAtInterval(interval)
+            } else {
+                self.disconnect()
+            }
+        })
+    }
+    
+    private func sendRTMPing() {
+        if connected {
+            let json: [String: AnyObject] = [
+                "id": NSDate().slackTimestamp(),
+                "type": "ping",
+            ]
+            do {
+                let data = try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted)
+                let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+                if let writePing = string as? String {
+                    ping = json["id"] as? Double
+                    webSocket?.writeString(writePing)
+                }
+            }
+            catch _ {
+                
+            }
+        }
+    }
+    
+    private func timeoutCheck() -> Bool {
+        if let pong = pong, ping = ping, timeout = timeout {
+            if pong - ping < timeout {
+                return true
+            } else {
+                return false
+            }
+        // Ping-pong or timeout not configured
+        } else {
+            return true
+        }
     }
     
     //MARK: - Client setup
@@ -207,14 +267,21 @@ public class Client: WebSocketDelegate {
     }
     
     // MARK: - WebSocketDelegate
-    public func websocketDidConnect(socket: WebSocket) {}
+    public func websocketDidConnect(socket: WebSocket) {
+        if let pingInterval = pingInterval {
+            pingRTMServerAtInterval(pingInterval)
+        }
+    }
     
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         connected = false
         authenticated = false
         webSocket = nil
-        if let delegate = slackEventsDelegate {
-            delegate.clientDisconnected()
+        dispatcher = nil
+        authenticatedUser = nil
+        slackEventsDelegate?.clientDisconnected()
+        if reconnect == true {
+            connect(pingInterval: pingInterval, timeout: timeout, reconnect: reconnect)
         }
     }
     
@@ -223,7 +290,9 @@ public class Client: WebSocketDelegate {
             return
         }
         do {
-            try dispatcher?.dispatch(NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as! [String: AnyObject])
+            if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject] {
+                dispatcher?.dispatch(json)
+            }
         }
         catch _ {
             

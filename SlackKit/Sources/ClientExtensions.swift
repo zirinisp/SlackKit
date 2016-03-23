@@ -78,8 +78,8 @@ internal extension String {
 
 public extension NSDate {
     
-    func slackTimestamp() -> String {
-        return NSNumber(double: timeIntervalSince1970).stringValue
+    func slackTimestamp() -> Double {
+        return NSNumber(double: timeIntervalSince1970).doubleValue
     }
 
 }

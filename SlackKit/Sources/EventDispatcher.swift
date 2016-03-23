@@ -96,6 +96,8 @@ internal class EventDispatcher {
                 handler.pinAdded(event)
             case .PinRemoved:
                 handler.pinRemoved(event)
+            case .Pong:
+                handler.pong(event)
             case .PresenceChange:
                 handler.presenceChange(event)
             case .ManualPresenceChange:
@@ -146,7 +148,7 @@ internal class EventDispatcher {
                 // Other clients should ignore this event.
                 break
             case .TeamMigrationStarted:
-                client.connect()
+                client.connect(client.pingInterval, timeout: client.timeout, reconnect: client.reconnect)
             case .ReconnectURL:
                 // The reconnect_url event is currently unsupported and experimental.
                 break
