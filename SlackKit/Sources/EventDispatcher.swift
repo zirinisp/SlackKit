@@ -148,7 +148,7 @@ internal class EventDispatcher {
                 // Other clients should ignore this event.
                 break
             case .TeamMigrationStarted:
-                client.connect(client.pingInterval, timeout: client.timeout, reconnect: client.reconnect)
+                client.connect(pingInterval: client.pingInterval, timeout: client.timeout, reconnect: client.reconnect)
             case .ReconnectURL:
                 // The reconnect_url event is currently unsupported and experimental.
                 break

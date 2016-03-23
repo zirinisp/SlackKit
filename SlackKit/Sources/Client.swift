@@ -103,8 +103,9 @@ public class Client: WebSocketDelegate {
     public func sendMessage(message: String, channelID: String) {
         if (connected) {
             if let data = formatMessageToSlackJsonString(msg: message, channel: channelID) {
-                let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-                webSocket?.writeString(string as! String)
+                if let string = NSString(data: data, encoding: NSUTF8StringEncoding) as? String {
+                    webSocket?.writeString(string)
+                }
             }
         }
     }

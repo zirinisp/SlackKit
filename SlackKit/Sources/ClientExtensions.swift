@@ -26,20 +26,11 @@ import Foundation
 extension Client {
     
     //MARK: - User & Channel
-    public func getChannelOrUserIdByName(name: String) -> String? {
-        if (name[name.startIndex] == "@") {
-            return getUserIdByName(name)
-        } else if (name[name.startIndex] == "C") {
-            return getChannelIDByName(name)
-        }
-        return nil
-    }
-    
     public func getChannelIDByName(name: String) -> String? {
         return channels.filter{$0.1.name == stripString(name)}.first?.0
     }
     
-    public func getUserIdByName(name: String) -> String? {
+    public func getUserIDByName(name: String) -> String? {
         return users.filter{$0.1.name == stripString(name)}.first?.0
     }
     
@@ -54,13 +45,14 @@ extension Client {
     }
     
     //MARK: - Utilities
-    internal func stripString(var string: String) -> String {
+    internal func stripString(string: String) -> String? {
+        var strippedString: String?
         if string[string.startIndex] == "@" {
-            string = string.substringFromIndex(string.startIndex.advancedBy(1))
+            strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
         } else if string[string.startIndex] == "#" {
-            string = string.substringFromIndex(string.startIndex.advancedBy(1))
+            strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
         }
-        return string
+        return strippedString
     }
     
 }
