@@ -48,6 +48,11 @@ If you want to receive messages from the Slack RTM API, connect to it.
 client.connect()
 ```
 
+You can also set options for a ping/pong interval, timeout interval, and automatic reconnection:
+```swift
+client.connect(pingInterval: 2, timeout: 10, reconnect: false)
+```
+
 Once connected, the client will begin to consume any messages sent by the Slack RTM API.
 
 ####Web API Methods
