@@ -12,7 +12,7 @@ import PackageDescription
 
 let package = Package(
     dependencies: [
-        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 0)
+        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 1)
     ]
 )
 ```
