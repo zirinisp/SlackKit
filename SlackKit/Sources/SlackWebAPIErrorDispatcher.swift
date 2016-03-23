@@ -34,6 +34,7 @@ public enum SlackError: ErrorType {
     case BadRedirectURI
     case BadTimeStamp
     case CantArchiveGeneral
+    case CantDelete
     case CantDeleteFile
     case CantDeleteMessage
     case CantInvite
@@ -75,6 +76,7 @@ public enum SlackError: ErrorType {
     case MissingPostType
     case NameTaken
     case NoChannel
+    case NoComment
     case NoItemSpecified
     case NoReaction
     case NoText
@@ -131,6 +133,8 @@ internal struct ErrorDispatcher {
             return .BadRedirectURI
         case "bad_timestamp":
             return .BadTimeStamp
+        case "cant_delete":
+            return .CantDelete
         case "cant_delete_file":
             return .CantDeleteFile
         case "cant_delete_message":
@@ -213,6 +217,8 @@ internal struct ErrorDispatcher {
             return .NameTaken
         case "no_channel":
             return .NoChannel
+        case "no_comment":
+            return .NoComment
         case "no_reaction":
             return .NoReaction
         case "no_item_specified":
