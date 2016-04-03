@@ -81,6 +81,21 @@ public class Message {
         attachments = messageAttachments(message?["attachments"] as? [[String: AnyObject]])
     }
     
+    internal init?(ts:String?) {
+        self.ts = ts
+        subtype = nil
+        user = nil
+        channel = nil
+        botID = nil
+        username = nil
+        icons = nil
+        deletedTs = nil
+        upload = nil
+        itemType = nil
+        comment = nil
+        file = nil
+    }
+    
     private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
         var returnValue = [String: Reaction]()
         if let r = reactions {

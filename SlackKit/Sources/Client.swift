@@ -78,12 +78,12 @@ public class Client: WebSocketDelegate {
         self.token = apiToken
     }
     
-    public func connect(pingInterval pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
+    public func connect(simpleLatest simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
         self.pingInterval = pingInterval
         self.timeout = timeout
         self.reconnect = reconnect
         dispatcher = EventDispatcher(client: self)
-        webAPI.rtmStart(success: {
+        webAPI.rtmStart(simpleLatest, noUnreads: noUnreads, mpimAware: mpimAware, success: {
             (response) -> Void in
             self.initialSetup(response)
             if let socketURL = response["url"] as? String {
