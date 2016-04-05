@@ -34,7 +34,7 @@ public struct Attachment {
     public let title: String?
     public let titleLink: String?
     public let text: String?
-    public let fields: [[String: AnyObject]]?
+    public let fields: [AttachmentField]?
     public let imageURL: String?
     public let thumbURL: String?
 
@@ -48,12 +48,12 @@ public struct Attachment {
         title = attachment?["title"] as? String
         titleLink = attachment?["title_link"] as? String
         text = attachment?["text"] as? String
-        fields = attachment?["fields"] as? [[String: AnyObject]]
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
+        fields = Attachment.fields(attachment?["fields"] as? [[String: AnyObject]])
     }
     
-    public init?(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [[String: AnyObject]]? = nil, imageURL: String? = nil, thumbURL: String? = nil) {
+    public init?(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil) {
         self.fallback = fallback
         self.color = colorHex
         self.pretext = pretext
@@ -79,10 +79,66 @@ public struct Attachment {
         attachment["title"] = title
         attachment["title_link"] = titleLink
         attachment["text"] = text
-        attachment["fields"] = fields
+        attachment["fields"] = fieldJSONArray(fields)
         attachment["image_url"] = imageURL
         attachment["thumb_url"] = thumbURL
         return attachment
     }
     
+    private static func fields(fields: [[String: AnyObject]]?) -> [AttachmentField] {
+        var returnValue = [AttachmentField]()
+        if let f = fields {
+            for field in f {
+                if let aField = AttachmentField(field: field) {
+                    returnValue.append(aField)
+                }
+            }
+        }
+        return returnValue
+    }
+    
+    private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: AnyObject]] {
+        var returnValue = [[String: AnyObject]]()
+        if let f = fields {
+            for field in f {
+                returnValue.append(field.dictionary())
+            }
+        }
+        return returnValue
+    }
+    
+}
+
+public struct AttachmentField {
+    
+    public let title: String?
+    public let value: String?
+    public let short: Bool?
+    
+    internal init?(field: [String: AnyObject]?) {
+        title = field?["title"] as? String
+        value = field?["value"] as? String
+        short = field?["short"] as? Bool
+    }
+    
+    public init(title:String, value:String, short: Bool? = nil) {
+        self.title = title
+        self.value = value.slackFormatEscaping()
+        self.short = short
+    }
+    
+    internal func dictionary() -> [String: AnyObject] {
+        var field = [String: AnyObject]()
+        field["title"] = title
+        field["value"] = value
+        field["short"] = short
+        return field
+    }
+    
+}
+
+public enum AttachmentColor: String {
+    case Good = "good"
+    case Warning = "warning"
+    case Danger = "danger"
 }
