@@ -50,7 +50,9 @@ public struct Attachment {
         text = attachment?["text"] as? String
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
-        fields = Attachment.fields(attachment?["fields"] as? [[String: AnyObject]])
+        fields = (attachment?["fields"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(field) -> AttachmentField? in
+            return AttachmentField(field: field)
+        })
     }
     
     public init?(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil) {
@@ -83,18 +85,6 @@ public struct Attachment {
         attachment["image_url"] = imageURL
         attachment["thumb_url"] = thumbURL
         return attachment
-    }
-    
-    private static func fields(fields: [[String: AnyObject]]?) -> [AttachmentField] {
-        var returnValue = [AttachmentField]()
-        if let f = fields {
-            for field in f {
-                if let aField = AttachmentField(field: field) {
-                    returnValue.append(aField)
-                }
-            }
-        }
-        return returnValue
     }
     
     private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: AnyObject]] {
@@ -135,10 +125,4 @@ public struct AttachmentField {
         return field
     }
     
-}
-
-public enum AttachmentColor: String {
-    case Good = "good"
-    case Warning = "warning"
-    case Danger = "danger"
 }

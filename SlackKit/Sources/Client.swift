@@ -99,7 +99,7 @@ public class Client: WebSocketDelegate {
         webSocket?.disconnect()
     }
     
-    //MARK: - Message send
+    //MARK: - RTM Message send
     public func sendMessage(message: String, channelID: String) {
         if (connected) {
             if let data = formatMessageToSlackJsonString(msg: message, channel: channelID) {
@@ -183,74 +183,38 @@ public class Client: WebSocketDelegate {
     }
     
     //MARK: - Client setup
-    internal func initialSetup(json: [String: AnyObject]) {
+    private func initialSetup(json: [String: AnyObject]) {
         team = Team(team: json["team"] as? [String: AnyObject])
         authenticatedUser = User(user: json["self"] as? [String: AnyObject])
         authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: AnyObject])
-        enumerateUsers(json["users"] as? Array)
-        enumerateChannels(json["channels"] as? Array)
-        enumerateGroups(json["groups"] as? Array)
-        enumerateMPIMs(json["mpims"] as? Array)
-        enumerateIMs(json["ims"] as? Array)
-        enumerateBots(json["bots"] as? Array)
+        enumerateObjects(json["users"] as? Array) { (user) in self.addUser(user) }
+        enumerateObjects(json["channels"] as? Array) { (channel) in self.addChannel(channel) }
+        enumerateObjects(json["groups"] as? Array) { (group) in self.addChannel(group) }
+        enumerateObjects(json["mpims"] as? Array) { (mpim) in self.addChannel(mpim) }
+        enumerateObjects(json["ims"] as? Array) { (ims) in self.addChannel(ims) }
+        enumerateObjects(json["bots"] as? Array) { (bots) in self.addBot(bots) }
         enumerateSubteams(json["subteams"] as? [String: AnyObject])
     }
     
-    internal func enumerateUsers(users: [AnyObject]?) {
-        if let users = users {
-            for user in users {
-                let u = User(user: user as? [String: AnyObject])
-                self.users[u!.id!] = u
-            }
+    private func addUser(aUser: [String: AnyObject]) {
+        if let user = User(user: aUser), id = user.id {
+            users[id] = user
         }
     }
     
-    internal func enumerateChannels(channels: [AnyObject]?) {
-        if let channels = channels {
-            for channel in channels {
-                let c = Channel(channel: channel as? [String: AnyObject])
-                self.channels[c!.id!] = c
-            }
+    private func addChannel(aChannel: [String: AnyObject]) {
+        if let channel = Channel(channel: aChannel), id = channel.id {
+            channels[id] = channel
         }
     }
     
-    internal func enumerateGroups(groups: [AnyObject]?) {
-        if let groups = groups {
-            for group in groups {
-                let g = Channel(channel: group as? [String: AnyObject])
-                self.channels[g!.id!] = g
-            }
+    private func addBot(aBot: [String: AnyObject]) {
+        if let bot = Bot(bot: aBot), id = bot.id {
+            bots[id] = bot
         }
     }
     
-    internal func enumerateIMs(ims: [AnyObject]?) {
-        if let ims = ims {
-            for im in ims {
-                let i = Channel(channel: im as? [String: AnyObject])
-                self.channels[i!.id!] = i
-            }
-        }
-    }
-    
-    internal func enumerateMPIMs(mpims: [AnyObject]?) {
-        if let mpims = mpims {
-            for mpim in mpims {
-                let m = Channel(channel: mpim as? [String: AnyObject])
-                self.channels[m!.id!] = m
-            }
-        }
-    }
-    
-    internal func enumerateBots(bots: [AnyObject]?) {
-        if let bots = bots {
-            for bot in bots {
-                let b = Bot(bot: bot as? [String: AnyObject])
-                self.bots[b!.id!] = b
-            }
-        }
-    }
-    
-    internal func enumerateSubteams(subteams: [String: AnyObject]?) {
+    private func enumerateSubteams(subteams: [String: AnyObject]?) {
         if let subteams = subteams {
             if let all = subteams["all"] as? [[String: AnyObject]] {
                 for item in all {
@@ -262,6 +226,17 @@ public class Client: WebSocketDelegate {
                 for item in auth {
                     authenticatedUser?.userGroups = [String: String]()
                     authenticatedUser?.userGroups![item] = item
+                }
+            }
+        }
+    }
+    
+    // MARK: - Utilities
+    private func enumerateObjects(array: [AnyObject]?, initalizer: ([String: AnyObject])-> Void) {
+        if let array = array {
+            for object in array {
+                if let dictionary = object as? [String: AnyObject] {
+                    initalizer(dictionary)
                 }
             }
         }

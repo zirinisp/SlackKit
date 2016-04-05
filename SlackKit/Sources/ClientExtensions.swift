@@ -46,13 +46,24 @@ extension Client {
     
     //MARK: - Utilities
     internal func stripString(string: String) -> String? {
-        var strippedString: String?
-        if string[string.startIndex] == "@" {
-            strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
-        } else if string[string.startIndex] == "#" {
+        var strippedString = string
+        if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
             strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
         }
         return strippedString
+    }
+}
+
+public enum AttachmentColor: String {
+    case Good = "good"
+    case Warning = "warning"
+    case Danger = "danger"
+}
+
+public extension NSDate {
+
+    func slackTimestamp() -> Double {
+        return NSNumber(double: timeIntervalSince1970).doubleValue
     }
     
 }
@@ -68,10 +79,18 @@ internal extension String {
 
 }
 
-public extension NSDate {
-    
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
-    }
+internal extension Array {
 
+    func objectArrayFromDictionaryArray<T>(intializer:([String: AnyObject])->T?) -> [T] {
+        var returnValue = [T]()
+        for object in self {
+            if let dictionary = object as? [String: AnyObject] {
+                if let value = intializer(dictionary) {
+                    returnValue.append(value)
+                }
+            }
+        }
+        return returnValue
+    }
+    
 }
