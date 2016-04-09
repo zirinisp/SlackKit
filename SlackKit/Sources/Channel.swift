@@ -66,11 +66,16 @@ public struct Channel {
         purpose = Topic(topic: channel?["purpose"] as? [String: AnyObject])
         isMember = channel?["is_member"] as? Bool
         lastRead = channel?["last_read"] as? String
-        latest = Message(message: channel?["latest"] as? [String: AnyObject])
         unread = channel?["unread_count"] as? Int
         unreadCountDisplay = channel?["unread_count_display"] as? Int
         hasPins = channel?["has_pins"] as? Bool
         members = channel?["members"] as? [String]
+        
+        if (Message(message: channel?["latest"] as? [String: AnyObject])?.ts == nil) {
+            latest = Message(ts: channel?["latest"] as? String)
+        } else {
+            latest = Message(message: channel?["latest"] as? [String: AnyObject])
+        }
     }
     
     internal init?(id:String?) {

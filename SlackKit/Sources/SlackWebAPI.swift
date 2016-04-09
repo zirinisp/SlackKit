@@ -110,8 +110,9 @@ public class SlackWebAPI {
     }
     
     //MARK: - RTM
-    public func rtmStart(success success: ((response: [String: AnyObject])->Void)?, failure: FailureClosure?) {
-        client.api.request(.RTMStart, token: client.token, parameters: nil, successClosure: {
+    public func rtmStart(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, success: ((response: [String: AnyObject])->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["simple_latest": simpleLatest, "no_unreads": noUnreads, "mpim_aware": mpimAware]
+        client.api.request(.RTMStart, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
                 (response) -> Void in
                 success?(response: response)
             }) {(error) -> Void in
@@ -194,8 +195,8 @@ public class SlackWebAPI {
         }
     }
     
-    public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool = false, parse: ParseMode = .Full, linkNames: Bool = false, attachments: [Attachment?]? = nil, unfurlLinks: Bool = false, unfurlMedia: Bool = false, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
-        let parameters: [String: AnyObject?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":encodeAttachments(attachments), "icon_url":iconURL, "icon_emoji":iconEmoji]
+    public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool? = nil, parse: ParseMode? = nil, linkNames: Bool? = nil, attachments: [Attachment?]? = nil, unfurlLinks: Bool? = nil, unfurlMedia: Bool? = nil, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
+        let parameters: [String: AnyObject?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse?.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":encodeAttachments(attachments), "icon_url":iconURL, "icon_emoji":iconEmoji]
         client.api.request(.ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?((ts: response["ts"] as? String, response["channel"] as? String))

@@ -21,13 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public enum ItemType: String {
-    case ChannelMessage = "C"
-    case PrivateGroupMessage = "G"
-    case File = "F"
-    case FileComments = "Fc"
-}
-
 public class Message {
     
     public let type = "message"
@@ -53,7 +46,7 @@ public class Message {
     public let comment: Comment?
     public let file: File?
     internal(set) public var reactions = [String: Reaction]()
-    internal(set) public var attachments: [Attachment] = []
+    internal(set) public var attachments: [Attachment]?
     
     public init?(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
@@ -78,7 +71,24 @@ public class Message {
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
         reactions = messageReactions(message?["reactions"] as? [[String: AnyObject]])
-        attachments = messageAttachments(message?["attachments"] as? [[String: AnyObject]])
+        attachments = (message?["attachments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(attachment) -> Attachment? in
+            return Attachment(attachment: attachment)
+        })
+    }
+    
+    internal init?(ts:String?) {
+        self.ts = ts
+        subtype = nil
+        user = nil
+        channel = nil
+        botID = nil
+        username = nil
+        icons = nil
+        deletedTs = nil
+        upload = nil
+        itemType = nil
+        comment = nil
+        file = nil
     }
     
     private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
@@ -92,19 +102,6 @@ public class Message {
         }
         return returnValue
     }
-    
-    private func messageAttachments(attachments: [[String: AnyObject]]?) -> [Attachment] {
-        var returnValue:[Attachment] = []
-        if let a = attachments {
-            for attachment in a {
-                if let attachment = Attachment(attachment: attachment) {
-                    returnValue.append(attachment)
-                }
-            }
-        }
-        return returnValue
-    }
-    
 }
 
 extension Message: Equatable {}
