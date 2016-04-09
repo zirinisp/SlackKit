@@ -40,7 +40,6 @@ To use SlackKit you'll need a bearer token which identifies a single user. You c
 Once you have a token, initialize a client instance using it:
 ```swift
 let client = Client(apiToken: "YOUR_SLACK_API_TOKEN")
-
 ```
 
 If you want to receive messages from the Slack RTM API, connect to it.
@@ -216,6 +215,18 @@ func subteamEvent(userGroup: UserGroup)
 func subteamSelfAdded(subteamID: String)
 func subteamSelfRemoved(subteamID: String)
 ```
+
+###Examples
+####Leaderboard
+Included in the OSX-Sample is an example application of a bot you might make using SlackKit. It’s a basic leaderboard scoring bot, in the spirit of [PlusPlus](https://plusplus.chat).
+
+To configure it, enter your bot’s API token in `AppDelegate.swift` for the Leaderboard bot:
+
+```swift
+let learderboard = Leaderboard(token: "SLACK_AUTH_TOKEN")
+```
+
+It adds a point for every `@thing++`, subtracts a point for every `@thing--`, and shows a leaderboard when asked `@botname leaderboard`.
 
 ###Get In Touch
 [@pvzig](https://twitter.com/pvzig)
