@@ -131,6 +131,7 @@ There are a number of delegates that you can set to receive callbacks for certai
 
 #####SlackEventsDelegate
 ```swift
+func clientConnectionFailed(error: SlackError)
 func clientConnected()
 func clientDisconnected()
 func preferenceChanged(preference: String, value: AnyObject)
