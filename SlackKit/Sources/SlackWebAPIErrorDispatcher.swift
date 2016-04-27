@@ -111,6 +111,8 @@ public enum SlackError: ErrorType {
     case UserListNotSupplied
     case UserNotFound
     case UserNotVisible
+    // Client
+    case ClientNetworkError
 }
 
 internal struct ErrorDispatcher {

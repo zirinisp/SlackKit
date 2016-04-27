@@ -24,6 +24,7 @@
 import Foundation
 
 public protocol SlackEventsDelegate {
+    func clientConnectionFailed(error: SlackError)
     func clientConnected()
     func clientDisconnected()
     func preferenceChanged(preference: String, value: AnyObject)
