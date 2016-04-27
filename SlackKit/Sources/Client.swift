@@ -52,7 +52,7 @@ public class Client: WebSocketDelegate {
     public var subteamEventsDelegate: SubteamEventsDelegate?
     public var teamProfileEventsDelegate: TeamProfileEventsDelegate?
     
-    internal var token = "SLACK_AUTH_TOKEN"
+    public var token = "SLACK_AUTH_TOKEN"
     
     public func setAuthToken(token: String) {
         self.token = token
