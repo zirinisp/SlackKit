@@ -73,6 +73,7 @@ SlackKit currently supports the a subset of the Slack Web APIs that are availabl
 - files.comments.edit
 - files.comments.delete
 - files.delete
+- files.info
 - files.upload
 - groups.close
 - groups.history
