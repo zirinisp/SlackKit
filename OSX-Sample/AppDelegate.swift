@@ -30,10 +30,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
     @IBOutlet weak var window: NSWindow!
 
-    let learderboard = Leaderboard(token: "SLACK_AUTH_TOKEN")
+    let leaderboard = Leaderboard(token: "SLACK_AUTH_TOKEN")
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
-        learderboard.client.connect()
+        leaderboard.client.connect()
     }
     
     func applicationWillTerminate(aNotification: NSNotification) {
