@@ -36,6 +36,7 @@ internal struct NetworkInterface {
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
             (data, response, internalError) -> Void in
             guard let data = data else {
+                errorClosure(SlackError.ClientNetworkError)
                 return
             }
             do {

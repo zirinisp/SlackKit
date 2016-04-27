@@ -92,7 +92,9 @@ public class Client: WebSocketDelegate {
                 self.webSocket?.delegate = self
                 self.webSocket?.connect()
             }
-            }, failure:nil)
+            }, failure: {(error) -> Void in
+                self.slackEventsDelegate?.clientConnectionFailed(error)
+            })
     }
     
     public func disconnect() {
