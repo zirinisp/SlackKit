@@ -24,6 +24,8 @@ and run
 ```
 carthage update
 ```
+Drag the built SlackKit.framework into your Xcode project.
+
 
 ####Swift Package Manager
 Add SlackKit to your Package.swift
