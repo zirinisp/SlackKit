@@ -4,6 +4,27 @@
 This is a Slack client library for iOS and OS X written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
 ###Installation
+####CocoaPods
+Add the pod to your podfile:
+```
+pod 'SlackKit'
+```
+and run
+```
+pod install
+```
+
+####Carthage
+
+Add SlackKit to your Cartfile:
+```
+github “pvzig/SlackKit” ~> 1.0
+```
+and run
+```
+carthage update
+```
+
 ####Swift Package Manager
 Add SlackKit to your Package.swift
 
@@ -18,16 +39,6 @@ let package = Package(
 ```
 
 Run `swift-build` on your application’s main directory.
-
-####CocoaPods
-Add the pod to your podfile:
-```
-pod 'SlackKit'
-```
-and run
-```
-pod install
-```
 
 To use the library in your project import it:
 ```
