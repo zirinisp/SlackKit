@@ -162,8 +162,6 @@
 		_LinkFileRef_URI /* libURI.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_URI" /* libURI.dylib */; };
 		_LinkFileRef_Venice /* libVenice.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Venice" /* libVenice.dylib */; };
 		_LinkFileRef_WebSocket /* libWebSocket.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_WebSocket" /* libWebSocket.dylib */; };
-		"__src_cc_ref_OSX-Sample/AppDelegate.swift" /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_OSX-Sample/AppDelegate.swift" /* AppDelegate.swift */; };
-		"__src_cc_ref_OSX-Sample/Leaderboard.swift" /* Leaderboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_OSX-Sample/Leaderboard.swift" /* Leaderboard.swift */; };
 		"__src_cc_ref_Packages/Base64-0.5.0/Source/Base64.swift" /* Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/Base64-0.5.0/Source/Base64.swift" /* Base64.swift */; };
 		"__src_cc_ref_Packages/C7-0.5.0/Sources/AsyncConnection.swift" /* AsyncConnection.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/C7-0.5.0/Sources/AsyncConnection.swift" /* AsyncConnection.swift */; };
 		"__src_cc_ref_Packages/C7-0.5.0/Sources/AsyncHost.swift" /* AsyncHost.swift in Sources */ = {isa = PBXBuildFile; fileRef = "__PBXFileRef_Packages/C7-0.5.0/Sources/AsyncHost.swift" /* AsyncHost.swift */; };
@@ -480,8 +478,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		"__PBXFileRef_OSX-Sample/AppDelegate.swift" /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		"__PBXFileRef_OSX-Sample/Leaderboard.swift" /* Leaderboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Leaderboard.swift; sourceTree = "<group>"; };
 		__PBXFileRef_Package.swift /* Package.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Package.swift; path = /Users/pzignego/Git/SlackKit/Package.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/Base64-0.5.0/Source/Base64.swift" /* Base64.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Base64.swift; sourceTree = "<group>"; };
 		"__PBXFileRef_Packages/C7-0.5.0/Sources/AsyncConnection.swift" /* AsyncConnection.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AsyncConnection.swift; sourceTree = "<group>"; };
@@ -1072,7 +1068,6 @@
 		"_____Sources_" /* Sources */ = {
 			isa = PBXGroup;
 			children = (
-				"_______Group_OSXSample" /* OSX-Sample */,
 				"_______Group_SlackKit" /* SlackKit */,
 			);
 			name = Sources;
@@ -1249,15 +1244,6 @@
 			);
 			name = MediaType;
 			path = "Packages/MediaType-0.5.0/Source";
-			sourceTree = "<group>";
-		};
-		"_______Group_OSXSample" /* OSX-Sample */ = {
-			isa = PBXGroup;
-			children = (
-				"__PBXFileRef_OSX-Sample/AppDelegate.swift" /* AppDelegate.swift */,
-				"__PBXFileRef_OSX-Sample/Leaderboard.swift" /* Leaderboard.swift */,
-			);
-			path = "OSX-Sample";
 			sourceTree = "<group>";
 		};
 		"_______Group_OpenSSL" /* OpenSSL */ = {
@@ -2223,8 +2209,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 0;
 			files = (
-				"__src_cc_ref_OSX-Sample/AppDelegate.swift" /* AppDelegate.swift in Sources */,
-				"__src_cc_ref_OSX-Sample/Leaderboard.swift" /* Leaderboard.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
