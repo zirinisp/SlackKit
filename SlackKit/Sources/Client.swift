@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 import Foundation
+import WebSocket
 
 public class Client {
     

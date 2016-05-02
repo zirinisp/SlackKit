@@ -22,41 +22,45 @@
 // THE SOFTWARE.
 
 import Foundation
+import HTTPSClient
 
 internal struct NetworkInterface {
     
     private let apiUrl = "https://slack.com/api/"
+    private let client: HTTPSClient.Client?
+    
+    init() {
+        client = nil
+    }
     
     internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
             requestString += requestStringFromParameters(parameters: params)
         }
-        let request = NSURLRequest(url: NSURL(string: requestString)!)
-        NSURLSession.shared().dataTask(with: request) {
-            (data, response, internalError) -> Void in
-            guard let data = data else {
-                return
-            }
-            do {
-                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
-                if (result["ok"] as! Bool == true) {
-                    successClosure(result)
+        
+        do {
+            var response: Response
+            response = try client!.get(requestString)
+            let bytes = try! response.body.becomeBuffer().bytes
+            let data = NSData(bytes: bytes, length: bytes.count)
+            let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
+            if (result["ok"] as! Bool == true) {
+                successClosure(result)
+            } else {
+                if let errorString = result["error"] as? String {
+                    throw ErrorDispatcher.dispatch(error: errorString)
                 } else {
-                    if let errorString = result["error"] as? String {
-                        throw ErrorDispatcher.dispatch(error: errorString)
-                    } else {
-                        throw SlackError.UnknownError
-                    }
-                }
-            } catch let error {
-                if let slackError = error as? SlackError {
-                    errorClosure(slackError)
-                } else {
-                    errorClosure(SlackError.UnknownError)
+                    throw SlackError.UnknownError
                 }
             }
-        }.resume()
+        } catch let error {
+            if let slackError = error as? SlackError {
+                errorClosure(slackError)
+            } else {
+                errorClosure(SlackError.UnknownError)
+            }
+        }
     }
     
     internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {

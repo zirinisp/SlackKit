@@ -138,6 +138,7 @@
 		265157271CD794B300F7436F /* libHTTPClient.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_HTTPClient" /* libHTTPClient.dylib */; };
 		265157281CD794B300F7436F /* libHTTP.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_HTTP" /* libHTTP.dylib */; };
 		265157291CD794B300F7436F /* libWebSocket.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_WebSocket" /* libWebSocket.dylib */; };
+		265157441CD7A3A900F7436F /* libSlackKit.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_SlackKit" /* libSlackKit.dylib */; };
 		_LinkFileRef_Base64 /* libBase64.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_Base64" /* libBase64.dylib */; };
 		_LinkFileRef_C7 /* libC7.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_C7" /* libC7.dylib */; };
 		_LinkFileRef_CHTTPParser /* libCHTTPParser.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = "_____Product_CHTTPParser" /* libCHTTPParser.dylib */; };
@@ -475,6 +476,13 @@
 			remoteGlobalIDString = "______Target_WebSocket";
 			remoteInfo = WebSocket;
 		};
+		26A0CE2F1CD7A4470083A8E6 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = __RootObject_ /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = "______Target_SlackKit";
+			remoteInfo = SlackKit;
+		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
@@ -809,6 +817,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 0;
 			files = (
+				265157441CD7A3A900F7436F /* libSlackKit.dylib in Frameworks */,
 				265156FB1CD794B300F7436F /* libPOSIX.dylib in Frameworks */,
 				265156FC1CD794B300F7436F /* libCHTTPParser.dylib in Frameworks */,
 				265156FD1CD794B300F7436F /* libIP.dylib in Frameworks */,
@@ -1715,6 +1724,7 @@
 			buildRules = (
 			);
 			dependencies = (
+				26A0CE301CD7A4470083A8E6 /* PBXTargetDependency */,
 				__Dependency_POSIX /* PBXTargetDependency */,
 				__Dependency_CHTTPParser /* PBXTargetDependency */,
 				__Dependency_IP /* PBXTargetDependency */,
@@ -2001,6 +2011,7 @@
 		__RootObject_ /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
+				LastSwiftUpdateCheck = 0730;
 				LastUpgradeCheck = 9999;
 			};
 			buildConfigurationList = "___RootConfs_" /* Build configuration list for PBXProject "SlackKit" */;
@@ -2009,6 +2020,7 @@
 			hasScannedForEncodings = 0;
 			knownRegions = (
 				en,
+				Base,
 			);
 			mainGroup = "___RootGroup_";
 			productRefGroup = "____Products_" /* Products */;
@@ -2373,6 +2385,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		26A0CE301CD7A4470083A8E6 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = "______Target_SlackKit" /* SlackKit */;
+			targetProxy = 26A0CE2F1CD7A4470083A8E6 /* PBXContainerItemProxy */;
+		};
 		__Dependency_Base64 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = "______Target_Base64" /* Base64 */;
