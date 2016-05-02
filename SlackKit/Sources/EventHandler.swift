@@ -21,8 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 internal class EventHandler {
     let client: SlackClient
     required init(client: SlackClient) {
@@ -45,7 +43,7 @@ internal class EventHandler {
     
     //MARK: - Messages
     func messageSent(event: Event) {
-        if let reply = event.replyTo, message = client.sentMessages[NSNumber(value: reply).stringValue], channel = message.channel, ts = message.ts {
+        if let reply = event.replyTo, message = client.sentMessages["\(reply)"], channel = message.channel, ts = message.ts {
             message.ts = event.ts
             message.text = event.text
             client.channels[channel]?.messages[ts] = message
@@ -100,12 +98,12 @@ internal class EventHandler {
                 }
             }
             
-            let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
+            /*let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
             dispatch_after(timeout, dispatch_get_main_queue()) {
                 if let index = self.client.channels[channelID]?.usersTyping.index(of:userID) {
                     self.client.channels[channelID]?.usersTyping.remove(at: index)
                 }
-            }
+            }*/
         }
     }
     

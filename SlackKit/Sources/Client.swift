@@ -21,7 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import C7
+import Jay
 import WebSocket
 
 public class SlackClient {
@@ -66,19 +67,19 @@ public class SlackClient {
     internal let api = NetworkInterface()
     private var dispatcher: EventDispatcher?
     
-    private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
+    //private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
     internal var ping: Double?
     internal var pong: Double?
     
-    internal var pingInterval: NSTimeInterval?
-    internal var timeout: NSTimeInterval?
+    internal var pingInterval: Double?
+    internal var timeout: Double?
     internal var reconnect: Bool?
     
     required public init(apiToken: String) {
         self.token = apiToken
     }
     
-    public func connect(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
+    public func connect(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: Double? = nil, timeout: Double? = nil, reconnect: Bool? = nil) {
         self.pingInterval = pingInterval
         self.timeout = timeout
         self.reconnect = reconnect
@@ -91,9 +92,9 @@ public class SlackClient {
                     let uri = try URI(socketURL)
                     self.webSocket = try WebSocket.Client(uri: uri, onConnect: {(socket) in
                         self.setupSocket(socket: socket)
-                        if let pingInterval = self.pingInterval {
+                        /*if let pingInterval = self.pingInterval {
                             self.pingRTMServerAtInterval(interval: pingInterval)
-                        }
+                        }*/
                     })
                     try self.webSocket?.connect(uri.description)
                 } catch _ {
@@ -119,34 +120,33 @@ public class SlackClient {
         }
     }*/
     
-    private func formatMessageToSlackJsonString(message: String, channel: String) -> NSData? {
-        let json: [String: AnyObject] = [
-            "id": NSDate().slackTimestamp(),
+    private func formatMessageToSlackJsonString(message: String, channel: String) -> Data? {
+        let json: [String: Any] = [
+            "id": Time.slackTimestamp,
             "type": "message",
             "channel": channel,
             "text": message.slackFormatEscaping()
         ]
-        addSentMessage(dictionary: json)
+        
         do {
-            let data = try NSJSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-            return data
-        }
-        catch _ {
+            let bytes = try Jay().dataFromJson(json)
+            return Data(bytes)
+        } catch {
             return nil
         }
     }
     
-    private func addSentMessage(dictionary: [String: AnyObject]) {
+    private func addSentMessage(dictionary: [String: Any]) {
         var message = dictionary
-        let ts = message["id"] as? NSNumber
+        let ts = message["id"] as? Int
         message.removeValue(forKey:"id")
-        message["ts"] = ts?.stringValue
+        message["ts"] = "\(ts)"
         message["user"] = self.authenticatedUser?.id
-        sentMessages[ts!.stringValue] = Message(message: message)
+        sentMessages["\(ts)"] = Message(message: message)
     }
     
     //MARK: - RTM Ping
-    private func pingRTMServerAtInterval(interval: NSTimeInterval) {
+    /*private func pingRTMServerAtInterval(interval: NSTimeInterval) {
         let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(interval * Double(NSEC_PER_SEC)))
         dispatch_after(delay, pingPongQueue, {
             if self.connected && self.timeoutCheck() {
@@ -160,7 +160,7 @@ public class SlackClient {
     
     private func sendRTMPing() {
         if connected {
-            let json: [String: AnyObject] = [
+            let json: [String: Any] = [
                 "id": NSDate().slackTimestamp(),
                 "type": "ping",
             ]
@@ -189,43 +189,43 @@ public class SlackClient {
         } else {
             return true
         }
-    }
+    }*/
     
     //MARK: - Client setup
-    private func initialSetup(json: [String: AnyObject]) {
-        team = Team(team: json["team"] as? [String: AnyObject])
-        authenticatedUser = User(user: json["self"] as? [String: AnyObject])
-        authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: AnyObject])
+    private func initialSetup(json: [String: Any]) {
+        team = Team(team: json["team"] as? [String: Any])
+        authenticatedUser = User(user: json["self"] as? [String: Any])
+        authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: Any])
         enumerateObjects(array: json["users"] as? Array) { (user) in self.addUser(aUser: user) }
         enumerateObjects(array: json["channels"] as? Array) { (channel) in self.addChannel(aChannel: channel) }
         enumerateObjects(array: json["groups"] as? Array) { (group) in self.addChannel(aChannel: group) }
         enumerateObjects(array: json["mpims"] as? Array) { (mpim) in self.addChannel(aChannel: mpim) }
         enumerateObjects(array: json["ims"] as? Array) { (ims) in self.addChannel(aChannel: ims) }
         enumerateObjects(array: json["bots"] as? Array) { (bots) in self.addBot(aBot: bots) }
-        enumerateSubteams(subteams: json["subteams"] as? [String: AnyObject])
+        enumerateSubteams(subteams: json["subteams"] as? [String: Any])
     }
     
-    private func addUser(aUser: [String: AnyObject]) {
+    private func addUser(aUser: [String: Any]) {
         if let user = User(user: aUser), id = user.id {
             users[id] = user
         }
     }
     
-    private func addChannel(aChannel: [String: AnyObject]) {
+    private func addChannel(aChannel: [String: Any]) {
         if let channel = Channel(channel: aChannel), id = channel.id {
             channels[id] = channel
         }
     }
     
-    private func addBot(aBot: [String: AnyObject]) {
+    private func addBot(aBot: [String: Any]) {
         if let bot = Bot(bot: aBot), id = bot.id {
             bots[id] = bot
         }
     }
     
-    private func enumerateSubteams(subteams: [String: AnyObject]?) {
+    private func enumerateSubteams(subteams: [String: Any]?) {
         if let subteams = subteams {
-            if let all = subteams["all"] as? [[String: AnyObject]] {
+            if let all = subteams["all"] as? [[String: Any]] {
                 for item in all {
                     let u = UserGroup(userGroup: item)
                     self.userGroups[u!.id!] = u
@@ -241,10 +241,10 @@ public class SlackClient {
     }
     
     // MARK: - Utilities
-    private func enumerateObjects(array: [AnyObject]?, initalizer: ([String: AnyObject])-> Void) {
+    private func enumerateObjects(array: [Any]?, initalizer: ([String: Any])-> Void) {
         if let array = array {
             for object in array {
-                if let dictionary = object as? [String: AnyObject] {
+                if let dictionary = object as? [String: Any] {
                     initalizer(dictionary)
                 }
             }
@@ -265,13 +265,10 @@ public class SlackClient {
     }
     
     private func websocketDidReceive(message: String) {
-        guard let data = message.data(using: NSUTF8StringEncoding) else {
-            return
-        }
         do {
-            if let json = try NSJSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
-                print(json)
-                dispatcher?.dispatch(event: json)
+            let json = try Jay().jsonFromData(message.data.bytes)
+            if let event = json as? [String: Any] {
+                dispatcher?.dispatch(event:event)
             }
         }
         catch _ {

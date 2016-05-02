@@ -32,7 +32,7 @@ public class Message {
     internal(set) public var text: String?
     public let botID: String?
     public let username: String?
-    public let icons: [String: AnyObject]?
+    public let icons: [String: Any]?
     public let deletedTs: String?
     internal(set) var purpose: String?
     internal(set) var topic: String?
@@ -48,7 +48,7 @@ public class Message {
     internal(set) public var reactions = [String: Reaction]()
     internal(set) public var attachments: [Attachment]?
     
-    public init?(message: [String: AnyObject]?) {
+    public init?(message: [String: Any]?) {
         subtype = message?["subtype"] as? String
         ts = message?["ts"] as? String
         user = message?["user"] as? String
@@ -57,7 +57,7 @@ public class Message {
         text = message?["text"] as? String
         botID = message?["bot_id"] as? String
         username = message?["username"] as? String
-        icons = message?["icons"] as? [String: AnyObject]
+        icons = message?["icons"] as? [String: Any]
         deletedTs = message?["deleted_ts"] as? String
         purpose = message?["purpose"] as? String
         topic = message?["topic"] as? String
@@ -68,10 +68,10 @@ public class Message {
         itemType = message?["item_type"] as? String
         isStarred = message?["is_starred"] as? Bool
         pinnedTo = message?["pinned_to"] as? [String]
-        comment = Comment(comment: message?["comment"] as? [String: AnyObject])
-        file = File(file: message?["file"] as? [String: AnyObject])
-        reactions = messageReactions(reactions: message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray(intializer: {(attachment) -> Attachment? in
+        comment = Comment(comment: message?["comment"] as? [String: Any])
+        file = File(file: message?["file"] as? [String: Any])
+        reactions = messageReactions(reactions: message?["reactions"] as? [[String: Any]])
+        attachments = (message?["attachments"] as? [[String: Any]])?.objectArrayFromDictionaryArray(intializer: {(attachment) -> Attachment? in
             return Attachment(attachment: attachment)
         })
     }
@@ -91,7 +91,7 @@ public class Message {
         file = nil
     }
     
-    private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
+    private func messageReactions(reactions: [[String: Any]]?) -> [String: Reaction] {
         var returnValue = [String: Reaction]()
         if let r = reactions {
             for react in r {

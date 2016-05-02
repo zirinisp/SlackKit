@@ -21,8 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import HTTPSClient
+import Jay
 
 internal struct NetworkInterface {
     
@@ -37,7 +37,7 @@ internal struct NetworkInterface {
         }
     }
     
-    internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+    internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: Any]?, successClosure: ([String: Any])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
             requestString += requestStringFromParameters(parameters: params)
@@ -46,17 +46,19 @@ internal struct NetworkInterface {
         do {
             var response: Response?
             response = try client?.get(requestString)
-            let bytes = try response?.body.becomeBuffer().bytes
-            if let bytes = bytes {
-                let data = NSData(bytes: bytes, length: bytes.count)
-                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
-                if (result["ok"] as! Bool == true) {
-                    successClosure(result)
-                } else {
-                    if let errorString = result["error"] as? String {
-                        throw ErrorDispatcher.dispatch(error: errorString)
+            
+            let data = try response?.body.becomeBuffer()
+            if let data = data {
+                let json = try Jay().jsonFromData(data.bytes)
+                if let result = json as? [String: Any] {
+                    if (result["ok"] as? Bool == true) {
+                        successClosure(result)
                     } else {
-                        throw SlackError.UnknownError
+                        if let errorString = result["error"] as? String {
+                            throw ErrorDispatcher.dispatch(error: errorString)
+                        } else {
+                            throw SlackError.UnknownError
+                        }
                     }
                 }
             }
@@ -70,7 +72,7 @@ internal struct NetworkInterface {
     }
     
     //TODO: Currently Unsupported
-    /*internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+    /*internal func uploadRequest(token: String, data: NSData, parameters: [String: Any]?, successClosure: ([String: Any])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(SlackAPIEndpoint.FilesUpload.rawValue)?token=\(token)"
         if let params = parameters {
             requestString = requestString + requestStringFromParameters(parameters: params)
@@ -102,7 +104,7 @@ internal struct NetworkInterface {
                 return
             }
             do {
-                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
+                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: Any]
                 if (result["ok"] as! Bool == true) {
                     successClosure(result)
                 } else {
@@ -126,11 +128,16 @@ internal struct NetworkInterface {
         return String(format: "slackkit.boundary.%08x%08x", arc4random(), arc4random())
     }*/
     
-    private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
+    private func requestStringFromParameters(parameters: [String: Any]) -> String {
         var requestString = ""
         for key in parameters.keys {
-            if let value = parameters[key] as? String, encodedValue = value.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed()) {
-                requestString += "&\(key)=\(encodedValue)"
+            if let value = parameters[key] as? String {
+                do {
+                    let encodedValue = try URI(value).description
+                    requestString += "&\(key)=\(encodedValue)"
+                } catch {
+                    
+                }
             } else if let value = parameters[key] as? Int {
                 requestString += "&\(key)=\(value)"
             }

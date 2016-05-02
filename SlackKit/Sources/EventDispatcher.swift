@@ -30,7 +30,7 @@ internal class EventDispatcher {
         handler = EventHandler(client: client)
     }
     
-    func dispatch(event: [String: AnyObject]) {
+    func dispatch(event: [String: Any]) {
         let event = Event(event: event)
         if let type = event.type {
             switch type {

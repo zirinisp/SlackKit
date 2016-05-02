@@ -21,8 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 public struct Attachment {
     
     public let fallback: String?
@@ -38,7 +36,7 @@ public struct Attachment {
     public let imageURL: String?
     public let thumbURL: String?
 
-    internal init?(attachment: [String: AnyObject]?) {
+    internal init?(attachment: [String: Any]?) {
         fallback = attachment?["fallback"] as? String
         color = attachment?["color"] as? String
         pretext = attachment?["pretext"] as? String
@@ -50,7 +48,7 @@ public struct Attachment {
         text = attachment?["text"] as? String
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
-        fields = (attachment?["fields"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray(intializer: {(field) -> AttachmentField? in
+        fields = (attachment?["fields"] as? [[String: Any]])?.objectArrayFromDictionaryArray(intializer: {(field) -> AttachmentField? in
             return AttachmentField(field: field)
         })
     }
@@ -70,8 +68,8 @@ public struct Attachment {
         self.thumbURL = thumbURL
     }
     
-    internal func dictionary() -> [String: AnyObject] {
-        var attachment = [String: AnyObject]()
+    internal func dictionary() -> [String: Any] {
+        var attachment = [String: Any]()
         attachment["fallback"] = fallback
         attachment["color"] = color
         attachment["pretext"] = pretext
@@ -87,8 +85,8 @@ public struct Attachment {
         return attachment
     }
     
-    private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: AnyObject]] {
-        var returnValue = [[String: AnyObject]]()
+    private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: Any]] {
+        var returnValue = [[String: Any]]()
         if let f = fields {
             for field in f {
                 returnValue.append(field.dictionary())
@@ -105,7 +103,7 @@ public struct AttachmentField {
     public let value: String?
     public let short: Bool?
     
-    internal init?(field: [String: AnyObject]?) {
+    internal init?(field: [String: Any]?) {
         title = field?["title"] as? String
         value = field?["value"] as? String
         short = field?["short"] as? Bool
@@ -117,8 +115,8 @@ public struct AttachmentField {
         self.short = short
     }
     
-    internal func dictionary() -> [String: AnyObject] {
-        var field = [String: AnyObject]()
+    internal func dictionary() -> [String: Any] {
+        var field = [String: Any]()
         field["title"] = title
         field["value"] = value
         field["short"] = short

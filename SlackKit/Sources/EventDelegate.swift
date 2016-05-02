@@ -21,12 +21,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 public protocol SlackEventsDelegate {
     func clientConnected()
     func clientDisconnected()
-    func preferenceChanged(preference: String, value: AnyObject)
+    func preferenceChanged(preference: String, value: Any)
     func userChanged(user: User)
     func presenceChanged(user: User?, presence: String?)
     func manualPresenceChanged(user: User?, presence: String?)
@@ -87,7 +85,7 @@ public protocol ReactionEventsDelegate {
 public protocol TeamEventsDelegate {
     func teamJoined(user: User)
     func teamPlanChanged(plan: String)
-    func teamPreferencesChanged(preference: String, value: AnyObject)
+    func teamPreferencesChanged(preference: String, value: Any)
     func teamNameChanged(name: String)
     func teamDomainChanged(domain: String)
     func teamEmailDomainChanged(domain: String)

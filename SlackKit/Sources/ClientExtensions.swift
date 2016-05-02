@@ -21,7 +21,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import C7
+#if os(Linux)
+    import Glibc
+#else
+    import Darwin.C
+#endif
 
 extension SlackClient {
     
@@ -48,7 +53,7 @@ extension SlackClient {
     internal func stripString(string: String) -> String? {
         var strippedString = string
         if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
-            strippedString = string.substring(from:string.startIndex.advanced(by:1))
+            strippedString.characters.remove(at: string.startIndex.advanced(by:1))
         }
         return strippedString
     }
@@ -60,10 +65,19 @@ public enum AttachmentColor: String {
     case Danger = "danger"
 }
 
-public extension NSDate {
+public typealias Time=Double
 
-    func slackTimestamp() -> Double {
-        return NSNumber(value: timeIntervalSince1970).doubleValue
+public extension Double {
+    
+    static func slackTimestamp() -> Double {
+        var clock: clock_serv_t = clock_serv_t()
+        var timeSpecBuffer: mach_timespec_t = mach_timespec_t(tv_sec: 0, tv_nsec: 0)
+        
+        host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &clock)
+        clock_get_time(clock, &timeSpecBuffer)
+        mach_port_deallocate(mach_task_self_, clock)
+        
+        return Double(timeSpecBuffer.tv_sec) + Double(timeSpecBuffer.tv_nsec) * 0.000000001
     }
     
 }
@@ -71,9 +85,10 @@ public extension NSDate {
 internal extension String {
     
     func slackFormatEscaping() -> String {
-        var escapedString = replacingOccurrences(of: "&", with: "&amp;")
-        escapedString = replacingOccurrences(of: "<", with: "&lt;")
-        escapedString = replacingOccurrences(of: ">", with: "&gt;")
+        var escapedString = self
+        escapedString.replace(string: "&", with: "&amp;")
+        escapedString.replace(string: "<", with: "&lt;")
+        escapedString.replace(string: ">", with: "&gt;")
         return escapedString
     }
 
@@ -81,10 +96,10 @@ internal extension String {
 
 internal extension Array {
 
-    func objectArrayFromDictionaryArray<T>(intializer:([String: AnyObject])->T?) -> [T] {
+    func objectArrayFromDictionaryArray<T>(intializer:([String: Any])->T?) -> [T] {
         var returnValue = [T]()
         for object in self {
-            if let dictionary = object as? [String: AnyObject] {
+            if let dictionary = object as? [String: Any] {
                 if let value = intializer(dictionary) {
                     returnValue.append(value)
                 }

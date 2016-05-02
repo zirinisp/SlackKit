@@ -137,14 +137,14 @@ internal struct Event {
     let fileID: String?
     let presence: String?
     let name: String?
-    let value: AnyObject?
+    let value: Any?
     let plan: String?
     let url: String?
     let domain: String?
     let emailDomain: String?
     let reaction: String?
     let replyTo: Double?
-    let reactions: [[String: AnyObject]]?
+    let reactions: [[String: Any]]?
     let edited: Edited?
     let bot: Bot?
     let channel: Channel?
@@ -160,7 +160,7 @@ internal struct Event {
     let subteamID: String?
     var profile: CustomProfile?
     
-    init(event:[String: AnyObject]) {
+    init(event:[String: Any]) {
         if let eventType = event["type"] as? String {
             type = EventType(rawValue:eventType)
         } else {
@@ -186,41 +186,41 @@ internal struct Event {
         emailDomain = event["email_domain"] as? String
         reaction = event["reaction"] as? String
         replyTo = event["reply_to"] as? Double
-        reactions = event["reactions"] as? [[String: AnyObject]]
-        bot = Bot(bot: event["bot"] as? [String: AnyObject])
-        edited = Edited(edited:event["edited"] as? [String: AnyObject])
-        dndStatus = DoNotDisturbStatus(status: event["dnd_status"] as? [String: AnyObject])
+        reactions = event["reactions"] as? [[String: Any]]
+        bot = Bot(bot: event["bot"] as? [String: Any])
+        edited = Edited(edited:event["edited"] as? [String: Any])
+        dndStatus = DoNotDisturbStatus(status: event["dnd_status"] as? [String: Any])
         itemUser = event["item_user"] as? String
-        item = Item(item: event["item"] as? [String: AnyObject])
-        subteam = UserGroup(userGroup: event["subteam"] as? [String: AnyObject])
+        item = Item(item: event["item"] as? [String: Any])
+        subteam = UserGroup(userGroup: event["subteam"] as? [String: Any])
         subteamID = event["subteam_id"] as? String
         message = Message(message: event)
-        nestedMessage = Message(message: event["message"] as? [String: AnyObject])
-        profile = CustomProfile(profile: event["profile"] as? [String: AnyObject])
+        nestedMessage = Message(message: event["message"] as? [String: Any])
+        profile = CustomProfile(profile: event["profile"] as? [String: Any])
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
-        if (Comment(comment: event["comment"] as? [String: AnyObject])?.id == nil) {
+        if (Comment(comment: event["comment"] as? [String: Any])?.id == nil) {
             comment = Comment(id: event["comment"] as? String)
         } else {
-            comment = Comment(comment: event["comment"] as? [String: AnyObject])
+            comment = Comment(comment: event["comment"] as? [String: Any])
         }
         
-        if (User(user: event["user"] as? [String: AnyObject])?.id == nil) {
+        if (User(user: event["user"] as? [String: Any])?.id == nil) {
             user = User(id: event["user"] as? String)
         } else {
-            user = User(user: event["user"] as? [String: AnyObject])
+            user = User(user: event["user"] as? [String: Any])
         }
         
-        if (File(file: event["file"] as? [String: AnyObject])?.id == nil) {
+        if (File(file: event["file"] as? [String: Any])?.id == nil) {
             file = File(id: event["file"] as? String)
         } else {
-            file = File(file: event["file"] as? [String: AnyObject])
+            file = File(file: event["file"] as? [String: Any])
         }
         
-        if (Channel(channel: event["channel"] as? [String: AnyObject])?.id == nil) {
+        if (Channel(channel: event["channel"] as? [String: Any])?.id == nil) {
             channel = Channel(id: event["channel"] as? String)
         } else {
-            channel = Channel(channel: event["channel"] as? [String: AnyObject])
+            channel = Channel(channel: event["channel"] as? [String: Any])
         }
     }
     

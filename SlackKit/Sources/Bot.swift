@@ -25,12 +25,12 @@ public struct Bot {
     
     public let id: String?
     internal(set) public var name: String?
-    internal(set) public var icons: [String: AnyObject]?
+    internal(set) public var icons: [String: Any]?
     
-    internal init?(bot: [String: AnyObject]?) {
+    internal init?(bot: [String: Any]?) {
         id = bot?["id"] as? String
         name = bot?["name"] as? String
-        icons = bot?["icons"] as? [String: AnyObject]
+        icons = bot?["icons"] as? [String: Any]
     }
     
 }

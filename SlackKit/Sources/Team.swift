@@ -29,20 +29,20 @@ public struct Team {
     internal(set) public var emailDomain: String?
     internal(set) public var messageEditWindowMinutes: Int?
     internal(set) public var overStorageLimit: Bool?
-    internal(set) public var prefs: [String: AnyObject]?
+    internal(set) public var prefs: [String: Any]?
     internal(set) public var plan: String?
     internal(set) public var icon: TeamIcon?
     
-    internal init?(team: [String: AnyObject]?) {
+    internal init?(team: [String: Any]?) {
         id = team?["id"] as! String
         name = team?["name"] as? String
         domain = team?["domain"] as? String
         emailDomain = team?["email_domain"] as? String
         messageEditWindowMinutes = team?["msg_edit_window_mins"] as? Int
         overStorageLimit = team?["over_storage_limit"] as? Bool
-        prefs = team?["prefs"] as? [String: AnyObject]
+        prefs = team?["prefs"] as? [String: Any]
         plan = team?["plan"] as? String
-        icon = TeamIcon(icon: team?["icon"] as? [String: AnyObject])
+        icon = TeamIcon(icon: team?["icon"] as? [String: Any])
     }
 }
 
@@ -56,7 +56,7 @@ public struct TeamIcon {
     internal(set) public var imageOriginal: String?
     internal(set) public var imageDefault: Bool?
     
-    internal init?(icon: [String: AnyObject]?) {
+    internal init?(icon: [String: Any]?) {
         image34 = icon?["image_34"] as? String
         image44 = icon?["image_44"] as? String
         image68 = icon?["image_68"] as? String
