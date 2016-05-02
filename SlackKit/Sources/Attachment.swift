@@ -50,7 +50,7 @@ public struct Attachment {
         text = attachment?["text"] as? String
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
-        fields = (attachment?["fields"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(field) -> AttachmentField? in
+        fields = (attachment?["fields"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray(intializer: {(field) -> AttachmentField? in
             return AttachmentField(field: field)
         })
     }
@@ -81,7 +81,7 @@ public struct Attachment {
         attachment["title"] = title
         attachment["title_link"] = titleLink
         attachment["text"] = text
-        attachment["fields"] = fieldJSONArray(fields)
+        attachment["fields"] = fieldJSONArray(fields: fields)
         attachment["image_url"] = imageURL
         attachment["thumb_url"] = thumbURL
         return attachment

@@ -45,13 +45,13 @@ internal class EventHandler {
     
     //MARK: - Messages
     func messageSent(event: Event) {
-        if let reply = event.replyTo, message = client.sentMessages[NSNumber(double: reply).stringValue], channel = message.channel, ts = message.ts {
+        if let reply = event.replyTo, message = client.sentMessages[NSNumber(value: reply).stringValue], channel = message.channel, ts = message.ts {
             message.ts = event.ts
             message.text = event.text
             client.channels[channel]?.messages[ts] = message
             
             if let delegate = client.messageEventsDelegate {
-                delegate.messageSent(message)
+                delegate.messageSent(message: message)
             }
         }
     }
@@ -61,7 +61,7 @@ internal class EventHandler {
             client.channels[id]?.messages[ts] = message
             
             if let delegate = client.messageEventsDelegate {
-                delegate.messageReceived(message)
+                delegate.messageReceived(message: message)
             }
         }
     }
@@ -71,7 +71,7 @@ internal class EventHandler {
             client.channels[id]?.messages[ts] = nested
             
             if let delegate = client.messageEventsDelegate {
-                delegate.messageChanged(nested)
+                delegate.messageChanged(message: nested)
             }
         }
     }
@@ -79,10 +79,10 @@ internal class EventHandler {
     func messageDeleted(event: Event) {
         if let id = event.channel?.id, key = event.message?.deletedTs {
             let message = client.channels[id]?.messages[key]
-            client.channels[id]?.messages.removeValueForKey(key)
+            client.channels[id]?.messages.removeValue(forKey:key)
             
             if let delegate = client.messageEventsDelegate {
-                delegate.messageDeleted(message)
+                delegate.messageDeleted(message: message)
             }
         }
     }
@@ -95,15 +95,15 @@ internal class EventHandler {
                     client.channels[channelID]?.usersTyping.append(userID)
                     
                     if let delegate = client.channelEventsDelegate {
-                        delegate.userTyping(event.channel, user: event.user)
+                        delegate.userTyping(channel: event.channel, user: event.user)
                     }
                 }
             }
             
             let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
             dispatch_after(timeout, dispatch_get_main_queue()) {
-                if let index = self.client.channels[channelID]?.usersTyping.indexOf(userID) {
-                    self.client.channels[channelID]?.usersTyping.removeAtIndex(index)
+                if let index = self.client.channels[channelID]?.usersTyping.index(of:userID) {
+                    self.client.channels[channelID]?.usersTyping.remove(at: index)
                 }
             }
         }
@@ -114,7 +114,7 @@ internal class EventHandler {
             client.channels[id]?.lastRead = event.ts
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelMarked(channel, timestamp: event.ts)
+                delegate.channelMarked(channel: channel, timestamp: event.ts)
             }
         }
         //TODO: Recalculate unreads
@@ -125,17 +125,17 @@ internal class EventHandler {
             client.channels[id] = channel
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelCreated(channel)
+                delegate.channelCreated(channel: channel)
             }
         }
     }
     
     func channelDeleted(event: Event) {
         if let channel = event.channel, id = channel.id {
-            client.channels.removeValueForKey(id)
+            client.channels.removeValue(forKey:id)
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelDeleted(channel)
+                delegate.channelDeleted(channel: channel)
             }
         }
     }
@@ -145,18 +145,18 @@ internal class EventHandler {
             client.channels[id] = event.channel
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelJoined(channel)
+                delegate.channelJoined(channel: channel)
             }
         }
     }
     
     func channelLeft(event: Event) {
         if let channel = event.channel, id = channel.id, userID = client.authenticatedUser?.id {
-            if let index = client.channels[id]?.members?.indexOf(userID) {
-                client.channels[id]?.members?.removeAtIndex(index)
+            if let index = client.channels[id]?.members?.index(of:userID) {
+                client.channels[id]?.members?.remove(at: index)
                 
                 if let delegate = client.channelEventsDelegate {
-                    delegate.channelLeft(channel)
+                    delegate.channelLeft(channel: channel)
                 }
             }
         }
@@ -167,7 +167,7 @@ internal class EventHandler {
             client.channels[id]?.name = channel.name
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelRenamed(channel)
+                delegate.channelRenamed(channel: channel)
             }
         }
     }
@@ -177,7 +177,7 @@ internal class EventHandler {
             client.channels[id]?.isArchived = archived
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelArchived(channel)
+                delegate.channelArchived(channel: channel)
             }
         }
     }
@@ -187,7 +187,7 @@ internal class EventHandler {
             //TODO: Reload chat history if there are any cached messages before latest
             
             if let delegate = client.channelEventsDelegate {
-                delegate.channelHistoryChanged(channel)
+                delegate.channelHistoryChanged(channel: channel)
             }
         }
     }
@@ -198,7 +198,7 @@ internal class EventHandler {
             client.authenticatedUser?.doNotDisturbStatus = dndStatus
             
             if let delegate = client.doNotDisturbEventsDelegate {
-                delegate.doNotDisturbUpdated(dndStatus)
+                delegate.doNotDisturbUpdated(dndStatus: dndStatus)
             }
         }
     }
@@ -208,7 +208,7 @@ internal class EventHandler {
             client.users[id]?.doNotDisturbStatus = dndStatus
             
             if let delegate = client.doNotDisturbEventsDelegate {
-                delegate.doNotDisturbUserUpdated(dndStatus, user: user)
+                delegate.doNotDisturbUserUpdated(dndStatus: dndStatus, user: user)
             }
         }
     }
@@ -219,7 +219,7 @@ internal class EventHandler {
             client.channels[id]?.isOpen = open
             
             if let delegate = client.groupEventsDelegate {
-                delegate.groupOpened(channel)
+                delegate.groupOpened(group: channel)
             }
         }
     }
@@ -236,7 +236,7 @@ internal class EventHandler {
             client.files[id] = file
             
             if let delegate = client.fileEventsDelegate {
-                delegate.fileProcessed(file)
+                delegate.fileProcessed(file: file)
             }
         }
     }
@@ -246,7 +246,7 @@ internal class EventHandler {
             client.files[id]?.isPublic = false
             
             if let delegate = client.fileEventsDelegate {
-                delegate.fileMadePrivate(file)
+                delegate.fileMadePrivate(file: file)
             }
         }
     }
@@ -254,11 +254,11 @@ internal class EventHandler {
     func deleteFile(event: Event) {
         if let file = event.file, id = file.id {
             if client.files[id] != nil {
-                client.files.removeValueForKey(id)
+                client.files.removeValue(forKey:id)
             }
             
             if let delegate = client.fileEventsDelegate {
-                delegate.fileDeleted(file)
+                delegate.fileDeleted(file: file)
             }
         }
     }
@@ -268,7 +268,7 @@ internal class EventHandler {
             client.files[id]?.comments[commentID] = comment
             
             if let delegate = client.fileEventsDelegate {
-                delegate.fileCommentAdded(file, comment: comment)
+                delegate.fileCommentAdded(file: file, comment: comment)
             }
         }
     }
@@ -278,17 +278,17 @@ internal class EventHandler {
             client.files[id]?.comments[commentID]?.comment = comment.comment
             
             if let delegate = client.fileEventsDelegate {
-                delegate.fileCommentEdited(file, comment: comment)
+                delegate.fileCommentEdited(file: file, comment: comment)
             }
         }
     }
     
     func fileCommentDeleted(event: Event) {
         if let file = event.file, id = file.id, comment = event.comment, commentID = comment.id {
-            client.files[id]?.comments.removeValueForKey(commentID)
+            client.files[id]?.comments.removeValue(forKey:commentID)
             
             if let delegate = client.fileEventsDelegate {
-                delegate.fileCommentDeleted(file, comment: comment)
+                delegate.fileCommentDeleted(file: file, comment: comment)
             }
         }
     }
@@ -299,7 +299,7 @@ internal class EventHandler {
             client.channels[id]?.pinnedItems.append(item)
             
             if let delegate = client.pinEventsDelegate {
-                delegate.itemPinned(item, channel: client.channels[id])
+                delegate.itemPinned(item: item, channel: client.channels[id])
             }
         }
     }
@@ -311,7 +311,7 @@ internal class EventHandler {
             }
             
             if let delegate = client.pinEventsDelegate {
-                delegate.itemUnpinned(event.item, channel: client.channels[id])
+                delegate.itemUnpinned(item: event.item, channel: client.channels[id])
             }
         }
     }
@@ -321,17 +321,17 @@ internal class EventHandler {
         if let item = event.item, type = item.type {
             switch type {
             case "message":
-                starMessage(item, star: star)
+                starMessage(item: item, star: star)
             case "file":
-                starFile(item, star: star)
+                starFile(item: item, star: star)
             case "file_comment":
-                starComment(item)
+                starComment(item: item)
             default:
                 break
             }
             
             if let delegate = client.starEventsDelegate {
-                delegate.itemStarred(item, star: star)
+                delegate.itemStarred(item: item, star: star)
             }
         }
     }
@@ -401,7 +401,7 @@ internal class EventHandler {
             }
             
             if let delegate = client.reactionEventsDelegate {
-                delegate.reactionAdded(event.reaction, item: event.item, itemUser: event.itemUser)
+                delegate.reactionAdded(reaction: event.reaction, item: event.item, itemUser: event.itemUser)
             }
         }
     }
@@ -413,29 +413,29 @@ internal class EventHandler {
                 if let channel = item.channel, ts = item.ts {
                     if let message = client.channels[channel]?.messages[ts] {
                         if (message.reactions[key]) != nil {
-                            message.reactions[key]?.users.removeValueForKey(userID)
+                            message.reactions[key]?.users.removeValue(forKey:userID)
                         }
                         if (message.reactions[key]?.users.count == 0) {
-                            message.reactions.removeValueForKey(key)
+                            message.reactions.removeValue(forKey:key)
                         }
                     }
                 }
             case "file":
                 if let itemFile = item.file, id = itemFile.id, file = client.files[id] {
                     if file.reactions[key] != nil {
-                        client.files[id]?.reactions[key]?.users.removeValueForKey(userID)
+                        client.files[id]?.reactions[key]?.users.removeValue(forKey:userID)
                     }
                     if client.files[id]?.reactions[key]?.users.count == 0 {
-                        client.files[id]?.reactions.removeValueForKey(key)
+                        client.files[id]?.reactions.removeValue(forKey:key)
                     }
                 }
             case "file_comment":
                 if let id = item.file?.id, file = client.files[id], commentID = item.fileCommentID {
                     if file.comments[commentID]?.reactions[key] != nil {
-                        client.files[id]?.comments[commentID]?.reactions[key]?.users.removeValueForKey(userID)
+                        client.files[id]?.comments[commentID]?.reactions[key]?.users.removeValue(forKey:userID)
                     }
                     if client.files[id]?.comments[commentID]?.reactions[key]?.users.count == 0 {
-                        client.files[id]?.comments[commentID]?.reactions.removeValueForKey(key)
+                        client.files[id]?.comments[commentID]?.reactions.removeValue(forKey:key)
                     }
                 }
                 break
@@ -444,7 +444,7 @@ internal class EventHandler {
             }
             
             if let delegate = client.reactionEventsDelegate {
-                delegate.reactionAdded(event.reaction, item: event.item, itemUser: event.itemUser)
+                delegate.reactionAdded(reaction: event.reaction, item: event.item, itemUser: event.itemUser)
             }
         }
     }
@@ -455,7 +455,7 @@ internal class EventHandler {
             client.authenticatedUser?.preferences?[name] = event.value
             
             if let delegate = client.slackEventsDelegate, value = event.value {
-                delegate.preferenceChanged(name, value: value)
+                delegate.preferenceChanged(preference: name, value: value)
             }
         }
     }
@@ -468,7 +468,7 @@ internal class EventHandler {
             client.users[id]?.preferences = preferences
             
             if let delegate = client.slackEventsDelegate {
-                delegate.userChanged(user)
+                delegate.userChanged(user: user)
             }
         }
     }
@@ -479,7 +479,7 @@ internal class EventHandler {
             client.users[id]?.presence = event.presence
             
             if let delegate = client.slackEventsDelegate {
-                delegate.presenceChanged(user, presence: event.presence)
+                delegate.presenceChanged(user: user, presence: event.presence)
             }
         }
     }
@@ -490,7 +490,7 @@ internal class EventHandler {
             client.users[id] = user
             
             if let delegate = client.teamEventsDelegate {
-                delegate.teamJoined(user)
+                delegate.teamJoined(user: user)
             }
         }
     }
@@ -500,7 +500,7 @@ internal class EventHandler {
             client.team?.plan = plan
             
             if let delegate = client.teamEventsDelegate {
-                delegate.teamPlanChanged(plan)
+                delegate.teamPlanChanged(plan: plan)
             }
         }
     }
@@ -510,7 +510,7 @@ internal class EventHandler {
             client.team?.prefs?[name] = event.value
             
             if let delegate = client.teamEventsDelegate, value = event.value {
-                delegate.teamPreferencesChanged(name, value: value)
+                delegate.teamPreferencesChanged(preference: name, value: value)
             }
         }
     }
@@ -520,7 +520,7 @@ internal class EventHandler {
             client.team?.name = name
             
             if let delegate = client.teamEventsDelegate {
-                delegate.teamNameChanged(name)
+                delegate.teamNameChanged(name: name)
             }
         }
     }
@@ -530,7 +530,7 @@ internal class EventHandler {
             client.team?.domain = domain
             
             if let delegate = client.teamEventsDelegate {
-                delegate.teamDomainChanged(domain)
+                delegate.teamDomainChanged(domain: domain)
             }
         }
     }
@@ -540,7 +540,7 @@ internal class EventHandler {
             client.team?.emailDomain = domain
             
             if let delegate = client.teamEventsDelegate {
-                delegate.teamEmailDomainChanged(domain)
+                delegate.teamEmailDomainChanged(domain: domain)
             }
         }
     }
@@ -559,7 +559,7 @@ internal class EventHandler {
             client.bots[id] = bot
             
             if let delegate = client.slackEventsDelegate {
-                delegate.botEvent(bot)
+                delegate.botEvent(bot: bot)
             }
         }
     }
@@ -570,7 +570,7 @@ internal class EventHandler {
             client.userGroups[id] = subteam
             
             if let delegate = client.subteamEventsDelegate {
-                delegate.subteamEvent(subteam)
+                delegate.subteamEvent(userGroup: subteam)
             }
         }
         
@@ -581,17 +581,17 @@ internal class EventHandler {
             client.authenticatedUser?.userGroups![subteamID] = subteamID
             
             if let delegate = client.subteamEventsDelegate {
-                delegate.subteamSelfAdded(subteamID)
+                delegate.subteamSelfAdded(subteamID: subteamID)
             }
         }
     }
     
     func subteamRemovedSelf(event: Event) {
         if let subteamID = event.subteamID {
-            client.authenticatedUser?.userGroups?.removeValueForKey(subteamID)
+            client.authenticatedUser?.userGroups?.removeValue(forKey:subteamID)
             
             if let delegate = client.subteamEventsDelegate {
-                delegate.subteamSelfRemoved(subteamID)
+                delegate.subteamSelfRemoved(subteamID: subteamID)
             }
         }
     }
@@ -601,13 +601,13 @@ internal class EventHandler {
         for user in client.users {
             if let fields = event.profile?.fields {
                 for key in fields.keys {
-                    client.users[user.0]?.profile?.customProfile?.fields[key]?.updateProfileField(fields[key])
+                    client.users[user.0]?.profile?.customProfile?.fields[key]?.updateProfileField(profile: fields[key])
                 }
             }
         }
         
         if let delegate = client.teamProfileEventsDelegate {
-            delegate.teamProfileChanged(event.profile)
+            delegate.teamProfileChanged(profile: event.profile)
         }
     }
     
@@ -619,7 +619,7 @@ internal class EventHandler {
         }
         
         if let delegate = client.teamProfileEventsDelegate {
-            delegate.teamProfileDeleted(event.profile)
+            delegate.teamProfileDeleted(profile: event.profile)
         }
     }
     
@@ -633,7 +633,7 @@ internal class EventHandler {
         }
         
         if let delegate = client.teamProfileEventsDelegate {
-            delegate.teamProfileReordered(event.profile)
+            delegate.teamProfileReordered(profile: event.profile)
         }
     }
     
@@ -642,7 +642,7 @@ internal class EventHandler {
         client.authenticatedUser?.presence = event.presence
         
         if let delegate = client.slackEventsDelegate {
-            delegate.manualPresenceChanged(client.authenticatedUser, presence: event.presence)
+            delegate.manualPresenceChanged(user: client.authenticatedUser, presence: event.presence)
         }
     }
     

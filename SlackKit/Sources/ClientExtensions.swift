@@ -27,11 +27,11 @@ extension Client {
     
     //MARK: - User & Channel
     public func getChannelIDByName(name: String) -> String? {
-        return channels.filter{$0.1.name == stripString(name)}.first?.0
+        return channels.filter{$0.1.name == stripString(string: name)}.first?.0
     }
     
     public func getUserIDByName(name: String) -> String? {
-        return users.filter{$0.1.name == stripString(name)}.first?.0
+        return users.filter{$0.1.name == stripString(string: name)}.first?.0
     }
     
     public func getImIDForUserWithID(id: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {
@@ -40,7 +40,7 @@ extension Client {
         if let channel = channel {
             success(imID: channel.0)
         } else {
-            webAPI.openIM(id, success: success, failure: failure)
+            webAPI.openIM(userID: id, success: success, failure: failure)
         }
     }
     
@@ -48,7 +48,7 @@ extension Client {
     internal func stripString(string: String) -> String? {
         var strippedString = string
         if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
-            strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
+            strippedString = string.substring(from:string.startIndex.advanced(by:1))
         }
         return strippedString
     }
@@ -63,7 +63,7 @@ public enum AttachmentColor: String {
 public extension NSDate {
 
     func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+        return NSNumber(value: timeIntervalSince1970).doubleValue
     }
     
 }
@@ -71,9 +71,9 @@ public extension NSDate {
 internal extension String {
     
     func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
+        var escapedString = replacingOccurrences(of: "&", with: "&amp;")
+        escapedString = replacingOccurrences(of: "<", with: "&lt;")
+        escapedString = replacingOccurrences(of: ">", with: "&gt;")
         return escapedString
     }
 

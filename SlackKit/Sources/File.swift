@@ -100,7 +100,7 @@ public struct File {
         isStarred = file?["is_starred"] as? Bool
         pinnedTo = file?["pinned_to"] as? [String]
         if let reactions = file?["reactions"] as? [[String: AnyObject]] {
-            self.reactions = Reaction.reactionsFromArray(reactions)
+            self.reactions = Reaction.reactionsFromArray(array: reactions)
         }
         
     }

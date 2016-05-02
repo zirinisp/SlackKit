@@ -23,7 +23,7 @@
 
 import Foundation
 
-public enum SlackError: ErrorType {
+public enum SlackError: ErrorProtocol {
     case AccountInactive
     case AlreadyArchived
     case AlreadyInChannel

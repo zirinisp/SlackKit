@@ -70,8 +70,8 @@ public class Message {
         pinnedTo = message?["pinned_to"] as? [String]
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
-        reactions = messageReactions(message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(attachment) -> Attachment? in
+        reactions = messageReactions(reactions: message?["reactions"] as? [[String: AnyObject]])
+        attachments = (message?["attachments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray(intializer: {(attachment) -> Attachment? in
             return Attachment(attachment: attachment)
         })
     }

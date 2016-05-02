@@ -30,21 +30,21 @@ internal struct NetworkInterface {
     internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
-            requestString += requestStringFromParameters(params)
+            requestString += requestStringFromParameters(parameters: params)
         }
-        let request = NSURLRequest(URL: NSURL(string: requestString)!)
-        NSURLSession.sharedSession().dataTaskWithRequest(request) {
+        let request = NSURLRequest(url: NSURL(string: requestString)!)
+        NSURLSession.shared().dataTask(with: request) {
             (data, response, internalError) -> Void in
             guard let data = data else {
                 return
             }
             do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
+                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
                 if (result["ok"] as! Bool == true) {
                     successClosure(result)
                 } else {
                     if let errorString = result["error"] as? String {
-                        throw ErrorDispatcher.dispatch(errorString)
+                        throw ErrorDispatcher.dispatch(error: errorString)
                     } else {
                         throw SlackError.UnknownError
                     }
@@ -62,11 +62,11 @@ internal struct NetworkInterface {
     internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(SlackAPIEndpoint.FilesUpload.rawValue)?token=\(token)"
         if let params = parameters {
-            requestString = requestString + requestStringFromParameters(params)
+            requestString = requestString + requestStringFromParameters(parameters: params)
         }
         
-        let request = NSMutableURLRequest(URL: NSURL(string: requestString)!)
-        request.HTTPMethod = "POST"
+        let request = NSMutableURLRequest(url: NSURL(string: requestString)!)
+        request.httpMethod = "POST"
         let boundaryConstant = randomBoundary()
         let contentType = "multipart/form-data; boundary=" + boundaryConstant
         let boundaryStart = "--\(boundaryConstant)\r\n"
@@ -75,28 +75,28 @@ internal struct NetworkInterface {
         let contentTypeString = "Content-Type: \(parameters!["filetype"])\r\n\r\n"
 
         let requestBodyData : NSMutableData = NSMutableData()
-        requestBodyData.appendData(boundaryStart.dataUsingEncoding(NSUTF8StringEncoding)!)
-        requestBodyData.appendData(contentDispositionString.dataUsingEncoding(NSUTF8StringEncoding)!)
-        requestBodyData.appendData(contentTypeString.dataUsingEncoding(NSUTF8StringEncoding)!)
-        requestBodyData.appendData(data)
-        requestBodyData.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        requestBodyData.appendData(boundaryEnd.dataUsingEncoding(NSUTF8StringEncoding)!)
+        requestBodyData.append(boundaryStart.data(using: NSUTF8StringEncoding)!)
+        requestBodyData.append(contentDispositionString.data(using: NSUTF8StringEncoding)!)
+        requestBodyData.append(contentTypeString.data(using: NSUTF8StringEncoding)!)
+        requestBodyData.append(data)
+        requestBodyData.append("\r\n".data(using: NSUTF8StringEncoding)!)
+        requestBodyData.append(boundaryEnd.data(using: NSUTF8StringEncoding)!)
         
         request.setValue(contentType, forHTTPHeaderField: "Content-Type")
-        request.HTTPBody = requestBodyData
+        request.httpBody = requestBodyData
 
-        NSURLSession.sharedSession().dataTaskWithRequest(request) {
+        NSURLSession.shared().dataTask(with: request) {
             (data, response, internalError) -> Void in
             guard let data = data else {
                 return
             }
             do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
+                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
                 if (result["ok"] as! Bool == true) {
                     successClosure(result)
                 } else {
                     if let errorString = result["error"] as? String {
-                        throw ErrorDispatcher.dispatch(errorString)
+                        throw ErrorDispatcher.dispatch(error: errorString)
                     } else {
                         throw SlackError.UnknownError
                     }
@@ -118,7 +118,7 @@ internal struct NetworkInterface {
     private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
         var requestString = ""
         for key in parameters.keys {
-            if let value = parameters[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
+            if let value = parameters[key] as? String, encodedValue = value.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed()) {
                 requestString += "&\(key)=\(encodedValue)"
             } else if let value = parameters[key] as? Int {
                 requestString += "&\(key)=\(value)"
