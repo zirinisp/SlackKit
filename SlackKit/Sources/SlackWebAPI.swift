@@ -103,10 +103,10 @@ public class SlackWebAPI {
         case IM = "im"
     }
     
-    private let client: Client
+    private let client: SlackClient
     
-    required public init(client: Client) {
-        self.client = client
+    required public init(slackClient: SlackClient) {
+        self.client = slackClient
     }
     
     //MARK: - RTM
@@ -257,7 +257,8 @@ public class SlackWebAPI {
         }
     }
     
-    public func uploadFile(file: NSData, filename: String, filetype: String = "auto", title: String? = nil, initialComment: String? = nil, channels: [String]? = nil, success: ((file: File?)->Void)?, failure: FailureClosure?) {
+    //TODO: Currently Unsupported
+    /*public func uploadFile(file: NSData, filename: String, filetype: String = "auto", title: String? = nil, initialComment: String? = nil, channels: [String]? = nil, success: ((file: File?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["file":file, "filename": filename, "filetype":filetype, "title":title, "initial_comment":initialComment, "channels":channels?.joined(separator: ",")]
         client.api.uploadRequest(token: client.token, data: file, parameters: filterNilParameters(parameters: parameters), successClosure: {
             (response) -> Void in
@@ -265,7 +266,7 @@ public class SlackWebAPI {
             }) {(error) -> Void in
                 failure?(error: error)
         }
-    }
+    }*/
     
     //MARK: - File Comments
     public func addFileComment(fileID: String, comment: String, success: ((comment: Comment?)->Void)?, failure: FailureClosure?) {

@@ -30,7 +30,11 @@ internal struct NetworkInterface {
     private let client: HTTPSClient.Client?
     
     init() {
-        client = nil
+        do {
+            self.client = try Client(uri: URI("https://slack.com"))
+        } catch {
+            self.client = nil
+        }
     }
     
     internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
@@ -40,18 +44,20 @@ internal struct NetworkInterface {
         }
         
         do {
-            var response: Response
-            response = try client!.get(requestString)
-            let bytes = try! response.body.becomeBuffer().bytes
-            let data = NSData(bytes: bytes, length: bytes.count)
-            let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
-            if (result["ok"] as! Bool == true) {
-                successClosure(result)
-            } else {
-                if let errorString = result["error"] as? String {
-                    throw ErrorDispatcher.dispatch(error: errorString)
+            var response: Response?
+            response = try client?.get(requestString)
+            let bytes = try response?.body.becomeBuffer().bytes
+            if let bytes = bytes {
+                let data = NSData(bytes: bytes, length: bytes.count)
+                let result = try NSJSONSerialization.jsonObject(with: data, options: []) as! [String: AnyObject]
+                if (result["ok"] as! Bool == true) {
+                    successClosure(result)
                 } else {
-                    throw SlackError.UnknownError
+                    if let errorString = result["error"] as? String {
+                        throw ErrorDispatcher.dispatch(error: errorString)
+                    } else {
+                        throw SlackError.UnknownError
+                    }
                 }
             }
         } catch let error {
@@ -63,7 +69,8 @@ internal struct NetworkInterface {
         }
     }
     
-    internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+    //TODO: Currently Unsupported
+    /*internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(SlackAPIEndpoint.FilesUpload.rawValue)?token=\(token)"
         if let params = parameters {
             requestString = requestString + requestStringFromParameters(parameters: params)
@@ -117,7 +124,7 @@ internal struct NetworkInterface {
     
     private func randomBoundary() -> String {
         return String(format: "slackkit.boundary.%08x%08x", arc4random(), arc4random())
-    }
+    }*/
     
     private func requestStringFromParameters(parameters: [String: AnyObject]) -> String {
         var requestString = ""

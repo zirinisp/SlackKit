@@ -23,7 +23,7 @@
 
 import Foundation
 
-extension Client {
+extension SlackClient {
     
     //MARK: - User & Channel
     public func getChannelIDByName(name: String) -> String? {

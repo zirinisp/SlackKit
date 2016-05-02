@@ -24,8 +24,8 @@
 import Foundation
 
 internal class EventHandler {
-    let client: Client
-    required init(client: Client) {
+    let client: SlackClient
+    required init(client: SlackClient) {
         self.client = client
     }
     

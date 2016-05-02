@@ -22,10 +22,10 @@
 // THE SOFTWARE.
 
 internal class EventDispatcher {
-    let client: Client
+    let client: SlackClient
     let handler: EventHandler
     
-    required init(client: Client) {
+    required init(client: SlackClient) {
         self.client = client
         handler = EventHandler(client: client)
     }

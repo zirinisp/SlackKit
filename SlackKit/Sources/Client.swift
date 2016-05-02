@@ -24,7 +24,7 @@
 import Foundation
 import WebSocket
 
-public class Client {
+public class SlackClient {
     
     internal(set) public var connected = false
     internal(set) public var authenticated = false
@@ -59,9 +59,10 @@ public class Client {
     }
     
     public var webAPI: SlackWebAPI {
-        return SlackWebAPI(client: self)
+        return SlackWebAPI(slackClient: self)
     }
 
+    internal var webSocket: WebSocket.Client?
     internal let api = NetworkInterface()
     private var dispatcher: EventDispatcher?
     
@@ -86,15 +87,24 @@ public class Client {
             (response) -> Void in
             self.initialSetup(json: response)
             if let socketURL = response["url"] as? String {
-                let url = NSURL(string: socketURL)
-                //self.webSocket = WebSocket(url: url!)
-                //self.webSocket?.delegate = self
-                //self.webSocket?.connect()
+                do {
+                    let uri = try URI(socketURL)
+                    self.webSocket = try WebSocket.Client(uri: uri, onConnect: {(socket) in
+                        self.setupSocket(socket: socket)
+                        if let pingInterval = self.pingInterval {
+                            self.pingRTMServerAtInterval(interval: pingInterval)
+                        }
+                    })
+                    try self.webSocket?.connect(uri.description)
+                } catch _ {
+                    
+                }
             }
             }, failure:nil)
     }
     
-    public func disconnect() {
+    //TODO: Currently Unsupported
+    /*public func disconnect() {
         //webSocket?.disconnect()
     }
     
@@ -107,7 +117,7 @@ public class Client {
                 }
             }
         }
-    }
+    }*/
     
     private func formatMessageToSlackJsonString(message: String, channel: String) -> NSData? {
         let json: [String: AnyObject] = [
@@ -143,7 +153,7 @@ public class Client {
                 self.sendRTMPing()
                 self.pingRTMServerAtInterval(interval: interval)
             } else {
-                self.disconnect()
+                //self.disconnect()
             }
         })
     }
@@ -241,15 +251,36 @@ public class Client {
         }
     }
     
-    /*
-    // MARK: - WebSocketDelegate
-    public func websocketDidConnect(socket: WebSocket) {
-        if let pingInterval = pingInterval {
-            pingRTMServerAtInterval(pingInterval)
+    
+    // MARK: - WebSocket
+    private func setupSocket(socket: Socket) {
+        socket.onText {(message) in
+            self.websocketDidReceive(message: message)
+        }
+        socket.onPing { (data) in try socket.pong() }
+        socket.onPong { (data) in try socket.ping() }
+        socket.onClose{ (code: CloseCode?, reason: String?) in
+            self.websocketDidDisconnect(closeCode: code, error: reason)
         }
     }
     
-    public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
+    private func websocketDidReceive(message: String) {
+        guard let data = message.data(using: NSUTF8StringEncoding) else {
+            return
+        }
+        do {
+            if let json = try NSJSONSerialization.jsonObject(with: data, options: .allowFragments) as? [String: AnyObject] {
+                print(json)
+                dispatcher?.dispatch(event: json)
+            }
+        }
+        catch _ {
+            
+        }
+
+    }
+    
+    private func websocketDidDisconnect(closeCode: CloseCode?, error: String?) {
         connected = false
         authenticated = false
         webSocket = nil
@@ -260,20 +291,5 @@ public class Client {
             connect(pingInterval: pingInterval, timeout: timeout, reconnect: reconnect)
         }
     }
-    
-    public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
-        guard let data = text.dataUsingEncoding(NSUTF8StringEncoding) else {
-            return
-        }
-        do {
-            if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject] {
-                dispatcher?.dispatch(json)
-            }
-        }
-        catch _ {
-            
-        }
-    }
-    */
     
 }
