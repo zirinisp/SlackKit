@@ -27,7 +27,8 @@ let package = Package(
     name: "SlackKit",
     targets: [],
     dependencies: [
-        .Package(url: "https://github.com/Zewo/WebSocket",
-            majorVersion: 0, minor: 5),
-    ]
+        .Package(url: "https://github.com/open-swift/C7.git", majorVersion: 0, minor: 5),
+        .Package(url: "https://github.com/czechboy0/Jay.git", majorVersion: 0, minor: 5),
+        .Package(url: "https://github.com/Zewo/WebSocket", majorVersion: 0, minor: 5),
+        ]
 )
