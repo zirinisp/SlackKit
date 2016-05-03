@@ -95,24 +95,7 @@ internal extension String {
         escapedString.replace(string: ">", with: "&gt;")
         return escapedString
     }
-
-    func percentEncodeQueryString() -> String {
-        var encodedString = self
-        encodedString.replace(string: "\"",with: "%22")
-        encodedString.replace(string: "#", with: "%23")
-        encodedString.replace(string: "%", with: "%25")
-        encodedString.replace(string: "<", with: "%3C")
-        encodedString.replace(string: ">", with: "%3E")
-        encodedString.replace(string: "[", with: "%5B")
-        encodedString.replace(string: "\\",with: "%5C")
-        encodedString.replace(string: "]", with: "%5D")
-        encodedString.replace(string: "^", with: "%5E")
-        encodedString.replace(string: "`", with: "%60")
-        encodedString.replace(string: "{", with: "%7B")
-        encodedString.replace(string: "|", with: "%7C")
-        encodedString.replace(string: "}", with: "%7D")
-        return encodedString
-    }
+    
 }
 
 internal extension Array {

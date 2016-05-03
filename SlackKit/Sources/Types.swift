@@ -43,9 +43,9 @@ public struct History {
         if let latestStr = history?["latest"] as? String, latestDouble = Double(latestStr) {
             latest = latestDouble
         }
-        if let msgs = history?["messages"] as? [[String: Any]] {
+        if let msgs = history?["messages"] as? [Any] {
             for message in msgs {
-                if let message = Message(message: message) {
+                if let message = Message(message: message as? [String: Any]) {
                     messages.append(message)
                 }
             }

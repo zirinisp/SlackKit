@@ -71,6 +71,44 @@ internal struct NetworkInterface {
         }
     }
     
+    internal func postRequest(endpoint: SlackAPIEndpoint, token: String, parameters: [String: Any]?, successClosure: ([String: Any])->Void, errorClosure: (SlackError)->Void) {
+        var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
+        do {
+            var response: Response?
+            let headers: Headers = ["Content-Type": "application/x-www-form-urlencoded"]
+            var body = ""
+            if let params = parameters {
+                body = requestStringFromParameters(parameters: params)
+            } else {
+                body = ""
+            }
+        
+            response = try client?.post(requestString, headers: headers, body: body)
+
+            let data = try response?.body.becomeBuffer()
+            if let data = data {
+                let json = try Jay().jsonFromData(data.bytes)
+                if let result = json as? [String: Any] {
+                    if (result["ok"] as? Bool == true) {
+                        successClosure(result)
+                    } else {
+                        if let errorString = result["error"] as? String {
+                            throw ErrorDispatcher.dispatch(error: errorString)
+                        } else {
+                            throw SlackError.UnknownError
+                        }
+                    }
+                }
+            }
+        } catch let error {
+            if let slackError = error as? SlackError {
+                errorClosure(slackError)
+            } else {
+                errorClosure(SlackError.UnknownError)
+            }
+        }
+    }
+    
     //TODO: Currently Unsupported
     /*internal func uploadRequest(token: String, data: NSData, parameters: [String: Any]?, successClosure: ([String: Any])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(SlackAPIEndpoint.FilesUpload.rawValue)?token=\(token)"
@@ -132,7 +170,8 @@ internal struct NetworkInterface {
         var requestString = ""
         for key in parameters.keys {
             if let value = parameters[key] as? String {
-                requestString += "&\(key)=\(value.percentEncodeQueryString())"
+                //TODO: This needs to be percent-encoded
+                requestString += "&\(key)=\(value)"
             } else if let value = parameters[key] as? Int {
                 requestString += "&\(key)=\(value)"
             }

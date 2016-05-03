@@ -131,7 +131,7 @@ public class SlackWebAPI {
     }
     
     //MARK: - Channels
-    public func channelHistory(id: String, latest: String = "\(Time.slackTimestamp)", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
+    public func channelHistory(id: String, latest: String = "\(Time.slackTimestamp())", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
         history(endpoint: .ChannelsHistory, id: id, latest: latest, oldest: oldest, inclusive: inclusive, count: count, unreads: unreads, success: {
             (history) -> Void in
                 success?(history: history)
@@ -149,7 +149,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func channelsList(excludeArchived: Bool = false, success: ((channels: [[String: Any]]?)->Void)?, failure: FailureClosure?) {
+    public func channelsList(excludeArchived: Bool = false, success: ((channels: [Any]?)->Void)?, failure: FailureClosure?) {
         list(endpoint: .ChannelsList, type:ChannelType.Channel, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
@@ -197,7 +197,7 @@ public class SlackWebAPI {
     
     public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool? = nil, parse: ParseMode? = nil, linkNames: Bool? = nil, attachments: [Attachment?]? = nil, unfurlLinks: Bool? = nil, unfurlMedia: Bool? = nil, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse?.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":encodeAttachments(attachments: attachments), "icon_url":iconURL, "icon_emoji":iconEmoji]
-        client.api.request(endpoint: .ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
+        client.api.postRequest(endpoint: .ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
             (response) -> Void in
                 success?((ts: response["ts"] as? String, response["channel"] as? String))
             }) {(error) -> Void in
@@ -207,7 +207,7 @@ public class SlackWebAPI {
     
     public func updateMessage(channel: String, ts: String, message: String, attachments: [Attachment?]? = nil, parse:ParseMode = .None, linkNames: Bool = false, success: ((updated: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any?] = ["channel": channel, "ts": ts, "text": message.slackFormatEscaping(), "parse": parse.rawValue, "link_names": linkNames, "attachments":encodeAttachments(attachments: attachments)]
-        client.api.request(endpoint: .ChatUpdate, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
+        client.api.postRequest(endpoint: .ChatUpdate, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
             (response) -> Void in
                 success?(updated: true)
             }) {(error) -> Void in
@@ -309,7 +309,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func groupHistory(id: String, latest: String = "\(Time.slackTimestamp)", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
+    public func groupHistory(id: String, latest: String = "\(Time.slackTimestamp())", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
         history(endpoint: .GroupsHistory, id: id, latest: latest, oldest: oldest, inclusive: inclusive, count: count, unreads: unreads, success: {
             (history) -> Void in
                 success?(history: history)
@@ -327,7 +327,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func groupsList(excludeArchived: Bool = false, success: ((channels: [[String: Any]]?)->Void)?, failure: FailureClosure?) {
+    public func groupsList(excludeArchived: Bool = false, success: ((channels: [Any]?)->Void)?, failure: FailureClosure?) {
         list(endpoint: .GroupsList, type:ChannelType.Group, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
@@ -383,7 +383,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func imHistory(id: String, latest: String = "\(Time.slackTimestamp)", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
+    public func imHistory(id: String, latest: String = "\(Time.slackTimestamp())", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
         history(endpoint: .IMHistory, id: id, latest: latest, oldest: oldest, inclusive: inclusive, count: count, unreads: unreads, success: {
             (history) -> Void in
                 success?(history: history)
@@ -392,7 +392,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func imsList(excludeArchived: Bool = false, success: ((channels: [[String: Any]]?)->Void)?, failure: FailureClosure?) {
+    public func imsList(excludeArchived: Bool = false, success: ((channels: [Any]?)->Void)?, failure: FailureClosure?) {
         list(endpoint: .IMList, type:ChannelType.IM, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
@@ -431,7 +431,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func mpimHistory(id: String, latest: String = "\(Time.slackTimestamp)", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
+    public func mpimHistory(id: String, latest: String = "\(Time.slackTimestamp())", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
         history(endpoint: .MPIMHistory, id: id, latest: latest, oldest: oldest, inclusive: inclusive, count: count, unreads: unreads, success: {
             (history) -> Void in
                 success?(history: history)
@@ -440,7 +440,7 @@ public class SlackWebAPI {
         }
     }
     
-    public func mpimsList(excludeArchived: Bool = false, success: ((channels: [[String: Any]]?)->Void)?, failure: FailureClosure?) {
+    public func mpimsList(excludeArchived: Bool = false, success: ((channels: [Any]?)->Void)?, failure: FailureClosure?) {
         list(endpoint: .MPIMList, type:ChannelType.Group, excludeArchived: excludeArchived, success: {
             (channels) -> Void in
                 success?(channels: channels)
@@ -592,11 +592,11 @@ public class SlackWebAPI {
         }
     }
     
-    public func usersList(includePresence: Bool = false, success: ((userList: [[String: Any]]?)->Void)?, failure: FailureClosure?) {
+    public func usersList(includePresence: Bool = false, success: ((userList: [String: Any]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any] = ["presence":includePresence]
         client.api.request(endpoint: .UsersList, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
-                success?(userList: response["members"] as? [[String: Any]])
+                success?(userList: response["members"] as? [String: Any])
             }){(error) -> Void in
                 failure?(error: error)
         }
@@ -632,7 +632,7 @@ public class SlackWebAPI {
         }
     }
     
-    private func history(endpoint: SlackAPIEndpoint, id: String, latest: String = "\(Time.slackTimestamp)", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
+    private func history(endpoint: SlackAPIEndpoint, id: String, latest: String = "\(Time.slackTimestamp())", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any] = ["channel": id, "latest": latest, "oldest": oldest, "inclusive":inclusive, "count":count, "unreads":unreads]
         client.api.request(endpoint: endpoint, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
@@ -652,11 +652,11 @@ public class SlackWebAPI {
         }
     }
     
-    private func list(endpoint: SlackAPIEndpoint, type: ChannelType, excludeArchived: Bool = false, success: ((channels: [[String: Any]]?)->Void)?, failure: FailureClosure?) {
+    private func list(endpoint: SlackAPIEndpoint, type: ChannelType, excludeArchived: Bool = false, success: ((channels: [Any]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any] = ["exclude_archived": excludeArchived]
         client.api.request(endpoint: endpoint, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
-                success?(channels: response[type.rawValue+"s"] as? [[String: Any]])
+                success?(channels: response[type.rawValue+"s"] as? [Any])
             }) {(error) -> Void in
                 failure?(error: error)
         }
