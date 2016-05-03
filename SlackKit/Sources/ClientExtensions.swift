@@ -70,14 +70,19 @@ public typealias Time=Double
 public extension Double {
     
     static func slackTimestamp() -> Double {
-        var clock: clock_serv_t = clock_serv_t()
-        var timeSpecBuffer: mach_timespec_t = mach_timespec_t(tv_sec: 0, tv_nsec: 0)
-        
-        host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &clock)
-        clock_get_time(clock, &timeSpecBuffer)
-        mach_port_deallocate(mach_task_self_, clock)
-        
-        return Double(timeSpecBuffer.tv_sec) + Double(timeSpecBuffer.tv_nsec) * 0.000000001
+        #if os(Linux)
+            return Double(time(nil))
+        #else
+            var clock: clock_serv_t = clock_serv_t()
+            var timeSpecBuffer: mach_timespec_t = mach_timespec_t(tv_sec: 0, tv_nsec: 0)
+            
+            host_get_clock_service(mach_host_self(), CALENDAR_CLOCK, &clock)
+            clock_get_time(clock, &timeSpecBuffer)
+            mach_port_deallocate(mach_task_self_, clock)
+            
+            return Double(timeSpecBuffer.tv_sec) + Double(timeSpecBuffer.tv_nsec) * 0.000000001
+        #endif
+
     }
     
 }

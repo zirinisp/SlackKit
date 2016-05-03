@@ -248,7 +248,7 @@ public class SlackWebAPI {
     
     //MARK: - Files
     public func deleteFile(fileID: String, success: ((deleted: Bool)->Void)?, failure: FailureClosure?) {
-        let parameters = ["file":fileID]
+        let parameters: [String: Any] = ["file":fileID]
         client.api.request(endpoint: .FilesDelete, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(deleted: true)
@@ -346,7 +346,7 @@ public class SlackWebAPI {
     }
     
     public func openGroup(channel: String, success: ((opened: Bool)->Void)?, failure: FailureClosure?) {
-        let parameters = ["channel":channel]
+        let parameters: [String: Any] = ["channel":channel]
         client.api.request(endpoint: .GroupsOpen, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(opened: true)
@@ -411,7 +411,7 @@ public class SlackWebAPI {
     }
     
     public func openIM(userID: String, success: ((imID: String?)->Void)?, failure: FailureClosure?) {
-        let parameters = ["user":userID]
+        let parameters: [String: Any] = ["user":userID]
         client.api.request(endpoint: .IMOpen, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
                 let group = response["channel"] as? [String: Any]
@@ -459,7 +459,7 @@ public class SlackWebAPI {
     }
     
     public func openMPIM(userIDs: [String], success: ((mpimID: String?)->Void)?, failure: FailureClosure?) {
-        let parameters = ["users":userIDs.joined(separator: ",")]
+        let parameters: [String: Any] = ["users":userIDs.joined(separator: ",")]
         client.api.request(endpoint: .MPIMOpen, token: client.token, parameters: parameters, successClosure: {
             (response) -> Void in
                 let group = response["group"] as? [String: Any]
