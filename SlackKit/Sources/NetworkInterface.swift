@@ -21,6 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Foundation
 import HTTPSClient
 import Jay
 
@@ -170,8 +171,12 @@ internal struct NetworkInterface {
         var requestString = ""
         for key in parameters.keys {
             if let value = parameters[key] as? String {
-                //TODO: This needs to be percent-encoded
-                requestString += "&\(key)=\(value)"
+                #if os(Linux)
+                    let encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet())
+                #else
+                    let encodedValue = value.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed())
+                #endif
+                requestString += "&\(key)=\(encodedValue)"
             } else if let value = parameters[key] as? Int {
                 requestString += "&\(key)=\(value)"
             }
