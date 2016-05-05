@@ -172,11 +172,11 @@ internal struct NetworkInterface {
         for key in parameters.keys {
             if let value = parameters[key] as? String {
                 #if os(Linux)
-                    if let encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.urlHostAllowed()) {
+                    if let encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
                         requestString += "&\(key)=\(encodedValue)"
                     }
                 #else
-                    if let encodedValue = value.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlHostAllowed()) {
+                    if let encodedValue = value.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed()) {
                         requestString += "&\(key)=\(encodedValue)"
                     }
                 #endif
