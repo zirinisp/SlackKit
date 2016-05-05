@@ -1,9 +1,14 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
-##iOS/OS X Slack Client Library
+##Alpha Linux Slack Client Library
 ###Description
-This is a Slack client library for iOS and OS X written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
+This is a Slack client library for Linux written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
+###Disclaimer: The linux version of SlackKit is a pre-release alpha. Feel free to report issues you come across.
+###Known Issues:
+	- File upload is currently broken.
+	- Attachments are currently broken.
 ###Installation
+
 ####Swift Package Manager
 Add SlackKit to your Package.swift
 
@@ -12,27 +17,35 @@ import PackageDescription
 
 let package = Package(
     dependencies: [
-        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 1)
+        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 0, minor: 0)
     ]
 )
 ```
 
-Run `swift-build` on your application’s main directory.
+####Development
+1. Install Homebrew: `/usr/bin/ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"`
+2. Install `swiftenv`: `brew install kylef/formulae/swiftenv`
+3. Configure your shell: `echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.bash_profile`
+4. Download and install the latest Zewo compatible snapshot:
+```
+swiftenv install DEVELOPMENT-SNAPSHOT-2016-04-12-a
+swiftenv local DEVELOPMENT-SNAPSHOT-2016-04-12-a
+```
+5. Install and Link OpenSSL: `brew install openssl`, `brew link openssl --force`
 
-####CocoaPods
-Add the pod to your podfile:
+To build an application that uses SlackKit in Xcode, simply use SwiftPM: 
 ```
-pod 'SlackKit'
+swift build -Xswiftc -I/usr/local/include -Xlinker -L/usr/local/lib -X
 ```
-and run
-```
-pod install
-```
+
 
 To use the library in your project import it:
 ```
 import SlackKit
 ```
+
+####Deployment
+Deploy your application to Heroku using [this buildpack](https://github.com/pvzig/heroku-buildpack-swift). For more detailed instructions please see [this post](https://medium.com/@pvzig/building-slack-bots-in-swift-b99e243e444c).
 
 ###Usage
 To use SlackKit you'll need a bearer token which identifies a single user. You can generate a [full access token or create one using OAuth 2](https://api.slack.com/web).
@@ -45,11 +58,6 @@ let client = Client(apiToken: "YOUR_SLACK_API_TOKEN")
 If you want to receive messages from the Slack RTM API, connect to it.
 ```swift
 client.connect()
-```
-
-You can also set options for a ping/pong interval, timeout interval, and automatic reconnection:
-```swift
-client.connect(pingInterval: 2, timeout: 10, reconnect: false)
 ```
 
 Once connected, the client will begin to consume any messages sent by the Slack RTM API.
@@ -73,7 +81,7 @@ SlackKit currently supports the a subset of the Slack Web APIs that are availabl
 - files.comments.edit
 - files.comments.delete
 - files.delete
-- files.upload
+- ~~files.upload~~
 - groups.close
 - groups.history
 - groups.info
@@ -215,18 +223,6 @@ func subteamEvent(userGroup: UserGroup)
 func subteamSelfAdded(subteamID: String)
 func subteamSelfRemoved(subteamID: String)
 ```
-
-###Examples
-####Leaderboard
-Included in the OSX-Sample is an example application of a bot you might make using SlackKit. It’s a basic leaderboard scoring bot, in the spirit of [PlusPlus](https://plusplus.chat).
-
-To configure it, enter your bot’s API token in `AppDelegate.swift` for the Leaderboard bot:
-
-```swift
-let learderboard = Leaderboard(token: "SLACK_AUTH_TOKEN")
-```
-
-It adds a point for every `@thing++`, subtracts a point for every `@thing--`, and shows a leaderboard when asked `@botname leaderboard`.
 
 ###Get In Touch
 [@pvzig](https://twitter.com/pvzig)
