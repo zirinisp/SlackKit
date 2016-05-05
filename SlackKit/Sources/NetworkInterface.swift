@@ -73,7 +73,7 @@ internal struct NetworkInterface {
     }
     
     internal func postRequest(endpoint: SlackAPIEndpoint, token: String, parameters: [String: Any]?, successClosure: ([String: Any])->Void, errorClosure: (SlackError)->Void) {
-        var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
+        let requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         do {
             var response: Response?
             let headers: Headers = ["Content-Type": "application/x-www-form-urlencoded"]

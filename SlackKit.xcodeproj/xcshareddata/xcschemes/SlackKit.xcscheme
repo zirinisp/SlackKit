@@ -14,9 +14,9 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "______Target_String"
-               BuildableName = "libString.dylib"
-               BlueprintName = "String"
+               BlueprintIdentifier = "______Target_C7"
+               BuildableName = "libC7.dylib"
+               BlueprintName = "C7"
                ReferencedContainer = "container:SlackKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -28,9 +28,37 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "______Target_C7"
-               BuildableName = "libC7.dylib"
-               BlueprintName = "C7"
+               BlueprintIdentifier = "______Target_Jay"
+               BuildableName = "libJay.dylib"
+               BlueprintName = "Jay"
+               ReferencedContainer = "container:SlackKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_JayExample"
+               BuildableName = "JayExample"
+               BlueprintName = "JayExample"
+               ReferencedContainer = "container:SlackKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
+            buildForTesting = "YES"
+            buildForRunning = "YES"
+            buildForProfiling = "YES"
+            buildForArchiving = "YES"
+            buildForAnalyzing = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_String"
+               BuildableName = "libString.dylib"
+               BlueprintName = "String"
                ReferencedContainer = "container:SlackKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -343,6 +371,20 @@
             </BuildableReference>
          </BuildActionEntry>
          <BuildActionEntry
+            buildForTesting = "NO"
+            buildForRunning = "NO"
+            buildForProfiling = "NO"
+            buildForArchiving = "NO"
+            buildForAnalyzing = "NO">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "______Target_Botly"
+               BuildableName = "Botly"
+               BlueprintName = "Botly"
+               ReferencedContainer = "container:SlackKit.xcodeproj">
+            </BuildableReference>
+         </BuildActionEntry>
+         <BuildActionEntry
             buildForTesting = "YES"
             buildForRunning = "YES"
             buildForProfiling = "YES"
@@ -353,20 +395,6 @@
                BlueprintIdentifier = "______Target_SlackKit"
                BuildableName = "libSlackKit.dylib"
                BlueprintName = "SlackKit"
-               ReferencedContainer = "container:SlackKit.xcodeproj">
-            </BuildableReference>
-         </BuildActionEntry>
-         <BuildActionEntry
-            buildForTesting = "NO"
-            buildForRunning = "NO"
-            buildForProfiling = "NO"
-            buildForArchiving = "NO"
-            buildForAnalyzing = "NO">
-            <BuildableReference
-               BuildableIdentifier = "primary"
-               BlueprintIdentifier = "______Target_OSXSample"
-               BuildableName = "libOSX-Sample.dylib"
-               BlueprintName = "OSX-Sample"
                ReferencedContainer = "container:SlackKit.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -382,9 +410,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_String"
-            BuildableName = "libString.dylib"
-            BlueprintName = "String"
+            BlueprintIdentifier = "______Target_C7"
+            BuildableName = "libC7.dylib"
+            BlueprintName = "C7"
             ReferencedContainer = "container:SlackKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -404,9 +432,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_String"
-            BuildableName = "libString.dylib"
-            BlueprintName = "String"
+            BlueprintIdentifier = "______Target_C7"
+            BuildableName = "libC7.dylib"
+            BlueprintName = "C7"
             ReferencedContainer = "container:SlackKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
@@ -422,9 +450,9 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "______Target_String"
-            BuildableName = "libString.dylib"
-            BlueprintName = "String"
+            BlueprintIdentifier = "______Target_C7"
+            BuildableName = "libC7.dylib"
+            BlueprintName = "C7"
             ReferencedContainer = "container:SlackKit.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
