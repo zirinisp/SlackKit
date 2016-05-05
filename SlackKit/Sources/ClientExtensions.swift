@@ -98,6 +98,27 @@ internal extension String {
     
 }
 
+public extension String {
+    
+    func contains(query: String, caseSensitive: Bool = false) -> Bool {
+        if query.isEmpty { return true }
+        let (s, q) = caseSensitive ? (self, query) : (self.lowercased(), query.lowercased())
+        var chars = s.characters; let qchars = q.characters
+        
+        while !chars.isEmpty {
+            if chars.starts(with: qchars) { return true }
+            chars.removeFirst()
+        }
+        
+        return false
+    }
+    
+    func prefixedBy(query: String, caseSensitive: Bool = false) -> Bool {
+        let (s, q) = caseSensitive ? (self, query) : (self.lowercased(), query.lowercased())
+        return s.characters.starts(with: q.characters)
+    }
+}
+
 internal extension Array {
 
     func objectArrayFromDictionaryArray<T>(intializer:([String: Any])->T?) -> [T] {
