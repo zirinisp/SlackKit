@@ -21,7 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import HTTPSClient
 import Jay
 
@@ -48,44 +47,6 @@ internal struct NetworkInterface {
             var response: Response?
             response = try client?.get(requestString)
             
-            let data = try response?.body.becomeBuffer()
-            if let data = data {
-                let json = try Jay().jsonFromData(data.bytes)
-                if let result = json as? [String: Any] {
-                    if (result["ok"] as? Bool == true) {
-                        successClosure(result)
-                    } else {
-                        if let errorString = result["error"] as? String {
-                            throw ErrorDispatcher.dispatch(error: errorString)
-                        } else {
-                            throw SlackError.UnknownError
-                        }
-                    }
-                }
-            }
-        } catch let error {
-            if let slackError = error as? SlackError {
-                errorClosure(slackError)
-            } else {
-                errorClosure(SlackError.UnknownError)
-            }
-        }
-    }
-    
-    internal func postRequest(endpoint: SlackAPIEndpoint, token: String, parameters: [String: Any]?, successClosure: ([String: Any])->Void, errorClosure: (SlackError)->Void) {
-        let requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
-        do {
-            var response: Response?
-            let headers: Headers = ["Content-Type": "application/x-www-form-urlencoded"]
-            var body = ""
-            if let params = parameters {
-                body = requestStringFromParameters(parameters: params)
-            } else {
-                body = ""
-            }
-        
-            response = try client?.post(requestString, headers: headers, body: body)
-
             let data = try response?.body.becomeBuffer()
             if let data = data {
                 let json = try Jay().jsonFromData(data.bytes)
@@ -171,15 +132,12 @@ internal struct NetworkInterface {
         var requestString = ""
         for key in parameters.keys {
             if let value = parameters[key] as? String {
-                #if os(Linux)
-                    if let encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLQueryAllowedCharacterSet()) {
-                        requestString += "&\(key)=\(encodedValue)"
-                    }
-                #else
-                    if let encodedValue = value.addingPercentEncoding(withAllowedCharacters: NSCharacterSet.urlQueryAllowed()) {
-                        requestString += "&\(key)=\(encodedValue)"
-                    }
-                #endif
+                do {
+                let encodedValue = try value.percentEncoded(allowing: .uriQueryAllowed)
+                    requestString += "&\(key)=\(encodedValue)"
+                } catch _ {
+                    print("Error encoding parameters.")
+                }
             } else if let value = parameters[key] as? Int {
                 requestString += "&\(key)=\(value)"
             }

@@ -197,7 +197,7 @@ public class SlackWebAPI {
     
     public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool? = nil, parse: ParseMode? = nil, linkNames: Bool? = nil, attachments: [Attachment?]? = nil, unfurlLinks: Bool? = nil, unfurlMedia: Bool? = nil, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse?.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":encodeAttachments(attachments: attachments), "icon_url":iconURL, "icon_emoji":iconEmoji]
-        client.api.postRequest(endpoint: .ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
+        client.api.request(endpoint: .ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
             (response) -> Void in
                 success?((ts: response["ts"] as? String, response["channel"] as? String))
             }) {(error) -> Void in
@@ -207,7 +207,7 @@ public class SlackWebAPI {
     
     public func updateMessage(channel: String, ts: String, message: String, attachments: [Attachment?]? = nil, parse:ParseMode = .None, linkNames: Bool = false, success: ((updated: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: Any?] = ["channel": channel, "ts": ts, "text": message.slackFormatEscaping(), "parse": parse.rawValue, "link_names": linkNames, "attachments":encodeAttachments(attachments: attachments)]
-        client.api.postRequest(endpoint: .ChatUpdate, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
+        client.api.request(endpoint: .ChatUpdate, token: client.token, parameters: filterNilParameters(parameters: parameters), successClosure: {
             (response) -> Void in
                 success?(updated: true)
             }) {(error) -> Void in

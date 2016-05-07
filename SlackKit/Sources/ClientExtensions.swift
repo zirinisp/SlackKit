@@ -53,7 +53,7 @@ extension SlackClient {
     internal func stripString(string: String) -> String? {
         var strippedString = string
         if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
-            strippedString.characters.remove(at: string.startIndex.advanced(by:1))
+            strippedString.characters.remove(at: string.startIndex)
         }
         return strippedString
     }
