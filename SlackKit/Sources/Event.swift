@@ -144,7 +144,6 @@ internal struct Event {
     let emailDomain: String?
     let reaction: String?
     let replyTo: Double?
-    let reactions: [[String: Any]]?
     let edited: Edited?
     let bot: Bot?
     let channel: Channel?
@@ -186,7 +185,6 @@ internal struct Event {
         emailDomain = event["email_domain"] as? String
         reaction = event["reaction"] as? String
         replyTo = event["reply_to"] as? Double
-        reactions = event["reactions"] as? [[String: Any]]
         bot = Bot(bot: event["bot"] as? [String: Any])
         edited = Edited(edited:event["edited"] as? [String: Any])
         dndStatus = DoNotDisturbStatus(status: event["dnd_status"] as? [String: Any])

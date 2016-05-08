@@ -73,17 +73,19 @@ public struct Reaction {
         self.users = users
     }
     
-    static func reactionsFromArray(array: [[String: Any]]) -> [String: Reaction] {
+    static func reactionsFromArray(array: [Any]) -> [String: Reaction] {
         var reactions = [String: Reaction]()
         var userDictionary = [String: String]()
-        for reaction in array {
-            if let users = reaction["users"] as? [String] {
-                for user in users {
-                    userDictionary[user] = user
+        for r in array {
+            if let reaction = r as? [String: Any] {
+                if let users = reaction["users"] as? [String] {
+                    for user in users {
+                        userDictionary[user] = user
+                    }
                 }
-            }
-            if let name = reaction["name"] as? String {
-                reactions[name] = Reaction(name: name, users: userDictionary)
+                if let name = reaction["name"] as? String {
+                    reactions[name] = Reaction(name: name, users: userDictionary)
+                }
             }
         }
         return reactions

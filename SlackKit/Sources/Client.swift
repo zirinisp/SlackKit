@@ -225,9 +225,9 @@ public class SlackClient {
     
     private func enumerateSubteams(subteams: [String: Any]?) {
         if let subteams = subteams {
-            if let all = subteams["all"] as? [[String: Any]] {
+            if let all = subteams["all"] as? [Any] {
                 for item in all {
-                    let u = UserGroup(userGroup: item)
+                    let u = UserGroup(userGroup: item as? [String: Any])
                     self.userGroups[u!.id!] = u
                 }
             }

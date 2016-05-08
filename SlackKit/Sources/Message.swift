@@ -70,8 +70,8 @@ public class Message {
         pinnedTo = message?["pinned_to"] as? [String]
         comment = Comment(comment: message?["comment"] as? [String: Any])
         file = File(file: message?["file"] as? [String: Any])
-        reactions = messageReactions(reactions: message?["reactions"] as? [[String: Any]])
-        attachments = (message?["attachments"] as? [[String: Any]])?.objectArrayFromDictionaryArray(intializer: {(attachment) -> Attachment? in
+        reactions = messageReactions(reactions: message?["reactions"] as? [Any])
+        attachments = (message?["attachments"] as? [Any])?.objectArrayFromDictionaryArray(intializer: {(attachment) -> Attachment? in
             return Attachment(attachment: attachment)
         })
     }
@@ -91,11 +91,11 @@ public class Message {
         file = nil
     }
     
-    private func messageReactions(reactions: [[String: Any]]?) -> [String: Reaction] {
+    private func messageReactions(reactions: [Any]?) -> [String: Reaction] {
         var returnValue = [String: Reaction]()
         if let r = reactions {
             for react in r {
-                if let reaction = Reaction(reaction: react), reactionName = reaction.name {
+                if let reaction = Reaction(reaction: react as? [String: Any]), reactionName = reaction.name {
                     returnValue[reactionName] = reaction
                 }
             }

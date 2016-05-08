@@ -48,7 +48,7 @@ public struct Attachment {
         text = attachment?["text"] as? String
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
-        fields = (attachment?["fields"] as? [[String: Any]])?.objectArrayFromDictionaryArray(intializer: {(field) -> AttachmentField? in
+        fields = (attachment?["fields"] as? [Any])?.objectArrayFromDictionaryArray(intializer: {(field) -> AttachmentField? in
             return AttachmentField(field: field)
         })
     }
@@ -85,8 +85,8 @@ public struct Attachment {
         return attachment
     }
     
-    private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: Any]] {
-        var returnValue = [[String: Any]]()
+    private func fieldJSONArray(fields: [AttachmentField]?) -> [Any] {
+        var returnValue = [Any]()
         if let f = fields {
             for field in f {
                 returnValue.append(field.dictionary())

@@ -696,7 +696,7 @@ public class SlackWebAPI {
     //MARK: - Encode Attachments
     private func encodeAttachments(attachments: [Attachment?]?) -> String? {
         if let attachments = attachments {
-            var attachmentArray: [[String: Any]] = []
+            var attachmentArray: [Any] = []
             for attachment in attachments {
                 if let attachment = attachment {
                     attachmentArray.append(attachment.dictionary())
