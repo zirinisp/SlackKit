@@ -6,7 +6,6 @@ This is a Slack client library for Linux written in Swift. It's intended to expo
 ###Disclaimer: The linux version of SlackKit is a pre-release alpha. Feel free to report issues you come across.
 ###Known Issues:
 	- File upload is currently broken.
-	- Attachments are currently broken.
 ###Installation
 
 ####Swift Package Manager
@@ -28,14 +27,15 @@ let package = Package(
 3. Configure your shell: `echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.bash_profile`
 4. Download and install the latest Zewo compatible snapshot:
 ```
-swiftenv install DEVELOPMENT-SNAPSHOT-2016-04-12-a
-swiftenv local DEVELOPMENT-SNAPSHOT-2016-04-12-a
+swiftenv install DEVELOPMENT-SNAPSHOT-2016-05-03-a
+swiftenv local DEVELOPMENT-SNAPSHOT-2016-05-03-a
 ```
 5. Install and Link OpenSSL: `brew install openssl`, `brew link openssl --force`
 
-To build an application that uses SlackKit in Xcode, simply use SwiftPM: 
+To build an application that uses SlackKit in Xcode, simply use SwiftPM. (For the 05-03 snapshot you must run `swift build` before generating an Xcode project:
 ```
-swift build -Xswiftc -I/usr/local/include -Xlinker -L/usr/local/lib -X
+swift build
+swift build -Xlinker -L$(pwd)/.build/debug/ -Xswiftc -I/usr/local/include -Xlinker -L/usr/local/lib -X
 ```
 
 
