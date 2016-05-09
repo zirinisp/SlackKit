@@ -133,12 +133,14 @@ internal struct NetworkInterface {
         for key in parameters.keys {
             if let value = parameters[key] as? String {
                 do {
-                let encodedValue = try value.percentEncoded(allowing: .uriQueryAllowed)
+                    let encodedValue = try value.percentEncoded(allowing: .uriQueryAllowed)
                     requestString += "&\(key)=\(encodedValue)"
                 } catch _ {
                     print("Error encoding parameters.")
                 }
             } else if let value = parameters[key] as? Int {
+                requestString += "&\(key)=\(value)"
+            } else if let value = parameters[key] as? Bool {
                 requestString += "&\(key)=\(value)"
             }
         }
