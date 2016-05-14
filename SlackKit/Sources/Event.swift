@@ -199,29 +199,30 @@ internal struct Event {
         profile = CustomProfile(profile: event["profile"] as? [String: AnyObject])
         
         // Comment, Channel, User, and File can come across as Strings or Dictionaries
-        if (Comment(comment: event["comment"] as? [String: AnyObject])?.id == nil) {
+        if let commentDictionary = event["comment"] as? [String: AnyObject] {
+            comment = Comment(comment: commentDictionary)
+        } else {
             comment = Comment(id: event["comment"] as? String)
-        } else {
-            comment = Comment(comment: event["comment"] as? [String: AnyObject])
         }
-        
-        if (User(user: event["user"] as? [String: AnyObject])?.id == nil) {
+
+        if let userDictionary = event["user"] as? [String: AnyObject] {
+            user = User(user: userDictionary)
+        } else {
             user = User(id: event["user"] as? String)
-        } else {
-            user = User(user: event["user"] as? [String: AnyObject])
         }
-        
-        if (File(file: event["file"] as? [String: AnyObject])?.id == nil) {
+
+        if let fileDictionary = event["file"] as? [String: AnyObject] {
+            file = File(file: fileDictionary)
+        } else {
             file = File(id: event["file"] as? String)
-        } else {
-            file = File(file: event["file"] as? [String: AnyObject])
         }
-        
-        if (Channel(channel: event["channel"] as? [String: AnyObject])?.id == nil) {
+
+        if let channelDictionary =  event["channel"] as? [String: AnyObject] {
+            channel = Channel(channel: channelDictionary)
+        } else {
             channel = Channel(id: event["channel"] as? String)
-        } else {
-            channel = Channel(channel: event["channel"] as? [String: AnyObject])
         }
+
     }
     
 }

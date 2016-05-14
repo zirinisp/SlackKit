@@ -28,7 +28,7 @@ public struct Edited {
     public let user: String?
     public let ts: String?
     
-    internal init?(edited:[String: AnyObject]?) {
+    internal init(edited:[String: AnyObject]?) {
         user = edited?["user"] as? String
         ts = edited?["ts"] as? String
     }
@@ -40,15 +40,13 @@ public struct History {
     internal(set) public var messages = [Message]()
     public let hasMore: Bool?
     
-    internal init?(history: [String: AnyObject]?) {
+    internal init(history: [String: AnyObject]?) {
         if let latestStr = history?["latest"] as? String, latestDouble = Double(latestStr) {
             latest = NSDate(timeIntervalSince1970: NSTimeInterval(latestDouble))
         }
         if let msgs = history?["messages"] as? [[String: AnyObject]] {
             for message in msgs {
-                if let message = Message(message: message) {
-                    messages.append(message)
-                }
+                messages.append(Message(message: message))
             }
         }
         hasMore = history?["has_more"] as? Bool
@@ -60,16 +58,16 @@ public struct Reaction {
     public let name: String?
     internal(set) public var users = [String: String]()
     
-    internal init?(reaction:[String: AnyObject]?) {
+    internal init(reaction:[String: AnyObject]?) {
         name = reaction?["name"] as? String
     }
     
-    internal init?(name: String?, user: String) {
+    internal init(name: String?, user: String) {
         self.name = name
         users[user] = user
     }
     
-    internal init?(name: String?, users: [String: String]) {
+    internal init(name: String?, users: [String: String]) {
         self.name = name
         self.users = users
     }
@@ -108,7 +106,7 @@ public struct Comment {
     internal(set) public var stars: Int?
     internal(set) public var reactions = [String: Reaction]()
     
-    internal init?(comment:[String: AnyObject]?) {
+    internal init(comment:[String: AnyObject]?) {
         id = comment?["id"] as? String
         created = comment?["created"] as? Int
         user = comment?["user"] as? String
@@ -117,7 +115,7 @@ public struct Comment {
         self.comment = comment?["comment"] as? String
     }
     
-    internal init?(id: String?) {
+    internal init(id: String?) {
         self.id = id
         self.user = nil
     }
@@ -139,7 +137,7 @@ public struct Item {
     public let comment: Comment?
     public let fileCommentID: String?
     
-    internal init?(item:[String: AnyObject]?) {
+    internal init(item:[String: AnyObject]?) {
         type = item?["type"] as? String
         ts = item?["ts"] as? String
         channel = item?["channel"] as? String
@@ -147,15 +145,16 @@ public struct Item {
         message = Message(message: item?["message"] as? [String: AnyObject])
         
         // Comment and File can come across as Strings or Dictionaries
-        if (Comment(comment: item?["comment"] as? [String: AnyObject])?.id == nil) {
+        if let commentDictionary = item?["comment"] as? [String: AnyObject] {
+            comment = Comment(comment: commentDictionary)
+        } else {
             comment = Comment(id: item?["comment"] as? String)
-        } else {
-            comment = Comment(comment: item?["comment"] as? [String: AnyObject])
         }
-        if (File(file: item?["file"] as? [String: AnyObject])?.id == nil) {
-            file = File(id: item?["file"] as? String)
+
+        if let fileDictionary = item?["file"] as? [String: AnyObject] {
+            file = File(file: fileDictionary)
         } else {
-            file = File(file: item?["file"] as? [String: AnyObject])
+            file = File(id: item?["file"] as? String)
         }
         
         fileCommentID = item?["file_comment"] as? String
@@ -174,7 +173,7 @@ public struct Topic {
     public let creator: String?
     public let lastSet: Int?
     
-    internal init?(topic: [String: AnyObject]?) {
+    internal init(topic: [String: AnyObject]?) {
         value = topic?["value"] as? String
         creator = topic?["creator"] as? String
         lastSet = topic?["last_set"] as? Int
@@ -189,7 +188,7 @@ public struct DoNotDisturbStatus {
     internal(set) public var snoozeEnabled: Bool?
     internal(set) public var snoozeEndtime: Int?
     
-    internal init?(status: [String: AnyObject]?) {
+    internal init(status: [String: AnyObject]?) {
         enabled = status?["dnd_enabled"] as? Bool
         nextDoNotDisturbStart = status?["next_dnd_start_ts"] as? Int
         nextDoNotDisturbEnd = status?["next_dnd_end_ts"] as? Int
@@ -203,26 +202,25 @@ public struct DoNotDisturbStatus {
 public struct CustomProfile {
     internal(set) public var fields = [String: CustomProfileField]()
     
-    internal init?(profile: [String: AnyObject]?) {
+    internal init(profile: [String: AnyObject]?) {
         if let eventFields = profile?["fields"] as? [AnyObject] {
             for field in eventFields {
-                if let cpf = CustomProfileField(field: field as? [String: AnyObject]), id = cpf.id {
-                    fields[id] = cpf
+                var cpf: CustomProfileField?
+                if let fieldDictionary = field as? [String: AnyObject] {
+                    cpf = CustomProfileField(field: fieldDictionary)
                 } else {
-                    if let cpf = CustomProfileField(id: field as? String), id = cpf.id {
-                        fields[id] = cpf
-                    }
+                    cpf = CustomProfileField(id: field as? String)
                 }
+                if let id = cpf?.id { fields[id] = cpf }
             }
         }
     }
     
-    internal init?(customFields: [String: AnyObject]?) {
+    internal init(customFields: [String: AnyObject]?) {
         if let customFields = customFields {
             for key in customFields.keys {
-                if let cpf = CustomProfileField(field: customFields[key] as? [String: AnyObject]) {
-                    self.fields[key] = cpf
-                }
+                let cpf = CustomProfileField(field: customFields[key] as? [String: AnyObject])
+                self.fields[key] = cpf
             }
         }
     }
@@ -241,7 +239,7 @@ public struct CustomProfileField {
     internal(set) public var possibleValues: [String]?
     internal(set) public var type: String?
     
-    internal init?(field: [String: AnyObject]?) {
+    internal init(field: [String: AnyObject]?) {
         id = field?["id"] as? String
         alt = field?["alt"] as? String
         value = field?["value"] as? String
@@ -254,7 +252,7 @@ public struct CustomProfileField {
         type = field?["type"] as? String
     }
     
-    internal init?(id: String?) {
+    internal init(id: String?) {
         self.id = id
     }
     

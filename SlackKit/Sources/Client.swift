@@ -197,19 +197,22 @@ public class Client: WebSocketDelegate {
     }
     
     private func addUser(aUser: [String: AnyObject]) {
-        if let user = User(user: aUser), id = user.id {
+        let user = User(user: aUser)
+        if let id = user.id {
             users[id] = user
         }
     }
     
     private func addChannel(aChannel: [String: AnyObject]) {
-        if let channel = Channel(channel: aChannel), id = channel.id {
+        let channel = Channel(channel: aChannel)
+        if let id = channel.id {
             channels[id] = channel
         }
     }
     
     private func addBot(aBot: [String: AnyObject]) {
-        if let bot = Bot(bot: aBot), id = bot.id {
+        let bot = Bot(bot: aBot)
+        if let id = bot.id {
             bots[id] = bot
         }
     }
@@ -219,7 +222,7 @@ public class Client: WebSocketDelegate {
             if let all = subteams["all"] as? [[String: AnyObject]] {
                 for item in all {
                     let u = UserGroup(userGroup: item)
-                    self.userGroups[u!.id!] = u
+                    self.userGroups[u.id!] = u
                 }
             }
             if let auth = subteams["self"] as? [String] {
