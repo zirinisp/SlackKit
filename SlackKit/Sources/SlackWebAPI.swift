@@ -104,16 +104,22 @@ public class SlackWebAPI {
         case IM = "im"
     }
     
-    private let client: Client
-    
-    required public init(client: Client) {
-        self.client = client
+    private let networkInterface: NetworkInterface
+    private let token: String
+
+    init(networkInterface: NetworkInterface, token: String) {
+        self.networkInterface = networkInterface
+        self.token = token
+    }
+
+    convenience public init(client: Client) {
+        self.init(networkInterface: client.api, token: client.token)
     }
     
     //MARK: - RTM
     public func rtmStart(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, success: ((response: [String: AnyObject])->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["simple_latest": simpleLatest, "no_unreads": noUnreads, "mpim_aware": mpimAware]
-        client.api.request(.RTMStart, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(.RTMStart, token: token, parameters: filterNilParameters(parameters), successClosure: {
                 (response) -> Void in
                 success?(response: response)
             }) {(error) -> Void in
@@ -123,7 +129,7 @@ public class SlackWebAPI {
     
     //MARK: - Auth Test
     public func authenticationTest(success: ((authenticated: Bool)->Void)?, failure: FailureClosure?) {
-        client.api.request(.AuthTest, token: client.token, parameters: nil, successClosure: {
+        networkInterface.request(.AuthTest, token: token, parameters: nil, successClosure: {
             (response) -> Void in
                 success?(authenticated: true)
             }) {(error) -> Void in
@@ -189,7 +195,7 @@ public class SlackWebAPI {
     //MARK: - Messaging
     public func deleteMessage(channel: String, ts: String, success: ((deleted: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": channel, "ts": ts]
-        client.api.request(.ChatDelete, token: client.token, parameters: parameters, successClosure: { (response) -> Void in
+        networkInterface.request(.ChatDelete, token: token, parameters: parameters, successClosure: { (response) -> Void in
                 success?(deleted: true)
             }) {(error) -> Void in
                 failure?(error: error)
@@ -198,7 +204,7 @@ public class SlackWebAPI {
     
     public func sendMessage(channel: String, text: String, username: String? = nil, asUser: Bool? = nil, parse: ParseMode? = nil, linkNames: Bool? = nil, attachments: [Attachment?]? = nil, unfurlLinks: Bool? = nil, unfurlMedia: Bool? = nil, iconURL: String? = nil, iconEmoji: String? = nil, success: (((ts: String?, channel: String?))->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["channel":channel, "text":text.slackFormatEscaping(), "as_user":asUser, "parse":parse?.rawValue, "link_names":linkNames, "unfurl_links":unfurlLinks, "unfurlMedia":unfurlMedia, "username":username, "attachments":encodeAttachments(attachments), "icon_url":iconURL, "icon_emoji":iconEmoji]
-        client.api.request(.ChatPostMessage, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(.ChatPostMessage, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?((ts: response["ts"] as? String, response["channel"] as? String))
             }) {(error) -> Void in
@@ -208,7 +214,7 @@ public class SlackWebAPI {
     
     public func updateMessage(channel: String, ts: String, message: String, attachments: [Attachment?]? = nil, parse:ParseMode = .None, linkNames: Bool = false, success: ((updated: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["channel": channel, "ts": ts, "text": message.slackFormatEscaping(), "parse": parse.rawValue, "link_names": linkNames, "attachments":encodeAttachments(attachments)]
-        client.api.request(.ChatUpdate, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(.ChatUpdate, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(updated: true)
             }) {(error) -> Void in
@@ -219,7 +225,7 @@ public class SlackWebAPI {
     //MARK: - Do Not Disturb
     public func dndInfo(user: String? = nil, success: ((status: DoNotDisturbStatus?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["user": user]
-        client.api.request(.DNDInfo, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(.DNDInfo, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(status: DoNotDisturbStatus(status: response))
             }) {(error) -> Void in
@@ -229,7 +235,7 @@ public class SlackWebAPI {
     
     public func dndTeamInfo(users: [String]? = nil, success: ((statuses: [String: DoNotDisturbStatus]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["users":users?.joinWithSeparator(",")]
-        client.api.request(.DNDTeamInfo, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(.DNDTeamInfo, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(statuses: self.enumerateDNDStauses(response["users"] as? [String: AnyObject]))
             }) {(error) -> Void in
@@ -239,7 +245,7 @@ public class SlackWebAPI {
     
     //MARK: - Emoji
     public func emojiList(success: ((emojiList: [String: AnyObject]?)->Void)?, failure: FailureClosure?) {
-        client.api.request(.EmojiList, token: client.token, parameters: nil, successClosure: {
+        networkInterface.request(.EmojiList, token: token, parameters: nil, successClosure: {
             (response) -> Void in
                 success?(emojiList: response["emoji"] as? [String: AnyObject])
             }) { (error) -> Void in
@@ -250,7 +256,7 @@ public class SlackWebAPI {
     //MARK: - Files
     public func deleteFile(fileID: String, success: ((deleted: Bool)->Void)?, failure: FailureClosure?) {
         let parameters = ["file":fileID]
-        client.api.request(.FilesDelete, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.FilesDelete, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(deleted: true)
             }) {(error) -> Void in
@@ -260,7 +266,7 @@ public class SlackWebAPI {
     
     public func fileInfo(fileID: String, commentCount: Int = 100, totalPages: Int = 1, success: ((file: File?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["file":fileID, "count": commentCount, "totalPages":totalPages]
-        client.api.request(.FilesInfo, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.FilesInfo, token: token, parameters: parameters, successClosure: {
             (response) in
                 var file = File(file: response["file"] as? [String: AnyObject])
                 (response["comments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(comment) -> Comment? in
@@ -277,7 +283,7 @@ public class SlackWebAPI {
     
     public func uploadFile(file: NSData, filename: String, filetype: String = "auto", title: String? = nil, initialComment: String? = nil, channels: [String]? = nil, success: ((file: File?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["file":file, "filename": filename, "filetype":filetype, "title":title, "initial_comment":initialComment, "channels":channels?.joinWithSeparator(",")]
-        client.api.uploadRequest(client.token, data: file, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.uploadRequest(token, data: file, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(file: File(file: response["file"] as? [String: AnyObject]))
             }) {(error) -> Void in
@@ -288,7 +294,7 @@ public class SlackWebAPI {
     //MARK: - File Comments
     public func addFileComment(fileID: String, comment: String, success: ((comment: Comment?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["file":fileID, "comment":comment.slackFormatEscaping()]
-        client.api.request(.FilesCommentsAdd, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.FilesCommentsAdd, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(comment: Comment(comment: response["comment"] as? [String: AnyObject]))
             }) {(error) -> Void in
@@ -298,7 +304,7 @@ public class SlackWebAPI {
     
     public func editFileComment(fileID: String, commentID: String, comment: String, success: ((comment: Comment?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["file":fileID, "id":commentID, "comment":comment.slackFormatEscaping()]
-        client.api.request(.FilesCommentsEdit, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.FilesCommentsEdit, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
             success?(comment: Comment(comment: response["comment"] as? [String: AnyObject]))
             }) {(error) -> Void in
@@ -308,7 +314,7 @@ public class SlackWebAPI {
     
     public func deleteFileComment(fileID: String, commentID: String, success: ((deleted: Bool?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["file":fileID, "id": commentID]
-        client.api.request(.FilesCommentsDelete, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.FilesCommentsDelete, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(deleted: true)
             }) {(error) -> Void in
@@ -364,7 +370,7 @@ public class SlackWebAPI {
     
     public func openGroup(channel: String, success: ((opened: Bool)->Void)?, failure: FailureClosure?) {
         let parameters = ["channel":channel]
-        client.api.request(.GroupsOpen, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.GroupsOpen, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(opened: true)
             }) {(error) -> Void in
@@ -429,7 +435,7 @@ public class SlackWebAPI {
     
     public func openIM(userID: String, success: ((imID: String?)->Void)?, failure: FailureClosure?) {
         let parameters = ["user":userID]
-        client.api.request(.IMOpen, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.IMOpen, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 let group = response["channel"] as? [String: AnyObject]
                 success?(imID: group?["id"] as? String)
@@ -477,7 +483,7 @@ public class SlackWebAPI {
     
     public func openMPIM(userIDs: [String], success: ((mpimID: String?)->Void)?, failure: FailureClosure?) {
         let parameters = ["users":userIDs.joinWithSeparator(",")]
-        client.api.request(.MPIMOpen, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.MPIMOpen, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 let group = response["group"] as? [String: AnyObject]
                 success?(mpimID: group?["id"] as? String)
@@ -507,7 +513,7 @@ public class SlackWebAPI {
     
     private func pin(endpoint: SlackAPIEndpoint, channel: String, file: String? = nil, fileComment: String? = nil, timestamp: String? = nil, success: ((ok: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["channel":channel, "file":file, "file_comment":fileComment, "timestamp":timestamp]
-        client.api.request(endpoint, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(ok: true)
             }){(error) -> Void in
@@ -538,7 +544,7 @@ public class SlackWebAPI {
     
     private func react(endpoint: SlackAPIEndpoint, name: String, file: String? = nil, fileComment: String? = nil, channel: String? = nil, timestamp: String? = nil, success: ((ok: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["name":name, "file":file, "file_comment":fileComment, "channel":channel, "timestamp":timestamp]
-        client.api.request(endpoint, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(ok: true)
             }) {(error) -> Void in
@@ -569,7 +575,7 @@ public class SlackWebAPI {
     
     private func star(endpoint: SlackAPIEndpoint, file: String?, fileComment: String?, channel: String?, timestamp: String?, success: ((ok: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject?] = ["file":file, "file_comment":fileComment, "channel":channel, "timestamp":timestamp]
-        client.api.request(endpoint, token: client.token, parameters: filterNilParameters(parameters), successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: filterNilParameters(parameters), successClosure: {
             (response) -> Void in
                 success?(ok: true)
             }) {(error) -> Void in
@@ -580,7 +586,7 @@ public class SlackWebAPI {
     
     //MARK: - Team
     public func teamInfo(success: ((info: [String: AnyObject]?)->Void)?, failure: FailureClosure?) {
-        client.api.request(.TeamInfo, token: client.token, parameters: nil, successClosure: {
+        networkInterface.request(.TeamInfo, token: token, parameters: nil, successClosure: {
             (response) -> Void in
                 success?(info: response["team"] as? [String: AnyObject])
             }) {(error) -> Void in
@@ -591,7 +597,7 @@ public class SlackWebAPI {
     //MARK: - Users
     public func userPresence(user: String, success: ((presence: String?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["user":user]
-        client.api.request(.UsersGetPresence, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.UsersGetPresence, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(presence: response["presence"] as? String)
             }){(error) -> Void in
@@ -601,7 +607,7 @@ public class SlackWebAPI {
     
     public func userInfo(id: String, success: ((user: User?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["user":id]
-        client.api.request(.UsersInfo, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.UsersInfo, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(user: User(user: response["user"] as? [String: AnyObject]))
             }) {(error) -> Void in
@@ -611,7 +617,7 @@ public class SlackWebAPI {
     
     public func usersList(includePresence: Bool = false, success: ((userList: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["presence":includePresence]
-        client.api.request(.UsersList, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.UsersList, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(userList: response["members"] as? [[String: AnyObject]])
             }){(error) -> Void in
@@ -620,7 +626,7 @@ public class SlackWebAPI {
     }
     
     public func setUserActive(success: ((success: Bool)->Void)?, failure: FailureClosure?) {
-        client.api.request(.UsersSetActive, token: client.token, parameters: nil, successClosure: {
+        networkInterface.request(.UsersSetActive, token: token, parameters: nil, successClosure: {
             (response) -> Void in
                 success?(success: true)
             }) {(error) -> Void in
@@ -630,7 +636,7 @@ public class SlackWebAPI {
     
     public func setUserPresence(presence: Presence, success: ((success: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["presence":presence.rawValue]
-        client.api.request(.UsersSetPresence, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(.UsersSetPresence, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(success:true)
             }) {(error) -> Void in
@@ -641,7 +647,7 @@ public class SlackWebAPI {
     //MARK: - Channel Utilities
     private func close(endpoint: SlackAPIEndpoint, channelID: String, success: ((closed: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel":channelID]
-        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(closed: true)
             }) {(error) -> Void in
@@ -651,7 +657,7 @@ public class SlackWebAPI {
     
     private func history(endpoint: SlackAPIEndpoint, id: String, latest: String = "\(NSDate().timeIntervalSince1970)", oldest: String = "0", inclusive: Bool = false, count: Int = 100, unreads: Bool = false, success: ((history: History?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": id, "latest": latest, "oldest": oldest, "inclusive":inclusive, "count":count, "unreads":unreads]
-        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(history: History(history: response))
             }) {(error) -> Void in
@@ -661,7 +667,7 @@ public class SlackWebAPI {
     
     private func info(endpoint: SlackAPIEndpoint, type: ChannelType, id: String, success: ((channel: Channel?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": id]
-        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(channel: Channel(channel: response[type.rawValue] as? [String: AnyObject]))
             }) {(error) -> Void in
@@ -671,7 +677,7 @@ public class SlackWebAPI {
     
     private func list(endpoint: SlackAPIEndpoint, type: ChannelType, excludeArchived: Bool = false, success: ((channels: [[String: AnyObject]]?)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["exclude_archived": excludeArchived]
-        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(channels: response[type.rawValue+"s"] as? [[String: AnyObject]])
             }) {(error) -> Void in
@@ -681,7 +687,7 @@ public class SlackWebAPI {
     
     private func mark(endpoint: SlackAPIEndpoint, channel: String, timestamp: String, success: ((ts: String)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": channel, "ts": timestamp]
-        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(ts: timestamp)
             }) {(error) -> Void in
@@ -691,7 +697,7 @@ public class SlackWebAPI {
     
     private func setInfo(endpoint: SlackAPIEndpoint, type: InfoType, channel: String, text: String, success: ((success: Bool)->Void)?, failure: FailureClosure?) {
         let parameters: [String: AnyObject] = ["channel": channel, type.rawValue: text]
-        client.api.request(endpoint, token: client.token, parameters: parameters, successClosure: {
+        networkInterface.request(endpoint, token: token, parameters: parameters, successClosure: {
             (response) -> Void in
                 success?(success: true)
             }) {(error) -> Void in
@@ -729,7 +735,7 @@ public class SlackWebAPI {
         }
         return nil
     }
-    
+
     //MARK: - Enumerate Do Not Distrub Status
     private func enumerateDNDStauses(statuses: [String: AnyObject]?) -> [String: DoNotDisturbStatus] {
         var retVal = [String: DoNotDisturbStatus]()
