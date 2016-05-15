@@ -68,30 +68,32 @@ internal extension Client {
     
     //MARK: - Channels
     func userTyping(event: Event) {
-        if let channelID = event.channel?.id, userID = event.user?.id {
-            if let _ = channels[channelID] {
-                if (!channels[channelID]!.usersTyping.contains(userID)) {
-                    channels[channelID]?.usersTyping.append(userID)
-                    
-                    channelEventsDelegate?.userTyping(event.channel, user: event.user)
-                }
-            }
-            
-            let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
-            dispatch_after(timeout, dispatch_get_main_queue()) {
-                if let index = self.channels[channelID]?.usersTyping.indexOf(userID) {
-                    self.channels[channelID]?.usersTyping.removeAtIndex(index)
-                }
+        guard let channel = event.channel, channelID = channel.id,
+                  user = event.user, userID = user.id where
+                  channels.indexForKey(channelID) != nil && !channels[channelID]!.usersTyping.contains(userID) else {
+            return
+        }
+
+        channels[channelID]?.usersTyping.append(userID)
+
+        channelEventsDelegate?.userTyping(channel, user: user)
+
+        let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
+        dispatch_after(timeout, dispatch_get_main_queue()) {
+            if let index = self.channels[channelID]?.usersTyping.indexOf(userID) {
+                self.channels[channelID]?.usersTyping.removeAtIndex(index)
             }
         }
     }
-    
+
     func channelMarked(event: Event) {
-        if let channel = event.channel, id = channel.id {
-            channels[id]?.lastRead = event.ts
-            
-            channelEventsDelegate?.channelMarked(channel, timestamp: event.ts)
+        guard let channel = event.channel, id = channel.id, timestamp = event.ts else {
+            return
         }
+        channels[id]?.lastRead = event.ts
+
+        channelEventsDelegate?.channelMarked(channel, timestamp: timestamp)
+
         //TODO: Recalculate unreads
     }
     
@@ -246,15 +248,17 @@ internal extension Client {
     }
     
     func pinRemoved(event: Event) {
-        if let id = event.channelID {
-            if let pins = channels[id]?.pinnedItems.filter({$0 != event.item}) {
-                channels[id]?.pinnedItems = pins
-            }
-            
-            pinEventsDelegate?.itemUnpinned(event.item, channel: channels[id])
+        guard let id = event.channelID, item = event.item else {
+            return
         }
+
+        if let pins = channels[id]?.pinnedItems.filter({$0 != item}) {
+            channels[id]?.pinnedItems = pins
+        }
+        
+        pinEventsDelegate?.itemUnpinned(item, channel: channels[id])
     }
-    
+
     //MARK: - Stars
     func itemStarred(event: Event, star: Bool) {
         if let item = event.item, type = item.type {
@@ -304,84 +308,87 @@ internal extension Client {
     
     //MARK: - Reactions
     func addedReaction(event: Event) {
-        if let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id {
-            switch type {
-            case "message":
-                if let channel = item.channel, ts = item.ts {
-                    if let message = channels[channel]?.messages[ts] {
-                        if (message.reactions[key]) == nil {
-                            message.reactions[key] = Reaction(name: event.reaction, user: userID)
-                        } else {
-                            message.reactions[key]?.users[userID] = userID
-                        }
-                    }
-                }
-            case "file":
-                if let id = item.file?.id, file = files[id] {
-                    if file.reactions[key] == nil {
-                        files[id]?.reactions[key] = Reaction(name: event.reaction, user: userID)
-                    } else {
-                        files[id]?.reactions[key]?.users[userID] = userID
-                    }
-                }
-            case "file_comment":
-                if let id = item.file?.id, file = files[id], commentID = item.fileCommentID {
-                    if file.comments[commentID]?.reactions[key] == nil {
-                        files[id]?.comments[commentID]?.reactions[key] = Reaction(name: event.reaction, user: userID)
-                    } else {
-                        files[id]?.comments[commentID]?.reactions[key]?.users[userID] = userID
-                    }
-                }
-                break
-            default:
-                break
-            }
-            
-            reactionEventsDelegate?.reactionAdded(event.reaction, item: event.item, itemUser: event.itemUser)
+        guard let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id, itemUser = event.itemUser else {
+            return
         }
+        switch type {
+        case "message":
+            if let channel = item.channel, ts = item.ts {
+                if let message = channels[channel]?.messages[ts] {
+                    if (message.reactions[key]) == nil {
+                        message.reactions[key] = Reaction(name: event.reaction, user: userID)
+                    } else {
+                        message.reactions[key]?.users[userID] = userID
+                    }
+                }
+            }
+        case "file":
+            if let id = item.file?.id, file = files[id] {
+                if file.reactions[key] == nil {
+                    files[id]?.reactions[key] = Reaction(name: event.reaction, user: userID)
+                } else {
+                    files[id]?.reactions[key]?.users[userID] = userID
+                }
+            }
+        case "file_comment":
+            if let id = item.file?.id, file = files[id], commentID = item.fileCommentID {
+                if file.comments[commentID]?.reactions[key] == nil {
+                    files[id]?.comments[commentID]?.reactions[key] = Reaction(name: event.reaction, user: userID)
+                } else {
+                    files[id]?.comments[commentID]?.reactions[key]?.users[userID] = userID
+                }
+            }
+            break
+        default:
+            break
+        }
+
+        reactionEventsDelegate?.reactionAdded(key, item: item, itemUser: itemUser)
     }
-    
+
     func removedReaction(event: Event) {
-        if let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id {
-            switch type {
-            case "message":
-                if let channel = item.channel, ts = item.ts {
-                    if let message = channels[channel]?.messages[ts] {
-                        if (message.reactions[key]) != nil {
-                            message.reactions[key]?.users.removeValueForKey(userID)
-                        }
-                        if (message.reactions[key]?.users.count == 0) {
-                            message.reactions.removeValueForKey(key)
-                        }
-                    }
-                }
-            case "file":
-                if let itemFile = item.file, id = itemFile.id, file = files[id] {
-                    if file.reactions[key] != nil {
-                        files[id]?.reactions[key]?.users.removeValueForKey(userID)
-                    }
-                    if files[id]?.reactions[key]?.users.count == 0 {
-                        files[id]?.reactions.removeValueForKey(key)
-                    }
-                }
-            case "file_comment":
-                if let id = item.file?.id, file = files[id], commentID = item.fileCommentID {
-                    if file.comments[commentID]?.reactions[key] != nil {
-                        files[id]?.comments[commentID]?.reactions[key]?.users.removeValueForKey(userID)
-                    }
-                    if files[id]?.comments[commentID]?.reactions[key]?.users.count == 0 {
-                        files[id]?.comments[commentID]?.reactions.removeValueForKey(key)
-                    }
-                }
-                break
-            default:
-                break
-            }
-            
-            reactionEventsDelegate?.reactionAdded(event.reaction, item: event.item, itemUser: event.itemUser)
+        guard let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id, itemUser = event.itemUser else {
+            return
         }
+
+        switch type {
+        case "message":
+            if let channel = item.channel, ts = item.ts {
+                if let message = channels[channel]?.messages[ts] {
+                    if (message.reactions[key]) != nil {
+                        message.reactions[key]?.users.removeValueForKey(userID)
+                    }
+                    if (message.reactions[key]?.users.count == 0) {
+                        message.reactions.removeValueForKey(key)
+                    }
+                }
+            }
+        case "file":
+            if let itemFile = item.file, id = itemFile.id, file = files[id] {
+                if file.reactions[key] != nil {
+                    files[id]?.reactions[key]?.users.removeValueForKey(userID)
+                }
+                if files[id]?.reactions[key]?.users.count == 0 {
+                    files[id]?.reactions.removeValueForKey(key)
+                }
+            }
+        case "file_comment":
+            if let id = item.file?.id, file = files[id], commentID = item.fileCommentID {
+                if file.comments[commentID]?.reactions[key] != nil {
+                    files[id]?.comments[commentID]?.reactions[key]?.users.removeValueForKey(userID)
+                }
+                if files[id]?.comments[commentID]?.reactions[key]?.users.count == 0 {
+                    files[id]?.comments[commentID]?.reactions.removeValueForKey(key)
+                }
+            }
+            break
+        default:
+            break
+        }
+
+        reactionEventsDelegate?.reactionRemoved(key, item: item, itemUser: itemUser)
     }
-    
+
     //MARK: - Preferences
     func changePreference(event: Event) {
         if let name = event.name {
@@ -406,10 +413,10 @@ internal extension Client {
     
     //MARK: - User Presence
     func presenceChange(event: Event) {
-        if let user = event.user, id = user.id {
+        if let user = event.user, id = user.id, presence = event.presence {
             users[id]?.presence = event.presence
             
-            slackEventsDelegate?.presenceChanged(user, presence: event.presence)
+            slackEventsDelegate?.presenceChanged(user, presence: presence)
         }
     }
     
@@ -507,44 +514,48 @@ internal extension Client {
     
     //MARK: - Team Profiles
     func teamProfileChange(event: Event) {
+        guard let profile = event.profile else { return }
+
         for user in users {
-            if let fields = event.profile?.fields {
-                for key in fields.keys {
-                    users[user.0]?.profile?.customProfile?.fields[key]?.updateProfileField(fields[key])
-                }
+            for key in profile.fields.keys {
+                users[user.0]?.profile?.customProfile?.fields[key]?.updateProfileField(profile.fields[key])
             }
         }
         
-        teamProfileEventsDelegate?.teamProfileChanged(event.profile)
+        teamProfileEventsDelegate?.teamProfileChanged(profile)
     }
     
     func teamProfileDeleted(event: Event) {
+        guard let profile = event.profile else { return }
+
         for user in users {
-            if let id = event.profile?.fields.first?.0 {
+            if let id = profile.fields.first?.0 {
                 users[user.0]?.profile?.customProfile?.fields[id] = nil
             }
         }
         
-        teamProfileEventsDelegate?.teamProfileDeleted(event.profile)
+        teamProfileEventsDelegate?.teamProfileDeleted(profile)
     }
     
     func teamProfileReordered(event: Event) {
+        guard let profile = event.profile else { return }
+
         for user in users {
-            if let keys = event.profile?.fields.keys {
-                for key in keys {
-                    users[user.0]?.profile?.customProfile?.fields[key]?.ordering = event.profile?.fields[key]?.ordering
-                }
+            for key in profile.fields.keys {
+                users[user.0]?.profile?.customProfile?.fields[key]?.ordering = profile.fields[key]?.ordering
             }
         }
-        
-        teamProfileEventsDelegate?.teamProfileReordered(event.profile)
+
+        teamProfileEventsDelegate?.teamProfileReordered(profile)
     }
     
     //MARK: - Authenticated User
     func manualPresenceChange(event: Event) {
-        authenticatedUser?.presence = event.presence
-        
-        slackEventsDelegate?.manualPresenceChanged(authenticatedUser, presence: event.presence)
+        guard let presence = event.presence, user = authenticatedUser else {
+            return
+        }
+        authenticatedUser?.presence = presence
+        slackEventsDelegate?.manualPresenceChanged(user, presence: presence)
     }
     
 }
