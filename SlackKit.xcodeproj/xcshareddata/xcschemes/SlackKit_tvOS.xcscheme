@@ -14,7 +14,7 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "268E45F61CE8ECB3009F19CC"
+               BlueprintIdentifier = "263993B41CE90EED004A6E93"
                BuildableName = "SlackKit_tvOS.framework"
                BlueprintName = "SlackKit_tvOS"
                ReferencedContainer = "container:SlackKit.xcodeproj">
@@ -45,7 +45,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "268E45F61CE8ECB3009F19CC"
+            BlueprintIdentifier = "263993B41CE90EED004A6E93"
             BuildableName = "SlackKit_tvOS.framework"
             BlueprintName = "SlackKit_tvOS"
             ReferencedContainer = "container:SlackKit.xcodeproj">
@@ -63,7 +63,7 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "268E45F61CE8ECB3009F19CC"
+            BlueprintIdentifier = "263993B41CE90EED004A6E93"
             BuildableName = "SlackKit_tvOS.framework"
             BlueprintName = "SlackKit_tvOS"
             ReferencedContainer = "container:SlackKit.xcodeproj">
