@@ -3,6 +3,9 @@
 ###Description
 This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
+####Building the SlackKit Framework
+To build the SlackKit project directly, first build the dependencies using Carthage or CocoaPods. To use the framework in your application, install it in one of the following ways:
+
 ###Installation
 ####CocoaPods
 Add the pod to your podfile:
@@ -25,7 +28,6 @@ and run
 carthage update
 ```
 Drag the built SlackKit.framework into your Xcode project.
-
 
 ####Swift Package Manager
 Add SlackKit to your Package.swift
