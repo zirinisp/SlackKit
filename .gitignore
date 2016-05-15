@@ -16,8 +16,10 @@ DerivedData
 *.hmap
 *.ipa
 *.xcuserstate
-.build
+
+# SwiftPM
 Packages/
+.build
 
 # CocoaPods
 #
@@ -26,10 +28,10 @@ Packages/
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 Pods/
+SlackKit.xcworkspace
 
 # Carthage
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
-# Carthage/Checkouts
-
+Carthage/Checkouts
 Carthage/Build
