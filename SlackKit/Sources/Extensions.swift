@@ -1,5 +1,5 @@
 //
-// ClientExtensions.swift
+// Extensions.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -22,43 +22,6 @@
 // THE SOFTWARE.
 
 import Foundation
-
-extension Client {
-    
-    //MARK: - User & Channel
-    public func getChannelIDByName(name: String) -> String? {
-        return channels.filter{$0.1.name == stripString(name)}.first?.0
-    }
-    
-    public func getUserIDByName(name: String) -> String? {
-        return users.filter{$0.1.name == stripString(name)}.first?.0
-    }
-    
-    public func getImIDForUserWithID(id: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {
-        let ims = channels.filter{$0.1.isIM == true}
-        let channel = ims.filter{$0.1.user == id}.first
-        if let channel = channel {
-            success(imID: channel.0)
-        } else {
-            webAPI.openIM(id, success: success, failure: failure)
-        }
-    }
-    
-    //MARK: - Utilities
-    internal func stripString(string: String) -> String? {
-        var strippedString = string
-        if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
-            strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
-        }
-        return strippedString
-    }
-}
-
-public enum AttachmentColor: String {
-    case Good = "good"
-    case Warning = "warning"
-    case Danger = "danger"
-}
 
 public extension NSDate {
 

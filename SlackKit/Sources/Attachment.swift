@@ -126,3 +126,9 @@ public struct AttachmentField {
     }
     
 }
+
+public enum AttachmentColor: String {
+    case Good = "good"
+    case Warning = "warning"
+    case Danger = "danger"
+}

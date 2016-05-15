@@ -1,5 +1,5 @@
 //
-// Message.swift
+// Event.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
