@@ -23,12 +23,6 @@
 
 import Foundation
 
-public enum AttachmentColor: String {
-    case Good = "good"
-    case Warning = "warning"
-    case Danger = "danger"
-}
-
 public extension NSDate {
 
     func slackTimestamp() -> Double {
