@@ -41,19 +41,3 @@ internal extension String {
     }
 
 }
-
-internal extension Array {
-
-    func objectArrayFromDictionaryArray<T>(intializer:([String: AnyObject])->T?) -> [T] {
-        var returnValue = [T]()
-        for object in self {
-            if let dictionary = object as? [String: AnyObject] {
-                if let value = intializer(dictionary) {
-                    returnValue.append(value)
-                }
-            }
-        }
-        return returnValue
-    }
-    
-}
