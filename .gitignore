@@ -28,11 +28,10 @@ Packages/
 # http://guides.cocoapods.org/using/using-cocoapods.html#should-i-ignore-the-pods-directory-in-source-control
 #
 Pods/
-Podfile.lock
+SlackKit.xcworkspace
 
 # Carthage
 #
 # Add this line if you want to avoid checking in source code from Carthage dependencies.
 Carthage/Checkouts
 Carthage/Build
-Cartfile.resolved
