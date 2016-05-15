@@ -42,7 +42,7 @@ let package = Package(
 )
 ```
 
-Run `swift-build` on your application’s main directory.
+Run `swift build` on your application’s main directory.
 
 To use the library in your project import it:
 ```
