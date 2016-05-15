@@ -1,7 +1,7 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
 ##iOS/OS X Slack Client Library
 ###Description
-This is a Slack client library for iOS and OS X written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
+This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
 ###Installation
 ####CocoaPods
