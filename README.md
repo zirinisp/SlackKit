@@ -27,12 +27,12 @@ and run
 ```
 carthage bootstrap
 ```
-*Note:* SlackKit currently takes a _long_ time for the compiler to compile with optimizations turned on. I'm currently exploring a potential fix for this issue. In the meantime, you may want to skip the waiting and build it in the debug configuration instead:
+**Note:** SlackKit currently takes a _long_ time for the compiler to compile with optimizations turned on. I'm currently exploring a potential fix for this issue. In the meantime, you may want to skip the waiting and build it in the debug configuration instead:
 ```
 carthage bootstrap --configuration "Debug"
 ```
 
-Drag the built SlackKit.framework, SlackKit_iOS.framework, or SlackKit_tvOS.framework into your Xcode project.
+Drag the built `SlackKit.framework`, `SlackKit_iOS.framework`, or `SlackKit_tvOS.framework` into your Xcode project.
 
 ####Swift Package Manager
 Add SlackKit to your Package.swift
