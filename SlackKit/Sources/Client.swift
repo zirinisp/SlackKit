@@ -40,18 +40,18 @@ public class SlackClient {
     internal(set) public var sentMessages = [String: Message]()
     
     //MARK: - Delegates
-    public var slackEventsDelegate: SlackEventsDelegate?
-    public var messageEventsDelegate: MessageEventsDelegate?
-    public var doNotDisturbEventsDelegate: DoNotDisturbEventsDelegate?
-    public var channelEventsDelegate: ChannelEventsDelegate?
-    public var groupEventsDelegate: GroupEventsDelegate?
-    public var fileEventsDelegate: FileEventsDelegate?
-    public var pinEventsDelegate: PinEventsDelegate?
-    public var starEventsDelegate: StarEventsDelegate?
-    public var reactionEventsDelegate: ReactionEventsDelegate?
-    public var teamEventsDelegate: TeamEventsDelegate?
-    public var subteamEventsDelegate: SubteamEventsDelegate?
-    public var teamProfileEventsDelegate: TeamProfileEventsDelegate?
+    public weak var slackEventsDelegate: SlackEventsDelegate?
+    public weak var messageEventsDelegate: MessageEventsDelegate?
+    public weak var doNotDisturbEventsDelegate: DoNotDisturbEventsDelegate?
+    public weak var channelEventsDelegate: ChannelEventsDelegate?
+    public weak var groupEventsDelegate: GroupEventsDelegate?
+    public weak var fileEventsDelegate: FileEventsDelegate?
+    public weak var pinEventsDelegate: PinEventsDelegate?
+    public weak var starEventsDelegate: StarEventsDelegate?
+    public weak var reactionEventsDelegate: ReactionEventsDelegate?
+    public weak var teamEventsDelegate: TeamEventsDelegate?
+    public weak var subteamEventsDelegate: SubteamEventsDelegate?
+    public weak var teamProfileEventsDelegate: TeamProfileEventsDelegate?
     
     internal var token = "SLACK_AUTH_TOKEN"
     
@@ -65,7 +65,6 @@ public class SlackClient {
 
     internal var webSocket: WebSocket.Client?
     internal let api = NetworkInterface()
-    private var dispatcher: EventDispatcher?
     
     //private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
     internal var ping: Double?
@@ -83,7 +82,6 @@ public class SlackClient {
         self.pingInterval = pingInterval
         self.timeout = timeout
         self.reconnect = reconnect
-        dispatcher = EventDispatcher(client: self)
         webAPI.rtmStart(simpleLatest: simpleLatest, noUnreads: noUnreads, mpimAware: mpimAware, success: {
             (response) -> Void in
             self.initialSetup(json: response)
@@ -268,7 +266,7 @@ public class SlackClient {
         do {
             let json = try Jay().jsonFromData(message.data.bytes)
             if let event = json as? [String: Any] {
-                dispatcher?.dispatch(event:event)
+                dispatch(event:event)
             }
         }
         catch _ {
@@ -281,7 +279,6 @@ public class SlackClient {
         connected = false
         authenticated = false
         webSocket = nil
-        dispatcher = nil
         authenticatedUser = nil
         slackEventsDelegate?.clientDisconnected()
         if reconnect == true {

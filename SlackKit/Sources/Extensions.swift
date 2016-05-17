@@ -1,5 +1,5 @@
 //
-// ClientExtensions.swift
+// Extensions.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -27,43 +27,6 @@ import C7
 #else
     import Darwin.C
 #endif
-
-extension SlackClient {
-    
-    //MARK: - User & Channel
-    public func getChannelIDByName(name: String) -> String? {
-        return channels.filter{$0.1.name == stripString(string: name)}.first?.0
-    }
-    
-    public func getUserIDByName(name: String) -> String? {
-        return users.filter{$0.1.name == stripString(string: name)}.first?.0
-    }
-    
-    public func getImIDForUserWithID(id: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {
-        let ims = channels.filter{$0.1.isIM == true}
-        let channel = ims.filter{$0.1.user == id}.first
-        if let channel = channel {
-            success(imID: channel.0)
-        } else {
-            webAPI.openIM(userID: id, success: success, failure: failure)
-        }
-    }
-    
-    //MARK: - Utilities
-    internal func stripString(string: String) -> String? {
-        var strippedString = string
-        if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
-            strippedString.characters.remove(at: string.startIndex)
-        }
-        return strippedString
-    }
-}
-
-public enum AttachmentColor: String {
-    case Good = "good"
-    case Warning = "warning"
-    case Danger = "danger"
-}
 
 public typealias Time=Double
 
