@@ -64,9 +64,9 @@ public class SlackClient {
     }
 
     internal var webSocket: WebSocket.Client?
+    internal var socket: Socket?
     internal let api = NetworkInterface()
     
-    //private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
     internal var ping: Double?
     internal var pong: Double?
     
@@ -90,9 +90,9 @@ public class SlackClient {
                     let uri = try URI(socketURL)
                     self.webSocket = try WebSocket.Client(uri: uri, onConnect: {(socket) in
                         self.setupSocket(socket: socket)
-                        /*if let pingInterval = self.pingInterval {
+                        if let pingInterval = self.pingInterval {
                             self.pingRTMServerAtInterval(interval: pingInterval)
-                        }*/
+                        }
                     })
                     try self.webSocket?.connect(uri.description)
                 } catch _ {
@@ -102,21 +102,20 @@ public class SlackClient {
             }, failure:nil)
     }
     
-    //TODO: Currently Unsupported
-    /*public func disconnect() {
-        //webSocket?.disconnect()
+    public func disconnect() {
+        _ = try? socket?.close()
     }
     
     //MARK: - RTM Message send
     public func sendMessage(message: String, channelID: String) {
         if (connected) {
             if let data = formatMessageToSlackJsonString(message: message, channel: channelID) {
-                if let string = NSString(data: data, encoding: NSUTF8StringEncoding) as? String {
-                    //webSocket?.writeString(string)
+                if let string = try? data.string() {
+                    _ = try? socket?.send(string)
                 }
             }
         }
-    }*/
+    }
     
     private func formatMessageToSlackJsonString(message: String, channel: String) -> Data? {
         let json: [String: Any] = [
@@ -144,31 +143,28 @@ public class SlackClient {
     }
     
     //MARK: - RTM Ping
-    /*private func pingRTMServerAtInterval(interval: NSTimeInterval) {
-        let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(interval * Double(NSEC_PER_SEC)))
-        dispatch_after(delay, pingPongQueue, {
-            if self.connected && self.timeoutCheck() {
-                self.sendRTMPing()
-                self.pingRTMServerAtInterval(interval: interval)
-            } else {
-                //self.disconnect()
-            }
-        })
+    private func pingRTMServerAtInterval(interval: Double) {
+        co { [weak self] in
+            let weakSelf = self
+            repeat {
+                nap(for: interval)
+                weakSelf?.sendRTMPing()
+            } while weakSelf?.connected == true && weakSelf?.timeoutCheck() == true
+            weakSelf?.disconnect()
+        }
     }
     
     private func sendRTMPing() {
         if connected {
             let json: [String: Any] = [
-                "id": NSDate().slackTimestamp(),
+                "id": Double.slackTimestamp(),
                 "type": "ping",
             ]
             do {
-                let data = try NSJSONSerialization.data(withJSONObject: json, options: .prettyPrinted)
-                let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-                if let writePing = string as? String {
-                    ping = json["id"] as? Double
-                    //webSocket?.writeString(writePing)
-                }
+                let data = try Jay().dataFromJson(json)
+                let string = try data.string()
+                ping = json["id"] as? Double
+                try socket?.send(string)
             }
             catch _ {
                 
@@ -187,7 +183,7 @@ public class SlackClient {
         } else {
             return true
         }
-    }*/
+    }
     
     //MARK: - Client setup
     private func initialSetup(json: [String: Any]) {
@@ -260,6 +256,7 @@ public class SlackClient {
         socket.onClose{ (code: CloseCode?, reason: String?) in
             self.websocketDidDisconnect(closeCode: code, error: reason)
         }
+        self.socket = socket
     }
     
     private func websocketDidReceive(message: String) {

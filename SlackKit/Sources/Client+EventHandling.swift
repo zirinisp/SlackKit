@@ -21,6 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Venice
+
 internal extension SlackClient {
     
     //MARK: - Pong
@@ -75,12 +77,12 @@ internal extension SlackClient {
                 }
             }
             
-            /*let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
-            dispatch_after(timeout, dispatch_get_main_queue()) {
+            co {
+                nap(for: 5.0)
                 if let index = self.channels[channelID]?.usersTyping.index(of:userID) {
                     self.channels[channelID]?.usersTyping.remove(at: index)
                 }
-            }*/
+            }
         }
     }
     
