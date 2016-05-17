@@ -77,10 +77,11 @@ internal extension SlackClient {
                 }
             }
             
-            co {
-                nap(for: 5.0)
-                if let index = self.channels[channelID]?.usersTyping.index(of:userID) {
-                    self.channels[channelID]?.usersTyping.remove(at: index)
+            co { [weak self] in
+                let weakSelf = self
+                nap(for: 5.0.seconds)
+                if let index = weakSelf?.channels[channelID]?.usersTyping.index(of:userID) {
+                    weakSelf?.channels[channelID]?.usersTyping.remove(at: index)
                 }
             }
         }
