@@ -125,7 +125,7 @@ internal struct NetworkInterface {
     }
     
     private func randomBoundary() -> String {
-        return "slackkit.boundary.\(UInt8(arc4random()).hexadecimal())\(UInt8(arc4random()).hexadecimal())"
+        return "slackkit.boundary.\(arc4random())\(arc4random())"
     }
     
     private func requestStringFromParameters(parameters: [String: Any]) -> String {
