@@ -119,7 +119,7 @@ public class SlackClient {
     
     private func formatMessageToSlackJsonString(message: String, channel: String) -> Data? {
         let json: [String: Any] = [
-            "id": Time.slackTimestamp,
+            "id": Time.slackTimestamp(),
             "type": "message",
             "channel": channel,
             "text": message.slackFormatEscaping()
