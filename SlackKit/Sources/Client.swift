@@ -102,9 +102,10 @@ public class SlackClient {
             }, failure:nil)
     }
     
+    /*TO-DO: Bug in Zewo/WebSocket
     public func disconnect() {
         _ = try? socket?.close()
-    }
+    }*/
     
     //MARK: - RTM Message send
     public func sendMessage(message: String, channelID: String) {
@@ -150,7 +151,7 @@ public class SlackClient {
                 nap(for: interval)
                 weakSelf?.sendRTMPing()
             } while weakSelf?.connected == true && weakSelf?.timeoutCheck() == true
-            weakSelf?.disconnect()
+            //weakSelf?.disconnect()
         }
     }
     
@@ -276,6 +277,7 @@ public class SlackClient {
         connected = false
         authenticated = false
         webSocket = nil
+        socket = nil
         authenticatedUser = nil
         slackEventsDelegate?.clientDisconnected()
         if reconnect == true {
