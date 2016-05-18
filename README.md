@@ -4,8 +4,7 @@
 This is a Slack client library for Linux written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
 ###Disclaimer: The linux version of SlackKit is a pre-release alpha. Feel free to report issues you come across.
-###Known Issues:
-	- File upload is currently broken.
+
 ###Installation
 
 ####Swift Package Manager
@@ -81,7 +80,7 @@ SlackKit currently supports the a subset of the Slack Web APIs that are availabl
 - files.comments.edit
 - files.comments.delete
 - files.delete
-- ~~files.upload~~
+- files.upload
 - groups.close
 - groups.history
 - groups.info
