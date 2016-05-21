@@ -94,11 +94,7 @@ public class Message {
     private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
         var returnValue = [String: Reaction]()
         if let r = reactions {
-            for react in r {
-                if let reaction = Reaction(reaction: react), reactionName = reaction.name {
-                    returnValue[reactionName] = reaction
-                }
-            }
+            returnValue = Reaction.reactionsFromArray(r)
         }
         return returnValue
     }
