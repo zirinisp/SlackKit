@@ -35,20 +35,26 @@ internal struct NetworkInterface {
         let request = NSURLRequest(URL: NSURL(string: requestString)!)
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
             (data, response, internalError) -> Void in
-            guard let data = data else {
+            guard let data = data, response = response as? NSHTTPURLResponse else {
                 errorClosure(SlackError.ClientNetworkError)
                 return
             }
             do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
-                if (result["ok"] as! Bool == true) {
-                    successClosure(result)
-                } else {
-                    if let errorString = result["error"] as? String {
-                        throw ErrorDispatcher.dispatch(errorString)
+                if response.statusCode == 200 {
+                    let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
+                    if (result["ok"] as! Bool == true) {
+                        successClosure(result)
                     } else {
-                        throw SlackError.UnknownError
+                        if let errorString = result["error"] as? String {
+                            throw ErrorDispatcher.dispatch(errorString)
+                        } else {
+                            throw SlackError.UnknownError
+                        }
                     }
+                } else if response.statusCode == 429 {
+                    throw SlackError.TooManyRequests
+                } else {
+                    throw SlackError.UnknownHTTPError
                 }
             } catch let error {
                 if let slackError = error as? SlackError {
