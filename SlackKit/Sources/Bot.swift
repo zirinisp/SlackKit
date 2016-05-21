@@ -27,7 +27,7 @@ public struct Bot {
     internal(set) public var name: String?
     internal(set) public var icons: [String: AnyObject]?
     
-    internal init?(bot: [String: AnyObject]?) {
+    internal init(bot: [String: AnyObject]?) {
         id = bot?["id"] as? String
         name = bot?["name"] as? String
         icons = bot?["icons"] as? [String: AnyObject]

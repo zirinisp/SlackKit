@@ -38,7 +38,7 @@ public struct Attachment {
     public let imageURL: String?
     public let thumbURL: String?
 
-    internal init?(attachment: [String: AnyObject]?) {
+    internal init(attachment: [String: AnyObject]?) {
         fallback = attachment?["fallback"] as? String
         color = attachment?["color"] as? String
         pretext = attachment?["pretext"] as? String
@@ -50,12 +50,10 @@ public struct Attachment {
         text = attachment?["text"] as? String
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
-        fields = (attachment?["fields"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(field) -> AttachmentField? in
-            return AttachmentField(field: field)
-        })
+        fields = (attachment?["fields"] as? [[String: AnyObject]])?.map { AttachmentField(field: $0) }
     }
     
-    public init?(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil) {
+    public init(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil) {
         self.fallback = fallback
         self.color = colorHex
         self.pretext = pretext
@@ -105,7 +103,7 @@ public struct AttachmentField {
     public let value: String?
     public let short: Bool?
     
-    internal init?(field: [String: AnyObject]?) {
+    internal init(field: [String: AnyObject]?) {
         title = field?["title"] as? String
         value = field?["value"] as? String
         short = field?["short"] as? Bool

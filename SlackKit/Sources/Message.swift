@@ -48,7 +48,7 @@ public class Message {
     internal(set) public var reactions = [String: Reaction]()
     internal(set) public var attachments: [Attachment]?
     
-    public init?(message: [String: AnyObject]?) {
+    public init(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
         ts = message?["ts"] as? String
         user = message?["user"] as? String
@@ -71,12 +71,12 @@ public class Message {
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
         reactions = messageReactions(message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(attachment) -> Attachment? in
+        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map({(attachment) -> Attachment in
             return Attachment(attachment: attachment)
         })
     }
     
-    internal init?(ts:String?) {
+    internal init(ts:String?) {
         self.ts = ts
         subtype = nil
         user = nil

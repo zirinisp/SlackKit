@@ -101,16 +101,15 @@ public class Client: WebSocketDelegate {
     
     //MARK: - RTM Message send
     public func sendMessage(message: String, channelID: String) {
-        if (connected) {
-            if let data = formatMessageToSlackJsonString(msg: message, channel: channelID) {
-                if let string = NSString(data: data, encoding: NSUTF8StringEncoding) as? String {
-                    webSocket?.writeString(string)
-                }
-            }
+        guard connected else { return }
+
+        if let data = try? formatMessageToSlackJsonString(msg: message, channel: channelID),
+            string = NSString(data: data, encoding: NSUTF8StringEncoding) as? String {
+            webSocket?.writeString(string)
         }
     }
     
-    private func formatMessageToSlackJsonString(message: (msg: String, channel: String)) -> NSData? {
+    private func formatMessageToSlackJsonString(message: (msg: String, channel: String)) throws -> NSData {
         let json: [String: AnyObject] = [
             "id": NSDate().slackTimestamp(),
             "type": "message",
@@ -118,13 +117,7 @@ public class Client: WebSocketDelegate {
             "text": message.msg.slackFormatEscaping()
         ]
         addSentMessage(json)
-        do {
-            let data = try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted)
-            return data
-        }
-        catch _ {
-            return nil
-        }
+        return try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted)
     }
     
     private func addSentMessage(dictionary: [String: AnyObject]) {
@@ -197,19 +190,22 @@ public class Client: WebSocketDelegate {
     }
     
     private func addUser(aUser: [String: AnyObject]) {
-        if let user = User(user: aUser), id = user.id {
+        let user = User(user: aUser)
+        if let id = user.id {
             users[id] = user
         }
     }
     
     private func addChannel(aChannel: [String: AnyObject]) {
-        if let channel = Channel(channel: aChannel), id = channel.id {
+        let channel = Channel(channel: aChannel)
+        if let id = channel.id {
             channels[id] = channel
         }
     }
     
     private func addBot(aBot: [String: AnyObject]) {
-        if let bot = Bot(bot: aBot), id = bot.id {
+        let bot = Bot(bot: aBot)
+        if let id = bot.id {
             bots[id] = bot
         }
     }
@@ -219,7 +215,7 @@ public class Client: WebSocketDelegate {
             if let all = subteams["all"] as? [[String: AnyObject]] {
                 for item in all {
                     let u = UserGroup(userGroup: item)
-                    self.userGroups[u!.id!] = u
+                    self.userGroups[u.id!] = u
                 }
             }
             if let auth = subteams["self"] as? [String] {
@@ -264,16 +260,12 @@ public class Client: WebSocketDelegate {
         guard let data = text.dataUsingEncoding(NSUTF8StringEncoding) else {
             return
         }
-        do {
-            if let json = try NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments) as? [String: AnyObject] {
-                dispatch(json)
-            }
-        }
-        catch _ {
-            
+
+        if let json = (try? NSJSONSerialization.JSONObjectWithData(data, options: NSJSONReadingOptions.AllowFragments)) as? [String: AnyObject] {
+            dispatch(json)
         }
     }
-    
+
     public func websocketDidReceiveData(socket: WebSocket, data: NSData) {}
     
 }
