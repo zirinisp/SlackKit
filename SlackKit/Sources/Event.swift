@@ -197,8 +197,9 @@ internal struct Event {
         message = Message(message: event)
         nestedMessage = Message(message: event["message"] as? [String: AnyObject])
         profile = CustomProfile(profile: event["profile"] as? [String: AnyObject])
-        
-        // Comment, Channel, User, and File can come across as Strings or Dictionaries
+        file = File(id: event["file"] as? String)
+
+        // Comment, Channel, and User can come across as Strings or Dictionaries
         if let commentDictionary = event["comment"] as? [String: AnyObject] {
             comment = Comment(comment: commentDictionary)
         } else {
@@ -209,12 +210,6 @@ internal struct Event {
             user = User(user: userDictionary)
         } else {
             user = User(id: event["user"] as? String)
-        }
-
-        if let fileDictionary = event["file"] as? [String: AnyObject] {
-            file = File(file: fileDictionary)
-        } else {
-            file = File(id: event["file"] as? String)
         }
 
         if let channelDictionary =  event["channel"] as? [String: AnyObject] {
