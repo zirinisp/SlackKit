@@ -76,7 +76,7 @@ public struct File {
     internal(set) public var isStarred: Bool?
     internal(set) public var pinnedTo: [String]?
     internal(set) public var comments = [String: Comment]()
-    internal(set) public var reactions = [String: Reaction]()
+    internal(set) public var reactions = [Reaction]()
     
     public init(file:[String: AnyObject]?) {
         id = file?["id"] as? String
@@ -131,10 +131,7 @@ public struct File {
         stars = file?["num_stars"] as? Int
         isStarred = file?["is_starred"] as? Bool
         pinnedTo = file?["pinned_to"] as? [String]
-        if let reactions = file?["reactions"] as? [[String: AnyObject]] {
-            self.reactions = Reaction.reactionsFromArray(reactions)
-        }
-        
+        reactions = Reaction.reactionsFromArray(file?["reactions"] as? [[String: AnyObject]])        
     }
     
     internal init(id:String?) {

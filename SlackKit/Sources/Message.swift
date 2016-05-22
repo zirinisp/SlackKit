@@ -45,7 +45,7 @@ public class Message {
     internal(set) var pinnedTo: [String]?
     public let comment: Comment?
     public let file: File?
-    internal(set) public var reactions = [String: Reaction]()
+    internal(set) public var reactions = [Reaction]()
     internal(set) public var attachments: [Attachment]?
     
     public init(message: [String: AnyObject]?) {
@@ -70,7 +70,7 @@ public class Message {
         pinnedTo = message?["pinned_to"] as? [String]
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
-        reactions = messageReactions(message?["reactions"] as? [[String: AnyObject]])
+        reactions = Reaction.reactionsFromArray(message?["reactions"] as? [[String: AnyObject]])
         attachments = (message?["attachments"] as? [[String: AnyObject]])?.map({(attachment) -> Attachment in
             return Attachment(attachment: attachment)
         })
@@ -90,14 +90,7 @@ public class Message {
         comment = nil
         file = nil
     }
-    
-    private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
-        var returnValue = [String: Reaction]()
-        if let r = reactions {
-            returnValue = Reaction.reactionsFromArray(r)
-        }
-        return returnValue
-    }
+
 }
 
 extension Message: Equatable {}

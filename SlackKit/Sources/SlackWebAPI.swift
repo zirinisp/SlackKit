@@ -730,7 +730,7 @@ public class SlackWebAPI {
                 }
             }
             do {
-                let data = try NSJSONSerialization.dataWithJSONObject(attachmentArray, options: NSJSONWritingOptions.PrettyPrinted)
+                let data = try NSJSONSerialization.dataWithJSONObject(attachmentArray, options: [])
                 let string = NSString(data: data, encoding: NSUTF8StringEncoding)
                 return string
             } catch _ {

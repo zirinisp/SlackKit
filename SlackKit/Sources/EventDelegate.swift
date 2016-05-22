@@ -27,7 +27,7 @@ public protocol SlackEventsDelegate: class {
     func clientConnectionFailed(error: SlackError)
     func clientConnected()
     func clientDisconnected()
-    func preferenceChanged(preference: String, value: AnyObject)
+    func preferenceChanged(preference: String, value: AnyObject?)
     func userChanged(user: User)
     func presenceChanged(user: User, presence: String)
     func manualPresenceChanged(user: User, presence: String)
@@ -88,7 +88,7 @@ public protocol ReactionEventsDelegate: class {
 public protocol TeamEventsDelegate: class {
     func teamJoined(user: User)
     func teamPlanChanged(plan: String)
-    func teamPreferencesChanged(preference: String, value: AnyObject)
+    func teamPreferencesChanged(preference: String, value: AnyObject?)
     func teamNameChanged(name: String)
     func teamDomainChanged(domain: String)
     func teamEmailDomainChanged(domain: String)

@@ -117,48 +117,46 @@ public class Client: WebSocketDelegate {
             "text": message.msg.slackFormatEscaping()
         ]
         addSentMessage(json)
-        return try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted)
+        return try NSJSONSerialization.dataWithJSONObject(json, options: [])
     }
     
     private func addSentMessage(dictionary: [String: AnyObject]) {
         var message = dictionary
-        let ts = message["id"] as? NSNumber
+        let ts = String(message["id"] as? NSNumber)
         message.removeValueForKey("id")
-        message["ts"] = ts?.stringValue
+        message["ts"] = ts
         message["user"] = self.authenticatedUser?.id
-        sentMessages[ts!.stringValue] = Message(message: message)
+        sentMessages[ts] = Message(message: message)
     }
     
     //MARK: - RTM Ping
     private func pingRTMServerAtInterval(interval: NSTimeInterval) {
         let delay = dispatch_time(DISPATCH_TIME_NOW, Int64(interval * Double(NSEC_PER_SEC)))
         dispatch_after(delay, pingPongQueue, {
-            if self.connected && self.timeoutCheck() {
-                self.sendRTMPing()
-                self.pingRTMServerAtInterval(interval)
-            } else {
+            guard self.connected && self.timeoutCheck() else {
                 self.disconnect()
+                return
             }
+            self.sendRTMPing()
+            self.pingRTMServerAtInterval(interval)
         })
     }
     
     private func sendRTMPing() {
-        if connected {
-            let json: [String: AnyObject] = [
-                "id": NSDate().slackTimestamp(),
-                "type": "ping",
-            ]
-            do {
-                let data = try NSJSONSerialization.dataWithJSONObject(json, options: NSJSONWritingOptions.PrettyPrinted)
-                let string = NSString(data: data, encoding: NSUTF8StringEncoding)
-                if let writePing = string as? String {
-                    ping = json["id"] as? Double
-                    webSocket?.writeString(writePing)
-                }
-            }
-            catch _ {
-                
-            }
+        guard connected else {
+            return
+        }
+        let json: [String: AnyObject] = [
+            "id": NSDate().slackTimestamp(),
+            "type": "ping",
+        ]
+        guard let data = try? NSJSONSerialization.dataWithJSONObject(json, options: []) else {
+            return
+        }
+        let string = NSString(data: data, encoding: NSUTF8StringEncoding)
+        if let writePing = string as? String {
+            ping = json["id"] as? Double
+            webSocket?.writeString(writePing)
         }
     }
     

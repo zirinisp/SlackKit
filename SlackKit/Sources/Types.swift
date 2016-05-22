@@ -56,33 +56,26 @@ public struct History {
 // MARK: - Reaction
 public struct Reaction {
     public let name: String?
-    internal(set) public var users = [String: String]()
+    internal(set) public var user: String?
     
     internal init(reaction:[String: AnyObject]?) {
         name = reaction?["name"] as? String
     }
     
-    internal init(name: String?, user: String) {
+    internal init(name: String, user: String) {
         self.name = name
-        users[user] = user
+        self.user = user
     }
     
-    internal init(name: String?, users: [String: String]) {
-        self.name = name
-        self.users = users
-    }
-    
-    static func reactionsFromArray(array: [[String: AnyObject]]) -> [String: Reaction] {
-        var reactions = [String: Reaction]()
-        var userDictionary = [String: String]()
-        for reaction in array {
-            if let users = reaction["users"] as? [String] {
-                for user in users {
-                    userDictionary[user] = user
+    static func reactionsFromArray(array: [[String: AnyObject]]?) -> [Reaction] {
+        var reactions = [Reaction]()
+        if let array = array {
+            for reaction in array {
+                if let users = reaction["users"] as? [String], name = reaction["name"] as? String {
+                    for user in users {
+                        reactions.append(Reaction(name: name, user: user))
+                    }
                 }
-            }
-            if let name = reaction["name"] as? String {
-                reactions[name] = Reaction(name: name, users: userDictionary)
             }
         }
         return reactions
@@ -104,7 +97,7 @@ public struct Comment {
     internal(set) public var comment: String?
     internal(set) public var starred: Bool?
     internal(set) public var stars: Int?
-    internal(set) public var reactions = [String: Reaction]()
+    internal(set) public var reactions = [Reaction]()
     
     internal init(comment:[String: AnyObject]?) {
         id = comment?["id"] as? String
