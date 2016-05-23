@@ -1,5 +1,5 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
-##iOS/OS X Slack Client Library
+##iOS, OS X, and tvOS Slack Client Library
 ###Description
 This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
 
@@ -32,7 +32,7 @@ carthage bootstrap
 carthage bootstrap --configuration "Debug"
 ```
 
-Drag the built `SlackKit.framework`, `SlackKit_iOS.framework`, or `SlackKit_tvOS.framework` into your Xcode project.
+Drag the built `SlackKit.framework` into your Xcode project.
 
 ####Swift Package Manager
 Add SlackKit to your Package.swift
