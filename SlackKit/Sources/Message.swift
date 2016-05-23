@@ -45,10 +45,10 @@ public class Message {
     internal(set) var pinnedTo: [String]?
     public let comment: Comment?
     public let file: File?
-    internal(set) public var reactions = [String: Reaction]()
+    internal(set) public var reactions = [Reaction]()
     internal(set) public var attachments: [Attachment]?
     
-    public init?(message: [String: AnyObject]?) {
+    public init(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
         ts = message?["ts"] as? String
         user = message?["user"] as? String
@@ -70,13 +70,13 @@ public class Message {
         pinnedTo = message?["pinned_to"] as? [String]
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
-        reactions = messageReactions(message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.objectArrayFromDictionaryArray({(attachment) -> Attachment? in
+        reactions = Reaction.reactionsFromArray(message?["reactions"] as? [[String: AnyObject]])
+        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map({(attachment) -> Attachment in
             return Attachment(attachment: attachment)
         })
     }
     
-    internal init?(ts:String?) {
+    internal init(ts:String?) {
         self.ts = ts
         subtype = nil
         user = nil
@@ -90,14 +90,7 @@ public class Message {
         comment = nil
         file = nil
     }
-    
-    private func messageReactions(reactions: [[String: AnyObject]]?) -> [String: Reaction] {
-        var returnValue = [String: Reaction]()
-        if let r = reactions {
-            returnValue = Reaction.reactionsFromArray(r)
-        }
-        return returnValue
-    }
+
 }
 
 extension Message: Equatable {}

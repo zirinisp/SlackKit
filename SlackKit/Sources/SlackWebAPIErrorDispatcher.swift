@@ -113,6 +113,7 @@ public enum SlackError: ErrorType {
     case UserNotVisible
     // Client
     case ClientNetworkError
+    case ClientJSONError
     // HTTP
     case TooManyRequests
     case UnknownHTTPError

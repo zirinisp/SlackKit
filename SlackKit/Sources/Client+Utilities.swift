@@ -23,15 +23,26 @@
 
 import Foundation
 
-public extension Client {
+public enum ClientError: ErrorType {
+    case ChannelDoesNotExist
+    case UserDoesNotExist
+}
 
+public extension Client {
+    
     //MARK: - User & Channel
-    public func getChannelIDByName(name: String) -> String? {
-        return channels.filter{$0.1.name == stripString(name)}.first?.0
+    public func getChannelIDByName(name: String) throws -> String {
+        guard let id = channels.filter({$0.1.name == stripString(name)}).first?.0 else {
+            throw ClientError.ChannelDoesNotExist
+        }
+        return id
     }
 
-    public func getUserIDByName(name: String) -> String? {
-        return users.filter{$0.1.name == stripString(name)}.first?.0
+    public func getUserIDByName(name: String) throws -> String {
+        guard let id = users.filter({$0.1.name == stripString(name)}).first?.0 else {
+            throw ClientError.UserDoesNotExist
+        }
+        return id
     }
 
     public func getImIDForUserWithID(id: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {
@@ -45,7 +56,7 @@ public extension Client {
     }
 
     //MARK: - Utilities
-    internal func stripString(string: String) -> String? {
+    internal func stripString(string: String) -> String {
         var strippedString = string
         if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
             strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))

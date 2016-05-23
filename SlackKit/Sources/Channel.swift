@@ -49,7 +49,7 @@ public struct Channel {
     internal(set) public var usersTyping = [String]()
     internal(set) public var messages = [String: Message]()
     
-    internal init?(channel: [String: AnyObject]?) {
+    internal init(channel: [String: AnyObject]?) {
         id = channel?["id"] as? String
         name = channel?["name"] as? String
         created = channel?["created"] as? Int
@@ -70,15 +70,15 @@ public struct Channel {
         unreadCountDisplay = channel?["unread_count_display"] as? Int
         hasPins = channel?["has_pins"] as? Bool
         members = channel?["members"] as? [String]
-        
-        if (Message(message: channel?["latest"] as? [String: AnyObject])?.ts == nil) {
-            latest = Message(ts: channel?["latest"] as? String)
+
+        if let latestMsgDictionary = channel?["latest"] as? [String: AnyObject] {
+            latest = Message(message: latestMsgDictionary)
         } else {
-            latest = Message(message: channel?["latest"] as? [String: AnyObject])
+            latest = Message(ts: channel?["latest"] as? String)
         }
     }
     
-    internal init?(id:String?) {
+    internal init(id:String?) {
         self.id = id
         created = nil
         creator = nil

@@ -32,37 +32,18 @@ internal struct NetworkInterface {
         if let params = parameters {
             requestString += requestStringFromParameters(params)
         }
-        let request = NSURLRequest(URL: NSURL(string: requestString)!)
+        guard let url =  NSURL(string: requestString) else {
+            errorClosure(SlackError.ClientNetworkError)
+            return
+        }
+        let request = NSURLRequest(URL:url)
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
             (data, response, internalError) -> Void in
-            guard let data = data, response = response as? NSHTTPURLResponse else {
-                errorClosure(SlackError.ClientNetworkError)
-                return
-            }
-            do {
-                if response.statusCode == 200 {
-                    let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
-                    if (result["ok"] as! Bool == true) {
-                        successClosure(result)
-                    } else {
-                        if let errorString = result["error"] as? String {
-                            throw ErrorDispatcher.dispatch(errorString)
-                        } else {
-                            throw SlackError.UnknownError
-                        }
-                    }
-                } else if response.statusCode == 429 {
-                    throw SlackError.TooManyRequests
-                } else {
-                    throw SlackError.UnknownHTTPError
-                }
-            } catch let error {
-                if let slackError = error as? SlackError {
-                    errorClosure(slackError)
-                } else {
-                    errorClosure(SlackError.UnknownError)
-                }
-            }
+            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
+                successClosure(json)
+            }, errorClosure: {(error) in
+                errorClosure(error)
+            })
         }.resume()
     }
     
@@ -71,8 +52,11 @@ internal struct NetworkInterface {
         if let params = parameters {
             requestString = requestString + requestStringFromParameters(params)
         }
-        
-        let request = NSMutableURLRequest(URL: NSURL(string: requestString)!)
+        guard let url =  NSURL(string: requestString) else {
+            errorClosure(SlackError.ClientNetworkError)
+            return
+        }
+        let request = NSMutableURLRequest(URL:url)
         request.HTTPMethod = "POST"
         let boundaryConstant = randomBoundary()
         let contentType = "multipart/form-data; boundary=" + boundaryConstant
@@ -94,28 +78,48 @@ internal struct NetworkInterface {
 
         NSURLSession.sharedSession().dataTaskWithRequest(request) {
             (data, response, internalError) -> Void in
-            guard let data = data else {
+            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
+                successClosure(json)
+            }, errorClosure: {(error) in
+                errorClosure(error)
+            })
+        }.resume()
+    }
+    
+    private func handleResponse(data: NSData?, response:NSURLResponse?, internalError:NSError?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+        guard let data = data, response = response as? NSHTTPURLResponse else {
+            errorClosure(SlackError.ClientNetworkError)
+            return
+        }
+        do {
+            guard let json = try NSJSONSerialization.JSONObjectWithData(data, options: []) as? [String: AnyObject] else {
+                errorClosure(SlackError.ClientJSONError)
                 return
             }
-            do {
-                let result = try NSJSONSerialization.JSONObjectWithData(data, options: []) as! [String: AnyObject]
-                if (result["ok"] as! Bool == true) {
-                    successClosure(result)
+            
+            switch response.statusCode {
+            case 200:
+                if (json["ok"] as! Bool == true) {
+                    successClosure(json)
                 } else {
-                    if let errorString = result["error"] as? String {
+                    if let errorString = json["error"] as? String {
                         throw ErrorDispatcher.dispatch(errorString)
                     } else {
                         throw SlackError.UnknownError
                     }
                 }
-            } catch let error {
-                if let slackError = error as? SlackError {
-                    errorClosure(slackError)
-                } else {
-                    errorClosure(SlackError.UnknownError)
-                }
+            case 429:
+                throw SlackError.TooManyRequests
+            default:
+                throw SlackError.ClientNetworkError
             }
-            }.resume()
+        } catch let error {
+            if let slackError = error as? SlackError {
+                errorClosure(slackError)
+            } else {
+                errorClosure(SlackError.UnknownError)
+            }
+        }
     }
     
     private func randomBoundary() -> String {

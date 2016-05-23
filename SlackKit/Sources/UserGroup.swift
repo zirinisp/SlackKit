@@ -43,7 +43,7 @@ public struct UserGroup {
     internal(set) public var users: [String]?
     internal(set) public var userCount: Int?
     
-    internal init?(userGroup: [String: AnyObject]?) {
+    internal init(userGroup: [String: AnyObject]?) {
         id = userGroup?["id"] as? String
         teamID = userGroup?["team_id"] as? String
         isUserGroup = userGroup?["is_usergroup"] as? Bool
