@@ -121,7 +121,10 @@ public class Client: WebSocketDelegate {
     
     private func addSentMessage(dictionary: [String: AnyObject]) {
         var message = dictionary
-        let ts = String(message["id"] as? NSNumber)
+        guard let id = message["id"] as? NSNumber else {
+            return
+        }
+        let ts = String(id)
         message.removeValueForKey("id")
         message["ts"] = ts
         message["user"] = self.authenticatedUser?.id
