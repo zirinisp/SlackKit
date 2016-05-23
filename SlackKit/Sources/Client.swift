@@ -27,7 +27,6 @@ import Starscream
 public class Client: WebSocketDelegate {
     
     internal(set) public var connected = false
-    internal(set) public var authenticated = false
     internal(set) public var authenticatedUser: User?
     internal(set) public var team: Team?
     
@@ -245,7 +244,6 @@ public class Client: WebSocketDelegate {
     
     public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         connected = false
-        authenticated = false
         webSocket = nil
         authenticatedUser = nil
         slackEventsDelegate?.clientDisconnected()
