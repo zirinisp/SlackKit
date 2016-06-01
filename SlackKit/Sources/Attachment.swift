@@ -37,6 +37,9 @@ public struct Attachment {
     public let fields: [AttachmentField]?
     public let imageURL: String?
     public let thumbURL: String?
+    public let footer: String?
+    public let footerIcon: String?
+    public let ts: Int?
 
     internal init(attachment: [String: AnyObject]?) {
         fallback = attachment?["fallback"] as? String
@@ -50,10 +53,13 @@ public struct Attachment {
         text = attachment?["text"] as? String
         imageURL = attachment?["image_url"] as? String
         thumbURL = attachment?["thumb_url"] as? String
+        footer = attachment?["footer"] as? String
+        footerIcon = attachment?["footer_icon"] as? String
+        ts = attachment?["ts"] as? Int
         fields = (attachment?["fields"] as? [[String: AnyObject]])?.map { AttachmentField(field: $0) }
     }
     
-    public init(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil) {
+    public init(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil, footer: String? = nil, footerIcon:String? = nil, ts:Int? = nil) {
         self.fallback = fallback
         self.color = colorHex
         self.pretext = pretext
@@ -66,6 +72,9 @@ public struct Attachment {
         self.fields = fields
         self.imageURL = imageURL
         self.thumbURL = thumbURL
+        self.footer = footer
+        self.footerIcon = footerIcon
+        self.ts = ts
     }
     
     internal func dictionary() -> [String: AnyObject] {
@@ -82,6 +91,9 @@ public struct Attachment {
         attachment["fields"] = fieldJSONArray(fields)
         attachment["image_url"] = imageURL
         attachment["thumb_url"] = thumbURL
+        attachment["footer"] = footer
+        attachment["footer_icon"] = footerIcon
+        attachment["ts"] = ts
         return attachment
     }
     
