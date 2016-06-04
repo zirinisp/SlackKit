@@ -21,7 +21,7 @@ pod install
 
 Add SlackKit to your Cartfile:
 ```
-github “pvzig/SlackKit” ~> 1.0
+github "pvzig/SlackKit" ~> 1.0
 ```
 and run
 ```
