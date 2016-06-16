@@ -24,6 +24,7 @@
 import C7
 import HTTPSClient
 import Jay
+import WebSocketClient
 
 internal struct NetworkInterface {
     
@@ -79,7 +80,6 @@ internal struct NetworkInterface {
         }
     
         let boundaryConstant = randomBoundary()
-        let contentType:Header = ["multipart/form-data; boundary=" + boundaryConstant]
         let boundaryStart = "--\(boundaryConstant)\r\n"
         let boundaryEnd = "--\(boundaryConstant)--\r\n"
         let contentDispositionString = "Content-Disposition: form-data; name=\"file\"; filename=\"\(parameters!["filename"])\"\r\n"
@@ -93,7 +93,7 @@ internal struct NetworkInterface {
         requestBodyData.append(contentsOf: "\r\n".data.bytes)
         requestBodyData.append(contentsOf: boundaryEnd.data.bytes)
         
-        let header: Headers = ["Content-Type":contentType]
+        let header: Headers = ["Content-Type":"multipart/form-data; boundary=" + boundaryConstant]
         
         do {
             var response: Response?

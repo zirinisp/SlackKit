@@ -23,7 +23,8 @@
 
 import C7
 import Jay
-import WebSocket
+import Venice
+import WebSocketClient
 
 public class SlackClient {
     
@@ -63,8 +64,8 @@ public class SlackClient {
         return SlackWebAPI(slackClient: self)
     }
 
-    internal var webSocket: WebSocket.Client?
-    internal var socket: Socket?
+    internal var webSocket: Client?
+    internal var socket: WebSocket?
     internal let api = NetworkInterface()
     
     internal var ping: Double?
@@ -88,7 +89,7 @@ public class SlackClient {
             if let socketURL = response["url"] as? String {
                 do {
                     let uri = try URI(socketURL)
-                    self.webSocket = try WebSocket.Client(uri: uri, onConnect: {(socket) in
+                    self.webSocket = try Client(uri: uri, didConnect: {(socket) in
                         self.setupSocket(socket: socket)
                         if let pingInterval = self.pingInterval {
                             self.pingRTMServerAtInterval(interval: pingInterval)
@@ -248,7 +249,7 @@ public class SlackClient {
     
     
     // MARK: - WebSocket
-    private func setupSocket(socket: Socket) {
+    private func setupSocket(socket: WebSocket) {
         socket.onText {(message) in
             self.websocketDidReceive(message: message)
         }
