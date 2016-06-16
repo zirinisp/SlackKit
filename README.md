@@ -26,8 +26,8 @@ let package = Package(
 3. Configure your shell: `echo 'if which swiftenv > /dev/null; then eval "$(swiftenv init -)"; fi' >> ~/.bash_profile`
 4. Download and install the latest Zewo compatible snapshot:
 ```
-swiftenv install DEVELOPMENT-SNAPSHOT-2016-05-03-a
-swiftenv local DEVELOPMENT-SNAPSHOT-2016-05-03-a
+swiftenv install DEVELOPMENT-SNAPSHOT-2016-05-09-a
+swiftenv local DEVELOPMENT-SNAPSHOT-2016-05-09-a
 ```
 5. Install and Link OpenSSL: `brew install openssl`, `brew link openssl --force`
 
