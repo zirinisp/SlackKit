@@ -1,5 +1,5 @@
 //
-// Team.swift
+// AttachmentField.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,27 +21,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Team {
+import Foundation
+
+public struct AttachmentField {
     
-    public let id: String
-    internal(set) public var name: String?
-    internal(set) public var domain: String?
-    internal(set) public var emailDomain: String?
-    internal(set) public var messageEditWindowMinutes: Int?
-    internal(set) public var overStorageLimit: Bool?
-    internal(set) public var prefs: [String: AnyObject]?
-    internal(set) public var plan: String?
-    internal(set) public var icon: TeamIcon?
+    public let title: String?
+    public let value: String?
+    public let short: Bool?
     
-    internal init(team: [String: AnyObject]?) {
-        id = team?["id"] as! String
-        name = team?["name"] as? String
-        domain = team?["domain"] as? String
-        emailDomain = team?["email_domain"] as? String
-        messageEditWindowMinutes = team?["msg_edit_window_mins"] as? Int
-        overStorageLimit = team?["over_storage_limit"] as? Bool
-        prefs = team?["prefs"] as? [String: AnyObject]
-        plan = team?["plan"] as? String
-        icon = TeamIcon(icon: team?["icon"] as? [String: AnyObject])
+    internal init(field: [String: AnyObject]?) {
+        title = field?["title"] as? String
+        value = field?["value"] as? String
+        short = field?["short"] as? Bool
     }
+    
+    public init(title:String, value:String, short: Bool? = nil) {
+        self.title = title
+        self.value = value.slackFormatEscaping()
+        self.short = short
+    }
+    
+    internal func dictionary() -> [String: AnyObject] {
+        var field = [String: AnyObject]()
+        field["title"] = title
+        field["value"] = value
+        field["short"] = short
+        return field
+    }
+    
 }

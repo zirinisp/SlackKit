@@ -109,34 +109,6 @@ public struct Attachment {
     
 }
 
-public struct AttachmentField {
-    
-    public let title: String?
-    public let value: String?
-    public let short: Bool?
-    
-    internal init(field: [String: AnyObject]?) {
-        title = field?["title"] as? String
-        value = field?["value"] as? String
-        short = field?["short"] as? Bool
-    }
-    
-    public init(title:String, value:String, short: Bool? = nil) {
-        self.title = title
-        self.value = value.slackFormatEscaping()
-        self.short = short
-    }
-    
-    internal func dictionary() -> [String: AnyObject] {
-        var field = [String: AnyObject]()
-        field["title"] = title
-        field["value"] = value
-        field["short"] = short
-        return field
-    }
-    
-}
-
 public enum AttachmentColor: String {
     case Good = "good"
     case Warning = "warning"

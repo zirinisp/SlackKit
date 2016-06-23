@@ -1,5 +1,5 @@
 //
-// Team.swift
+// Comment.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,27 +21,34 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Team {
+import Foundation
+
+public struct Comment {
+    public let id: String?
+    public let user: String?
+    internal(set) public var created: Int?
+    internal(set) public var comment: String?
+    internal(set) public var starred: Bool?
+    internal(set) public var stars: Int?
+    internal(set) public var reactions = [Reaction]()
     
-    public let id: String
-    internal(set) public var name: String?
-    internal(set) public var domain: String?
-    internal(set) public var emailDomain: String?
-    internal(set) public var messageEditWindowMinutes: Int?
-    internal(set) public var overStorageLimit: Bool?
-    internal(set) public var prefs: [String: AnyObject]?
-    internal(set) public var plan: String?
-    internal(set) public var icon: TeamIcon?
-    
-    internal init(team: [String: AnyObject]?) {
-        id = team?["id"] as! String
-        name = team?["name"] as? String
-        domain = team?["domain"] as? String
-        emailDomain = team?["email_domain"] as? String
-        messageEditWindowMinutes = team?["msg_edit_window_mins"] as? Int
-        overStorageLimit = team?["over_storage_limit"] as? Bool
-        prefs = team?["prefs"] as? [String: AnyObject]
-        plan = team?["plan"] as? String
-        icon = TeamIcon(icon: team?["icon"] as? [String: AnyObject])
+    internal init(comment:[String: AnyObject]?) {
+        id = comment?["id"] as? String
+        created = comment?["created"] as? Int
+        user = comment?["user"] as? String
+        starred = comment?["is_starred"] as? Bool
+        stars = comment?["num_stars"] as? Int
+        self.comment = comment?["comment"] as? String
     }
+    
+    internal init(id: String?) {
+        self.id = id
+        self.user = nil
+    }
+}
+
+extension Comment: Equatable {}
+
+public func ==(lhs: Comment, rhs: Comment) -> Bool {
+    return lhs.id == rhs.id
 }

@@ -18,7 +18,6 @@
 		263993971CE90EE0004A6E93 /* Client+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16C98791CE7D3DD00692776 /* Client+Utilities.swift */; };
 		263993981CE90EE0004A6E93 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1881C398E3C00BF7225 /* Channel.swift */; };
 		263993991CE90EE0004A6E93 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1921C398E3C00BF7225 /* User.swift */; };
-		2639939A1CE90EE0004A6E93 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1911C398E3C00BF7225 /* Types.swift */; };
 		2639939B1CE90EE0004A6E93 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1891C398E3C00BF7225 /* Client.swift */; };
 		2639939C1CE90EE0004A6E93 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18A1C398E3C00BF7225 /* Event.swift */; };
 		2639939D1CE90EE0004A6E93 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1871C398E3C00BF7225 /* Bot.swift */; };
@@ -39,7 +38,6 @@
 		263993B61CE90EED004A6E93 /* Client+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16C98791CE7D3DD00692776 /* Client+Utilities.swift */; };
 		263993B71CE90EED004A6E93 /* Channel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1881C398E3C00BF7225 /* Channel.swift */; };
 		263993B81CE90EED004A6E93 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1921C398E3C00BF7225 /* User.swift */; };
-		263993B91CE90EED004A6E93 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1911C398E3C00BF7225 /* Types.swift */; };
 		263993BA1CE90EED004A6E93 /* Client.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1891C398E3C00BF7225 /* Client.swift */; };
 		263993BB1CE90EED004A6E93 /* Event.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18A1C398E3C00BF7225 /* Event.swift */; };
 		263993BC1CE90EED004A6E93 /* Bot.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1871C398E3C00BF7225 /* Bot.swift */; };
@@ -65,10 +63,42 @@
 		26BBA19B1C398E3C00BF7225 /* File.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18E1C398E3C00BF7225 /* File.swift */; };
 		26BBA19C1C398E3C00BF7225 /* Message.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA18F1C398E3C00BF7225 /* Message.swift */; };
 		26BBA19D1C398E3C00BF7225 /* Team.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1901C398E3C00BF7225 /* Team.swift */; };
-		26BBA19E1C398E3C00BF7225 /* Types.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1911C398E3C00BF7225 /* Types.swift */; };
 		26BBA19F1C398E3C00BF7225 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1921C398E3C00BF7225 /* User.swift */; };
 		26BBA1A01C398E3C00BF7225 /* UserGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26BBA1931C398E3C00BF7225 /* UserGroup.swift */; };
 		26DF40351C7A0FA300E19241 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26DF40341C7A0FA300E19241 /* Attachment.swift */; };
+		26EC14901D1B964500FD3A53 /* Edited.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC148F1D1B964500FD3A53 /* Edited.swift */; };
+		26EC14911D1B964500FD3A53 /* Edited.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC148F1D1B964500FD3A53 /* Edited.swift */; };
+		26EC14921D1B964500FD3A53 /* Edited.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC148F1D1B964500FD3A53 /* Edited.swift */; };
+		26EC14941D1B965100FD3A53 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14931D1B965100FD3A53 /* History.swift */; };
+		26EC14951D1B965100FD3A53 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14931D1B965100FD3A53 /* History.swift */; };
+		26EC14961D1B965100FD3A53 /* History.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14931D1B965100FD3A53 /* History.swift */; };
+		26EC14981D1B965A00FD3A53 /* Reaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14971D1B965A00FD3A53 /* Reaction.swift */; };
+		26EC14991D1B965A00FD3A53 /* Reaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14971D1B965A00FD3A53 /* Reaction.swift */; };
+		26EC149A1D1B965A00FD3A53 /* Reaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14971D1B965A00FD3A53 /* Reaction.swift */; };
+		26EC149C1D1B966800FD3A53 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC149B1D1B966800FD3A53 /* Comment.swift */; };
+		26EC149D1D1B966800FD3A53 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC149B1D1B966800FD3A53 /* Comment.swift */; };
+		26EC149E1D1B966800FD3A53 /* Comment.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC149B1D1B966800FD3A53 /* Comment.swift */; };
+		26EC14A01D1B967100FD3A53 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC149F1D1B967100FD3A53 /* Item.swift */; };
+		26EC14A11D1B967100FD3A53 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC149F1D1B967100FD3A53 /* Item.swift */; };
+		26EC14A21D1B967100FD3A53 /* Item.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC149F1D1B967100FD3A53 /* Item.swift */; };
+		26EC14A41D1B967D00FD3A53 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14A31D1B967D00FD3A53 /* Topic.swift */; };
+		26EC14A51D1B967D00FD3A53 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14A31D1B967D00FD3A53 /* Topic.swift */; };
+		26EC14A61D1B967D00FD3A53 /* Topic.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14A31D1B967D00FD3A53 /* Topic.swift */; };
+		26EC14A81D1B968900FD3A53 /* DoNotDisturbStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14A71D1B968900FD3A53 /* DoNotDisturbStatus.swift */; };
+		26EC14A91D1B968900FD3A53 /* DoNotDisturbStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14A71D1B968900FD3A53 /* DoNotDisturbStatus.swift */; };
+		26EC14AA1D1B968900FD3A53 /* DoNotDisturbStatus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14A71D1B968900FD3A53 /* DoNotDisturbStatus.swift */; };
+		26EC14AC1D1B969600FD3A53 /* CustomProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14AB1D1B969600FD3A53 /* CustomProfile.swift */; };
+		26EC14AD1D1B969600FD3A53 /* CustomProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14AB1D1B969600FD3A53 /* CustomProfile.swift */; };
+		26EC14AE1D1B969600FD3A53 /* CustomProfile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14AB1D1B969600FD3A53 /* CustomProfile.swift */; };
+		26EC14B01D1B969E00FD3A53 /* CustomProfileField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14AF1D1B969E00FD3A53 /* CustomProfileField.swift */; };
+		26EC14B11D1B969E00FD3A53 /* CustomProfileField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14AF1D1B969E00FD3A53 /* CustomProfileField.swift */; };
+		26EC14B21D1B969E00FD3A53 /* CustomProfileField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14AF1D1B969E00FD3A53 /* CustomProfileField.swift */; };
+		26EC14B51D1B984C00FD3A53 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14B41D1B984C00FD3A53 /* AttachmentField.swift */; };
+		26EC14B61D1B984C00FD3A53 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14B41D1B984C00FD3A53 /* AttachmentField.swift */; };
+		26EC14B71D1B984C00FD3A53 /* AttachmentField.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14B41D1B984C00FD3A53 /* AttachmentField.swift */; };
+		26EC14B91D1B991100FD3A53 /* TeamIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14B81D1B991100FD3A53 /* TeamIcon.swift */; };
+		26EC14BA1D1B991100FD3A53 /* TeamIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14B81D1B991100FD3A53 /* TeamIcon.swift */; };
+		26EC14BB1D1B991100FD3A53 /* TeamIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14B81D1B991100FD3A53 /* TeamIcon.swift */; };
 		26F4BAC31C9DEBD1000910BA /* Leaderboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26F4BAC21C9DEBD1000910BA /* Leaderboard.swift */; };
 		4307A0801CC6D0910011D5DE /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4307A07F1CC6D0910011D5DE /* Starscream.framework */; };
 		C16C987A1CE7D3DD00692776 /* Client+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16C98791CE7D3DD00692776 /* Client+Utilities.swift */; };
@@ -101,10 +131,20 @@
 		26BBA18E1C398E3C00BF7225 /* File.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = File.swift; path = Sources/File.swift; sourceTree = "<group>"; };
 		26BBA18F1C398E3C00BF7225 /* Message.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Message.swift; path = Sources/Message.swift; sourceTree = "<group>"; };
 		26BBA1901C398E3C00BF7225 /* Team.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Team.swift; path = Sources/Team.swift; sourceTree = "<group>"; };
-		26BBA1911C398E3C00BF7225 /* Types.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Types.swift; path = Sources/Types.swift; sourceTree = "<group>"; };
 		26BBA1921C398E3C00BF7225 /* User.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = User.swift; path = Sources/User.swift; sourceTree = "<group>"; };
 		26BBA1931C398E3C00BF7225 /* UserGroup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = UserGroup.swift; path = Sources/UserGroup.swift; sourceTree = "<group>"; };
 		26DF40341C7A0FA300E19241 /* Attachment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = Attachment.swift; path = Sources/Attachment.swift; sourceTree = "<group>"; };
+		26EC148F1D1B964500FD3A53 /* Edited.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Edited.swift; sourceTree = "<group>"; };
+		26EC14931D1B965100FD3A53 /* History.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = History.swift; sourceTree = "<group>"; };
+		26EC14971D1B965A00FD3A53 /* Reaction.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Reaction.swift; sourceTree = "<group>"; };
+		26EC149B1D1B966800FD3A53 /* Comment.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Comment.swift; sourceTree = "<group>"; };
+		26EC149F1D1B967100FD3A53 /* Item.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Item.swift; sourceTree = "<group>"; };
+		26EC14A31D1B967D00FD3A53 /* Topic.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Topic.swift; sourceTree = "<group>"; };
+		26EC14A71D1B968900FD3A53 /* DoNotDisturbStatus.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DoNotDisturbStatus.swift; sourceTree = "<group>"; };
+		26EC14AB1D1B969600FD3A53 /* CustomProfile.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomProfile.swift; sourceTree = "<group>"; };
+		26EC14AF1D1B969E00FD3A53 /* CustomProfileField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CustomProfileField.swift; sourceTree = "<group>"; };
+		26EC14B41D1B984C00FD3A53 /* AttachmentField.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AttachmentField.swift; sourceTree = "<group>"; };
+		26EC14B81D1B991100FD3A53 /* TeamIcon.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TeamIcon.swift; sourceTree = "<group>"; };
 		26F4BAC21C9DEBD1000910BA /* Leaderboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Leaderboard.swift; sourceTree = "<group>"; };
 		4307A07F1CC6D0910011D5DE /* Starscream.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Starscream.framework; path = Carthage/Build/Mac/Starscream.framework; sourceTree = "<group>"; };
 		C16C98791CE7D3DD00692776 /* Client+Utilities.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = "Client+Utilities.swift"; path = "Sources/Client+Utilities.swift"; sourceTree = "<group>"; };
@@ -183,25 +223,16 @@
 		2661A6811BBF60E60026F67B /* SlackKit */ = {
 			isa = PBXGroup;
 			children = (
-				26DF40341C7A0FA300E19241 /* Attachment.swift */,
-				26BBA1871C398E3C00BF7225 /* Bot.swift */,
-				26BBA1881C398E3C00BF7225 /* Channel.swift */,
 				26BBA1891C398E3C00BF7225 /* Client.swift */,
 				C1A85FF71CE3BCEF00756C40 /* Client+EventDispatching.swift */,
 				C1A85FF81CE3BCEF00756C40 /* Client+EventHandling.swift */,
 				C16C98791CE7D3DD00692776 /* Client+Utilities.swift */,
-				26BBA18A1C398E3C00BF7225 /* Event.swift */,
 				26BBA18B1C398E3C00BF7225 /* EventDelegate.swift */,
 				260EC2301C4DC61D0093B253 /* Extensions.swift */,
-				26BBA18E1C398E3C00BF7225 /* File.swift */,
-				26BBA18F1C398E3C00BF7225 /* Message.swift */,
 				260EC2311C4DC61D0093B253 /* NetworkInterface.swift */,
 				260EC2321C4DC61D0093B253 /* SlackWebAPI.swift */,
 				2601D61A1C7646B80012BF22 /* SlackWebAPIErrorDispatcher.swift */,
-				26BBA1901C398E3C00BF7225 /* Team.swift */,
-				26BBA1911C398E3C00BF7225 /* Types.swift */,
-				26BBA1921C398E3C00BF7225 /* User.swift */,
-				26BBA1931C398E3C00BF7225 /* UserGroup.swift */,
+				26EC14B31D1B974500FD3A53 /* Models */,
 				268E46161CE8F7A2009F19CC /* Supporting Files */,
 			);
 			path = SlackKit;
@@ -216,6 +247,33 @@
 				268E46141CE8F79D009F19CC /* Info-tvOS.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		26EC14B31D1B974500FD3A53 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				26DF40341C7A0FA300E19241 /* Attachment.swift */,
+				26EC14B41D1B984C00FD3A53 /* AttachmentField.swift */,
+				26BBA1871C398E3C00BF7225 /* Bot.swift */,
+				26BBA1881C398E3C00BF7225 /* Channel.swift */,
+				26EC149B1D1B966800FD3A53 /* Comment.swift */,
+				26EC14AB1D1B969600FD3A53 /* CustomProfile.swift */,
+				26EC14AF1D1B969E00FD3A53 /* CustomProfileField.swift */,
+				26EC14A71D1B968900FD3A53 /* DoNotDisturbStatus.swift */,
+				26EC148F1D1B964500FD3A53 /* Edited.swift */,
+				26BBA18A1C398E3C00BF7225 /* Event.swift */,
+				26BBA18E1C398E3C00BF7225 /* File.swift */,
+				26EC14931D1B965100FD3A53 /* History.swift */,
+				26EC149F1D1B967100FD3A53 /* Item.swift */,
+				26BBA18F1C398E3C00BF7225 /* Message.swift */,
+				26EC14971D1B965A00FD3A53 /* Reaction.swift */,
+				26BBA1901C398E3C00BF7225 /* Team.swift */,
+				26EC14B81D1B991100FD3A53 /* TeamIcon.swift */,
+				26EC14A31D1B967D00FD3A53 /* Topic.swift */,
+				26BBA1921C398E3C00BF7225 /* User.swift */,
+				26BBA1931C398E3C00BF7225 /* UserGroup.swift */,
+			);
+			name = Models;
 			sourceTree = "<group>";
 		};
 		CA70A3A1A9A1A259960DFBCF /* Frameworks */ = {
@@ -414,22 +472,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				C16C987A1CE7D3DD00692776 /* Client+Utilities.swift in Sources */,
+				26EC149C1D1B966800FD3A53 /* Comment.swift in Sources */,
 				26BBA1951C398E3C00BF7225 /* Channel.swift in Sources */,
 				26BBA19F1C398E3C00BF7225 /* User.swift in Sources */,
-				26BBA19E1C398E3C00BF7225 /* Types.swift in Sources */,
+				26EC14A01D1B967100FD3A53 /* Item.swift in Sources */,
+				26EC14B51D1B984C00FD3A53 /* AttachmentField.swift in Sources */,
+				26EC14A41D1B967D00FD3A53 /* Topic.swift in Sources */,
+				26EC14B01D1B969E00FD3A53 /* CustomProfileField.swift in Sources */,
 				26BBA1961C398E3C00BF7225 /* Client.swift in Sources */,
+				26EC14A81D1B968900FD3A53 /* DoNotDisturbStatus.swift in Sources */,
 				26BBA1971C398E3C00BF7225 /* Event.swift in Sources */,
+				26EC14901D1B964500FD3A53 /* Edited.swift in Sources */,
 				26BBA1941C398E3C00BF7225 /* Bot.swift in Sources */,
 				C1A85FF91CE3BCEF00756C40 /* Client+EventDispatching.swift in Sources */,
+				26EC14941D1B965100FD3A53 /* History.swift in Sources */,
 				26BBA19B1C398E3C00BF7225 /* File.swift in Sources */,
+				26EC14B91D1B991100FD3A53 /* TeamIcon.swift in Sources */,
 				260EC2351C4DC61D0093B253 /* SlackWebAPI.swift in Sources */,
 				26DF40351C7A0FA300E19241 /* Attachment.swift in Sources */,
 				26BBA19C1C398E3C00BF7225 /* Message.swift in Sources */,
 				26BBA19D1C398E3C00BF7225 /* Team.swift in Sources */,
 				260EC2331C4DC61D0093B253 /* Extensions.swift in Sources */,
+				26EC14981D1B965A00FD3A53 /* Reaction.swift in Sources */,
 				26BBA1A01C398E3C00BF7225 /* UserGroup.swift in Sources */,
 				2601D61B1C7646B80012BF22 /* SlackWebAPIErrorDispatcher.swift in Sources */,
 				C1A85FFA1CE3BCEF00756C40 /* Client+EventHandling.swift in Sources */,
+				26EC14AC1D1B969600FD3A53 /* CustomProfile.swift in Sources */,
 				260EC2341C4DC61D0093B253 /* NetworkInterface.swift in Sources */,
 				26BBA1981C398E3C00BF7225 /* EventDelegate.swift in Sources */,
 			);
@@ -440,22 +508,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				263993971CE90EE0004A6E93 /* Client+Utilities.swift in Sources */,
+				26EC149D1D1B966800FD3A53 /* Comment.swift in Sources */,
 				263993981CE90EE0004A6E93 /* Channel.swift in Sources */,
 				263993991CE90EE0004A6E93 /* User.swift in Sources */,
-				2639939A1CE90EE0004A6E93 /* Types.swift in Sources */,
+				26EC14A11D1B967100FD3A53 /* Item.swift in Sources */,
+				26EC14B61D1B984C00FD3A53 /* AttachmentField.swift in Sources */,
+				26EC14A51D1B967D00FD3A53 /* Topic.swift in Sources */,
+				26EC14B11D1B969E00FD3A53 /* CustomProfileField.swift in Sources */,
 				2639939B1CE90EE0004A6E93 /* Client.swift in Sources */,
+				26EC14A91D1B968900FD3A53 /* DoNotDisturbStatus.swift in Sources */,
 				2639939C1CE90EE0004A6E93 /* Event.swift in Sources */,
+				26EC14911D1B964500FD3A53 /* Edited.swift in Sources */,
 				2639939D1CE90EE0004A6E93 /* Bot.swift in Sources */,
 				2639939E1CE90EE0004A6E93 /* Client+EventDispatching.swift in Sources */,
+				26EC14951D1B965100FD3A53 /* History.swift in Sources */,
 				2639939F1CE90EE0004A6E93 /* File.swift in Sources */,
+				26EC14BA1D1B991100FD3A53 /* TeamIcon.swift in Sources */,
 				263993A01CE90EE0004A6E93 /* SlackWebAPI.swift in Sources */,
 				263993A11CE90EE0004A6E93 /* Attachment.swift in Sources */,
 				263993A21CE90EE0004A6E93 /* Message.swift in Sources */,
 				263993A31CE90EE0004A6E93 /* Team.swift in Sources */,
 				263993A41CE90EE0004A6E93 /* Extensions.swift in Sources */,
+				26EC14991D1B965A00FD3A53 /* Reaction.swift in Sources */,
 				263993A51CE90EE0004A6E93 /* UserGroup.swift in Sources */,
 				263993A61CE90EE0004A6E93 /* SlackWebAPIErrorDispatcher.swift in Sources */,
 				263993A71CE90EE0004A6E93 /* Client+EventHandling.swift in Sources */,
+				26EC14AD1D1B969600FD3A53 /* CustomProfile.swift in Sources */,
 				263993A81CE90EE0004A6E93 /* NetworkInterface.swift in Sources */,
 				263993A91CE90EE0004A6E93 /* EventDelegate.swift in Sources */,
 			);
@@ -466,22 +544,32 @@
 			buildActionMask = 2147483647;
 			files = (
 				263993B61CE90EED004A6E93 /* Client+Utilities.swift in Sources */,
+				26EC149E1D1B966800FD3A53 /* Comment.swift in Sources */,
 				263993B71CE90EED004A6E93 /* Channel.swift in Sources */,
 				263993B81CE90EED004A6E93 /* User.swift in Sources */,
-				263993B91CE90EED004A6E93 /* Types.swift in Sources */,
+				26EC14A21D1B967100FD3A53 /* Item.swift in Sources */,
+				26EC14B71D1B984C00FD3A53 /* AttachmentField.swift in Sources */,
+				26EC14A61D1B967D00FD3A53 /* Topic.swift in Sources */,
+				26EC14B21D1B969E00FD3A53 /* CustomProfileField.swift in Sources */,
 				263993BA1CE90EED004A6E93 /* Client.swift in Sources */,
+				26EC14AA1D1B968900FD3A53 /* DoNotDisturbStatus.swift in Sources */,
 				263993BB1CE90EED004A6E93 /* Event.swift in Sources */,
+				26EC14921D1B964500FD3A53 /* Edited.swift in Sources */,
 				263993BC1CE90EED004A6E93 /* Bot.swift in Sources */,
 				263993BD1CE90EED004A6E93 /* Client+EventDispatching.swift in Sources */,
+				26EC14961D1B965100FD3A53 /* History.swift in Sources */,
 				263993BE1CE90EED004A6E93 /* File.swift in Sources */,
+				26EC14BB1D1B991100FD3A53 /* TeamIcon.swift in Sources */,
 				263993BF1CE90EED004A6E93 /* SlackWebAPI.swift in Sources */,
 				263993C01CE90EED004A6E93 /* Attachment.swift in Sources */,
 				263993C11CE90EED004A6E93 /* Message.swift in Sources */,
 				263993C21CE90EED004A6E93 /* Team.swift in Sources */,
 				263993C31CE90EED004A6E93 /* Extensions.swift in Sources */,
+				26EC149A1D1B965A00FD3A53 /* Reaction.swift in Sources */,
 				263993C41CE90EED004A6E93 /* UserGroup.swift in Sources */,
 				263993C51CE90EED004A6E93 /* SlackWebAPIErrorDispatcher.swift in Sources */,
 				263993C61CE90EED004A6E93 /* Client+EventHandling.swift in Sources */,
+				26EC14AE1D1B969600FD3A53 /* CustomProfile.swift in Sources */,
 				263993C71CE90EED004A6E93 /* NetworkInterface.swift in Sources */,
 				263993C81CE90EED004A6E93 /* EventDelegate.swift in Sources */,
 			);
