@@ -103,7 +103,7 @@ internal struct NetworkInterface {
                     successClosure(json)
                 } else {
                     if let errorString = json["error"] as? String {
-                        throw ErrorDispatcher.dispatch(errorString)
+                        throw SlackError(rawValue: errorString) ?? .UnknownError
                     } else {
                         throw SlackError.UnknownError
                     }

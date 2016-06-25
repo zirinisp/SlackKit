@@ -79,7 +79,7 @@ internal enum SlackAPIEndpoint: String {
     case UsersSetPresence = "users.setPresence"
 }
 
-public class SlackWebAPI {
+public final class SlackWebAPI {
     
     public typealias FailureClosure = (error: SlackError)->Void
     

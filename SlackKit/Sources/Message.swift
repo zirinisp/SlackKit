@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public class Message {
+public final class Message {
     
     public let type = "message"
     public let subtype: String?
@@ -71,9 +71,7 @@ public class Message {
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
         reactions = Reaction.reactionsFromArray(message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map({(attachment) -> Attachment in
-            return Attachment(attachment: attachment)
-        })
+        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map{Attachment(attachment: $0)}
     }
     
     internal init(ts:String?) {

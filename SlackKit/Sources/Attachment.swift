@@ -88,23 +88,13 @@ public struct Attachment {
         attachment["title"] = title
         attachment["title_link"] = titleLink
         attachment["text"] = text
-        attachment["fields"] = fieldJSONArray(fields)
+        attachment["fields"] = fields?.map{$0.dictionary()}
         attachment["image_url"] = imageURL
         attachment["thumb_url"] = thumbURL
         attachment["footer"] = footer
         attachment["footer_icon"] = footerIcon
         attachment["ts"] = ts
         return attachment
-    }
-    
-    private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: AnyObject]] {
-        var returnValue = [[String: AnyObject]]()
-        if let f = fields {
-            for field in f {
-                returnValue.append(field.dictionary())
-            }
-        }
-        return returnValue
     }
     
 }

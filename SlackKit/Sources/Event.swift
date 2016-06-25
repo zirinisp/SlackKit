@@ -161,11 +161,7 @@ internal struct Event {
     var profile: CustomProfile?
     
     init(event:[String: AnyObject]) {
-        if let eventType = event["type"] as? String {
-            type = EventType(rawValue:eventType)
-        } else {
-            type = EventType(rawValue: "ok")
-        }
+        type = EventType(rawValue: event["type"] as? String ?? "ok")
         ts = event["ts"] as? String
         subtype = event["subtype"] as? String
         channelID = event["channel_id"] as? String

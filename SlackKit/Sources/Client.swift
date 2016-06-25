@@ -24,7 +24,7 @@
 import Foundation
 import Starscream
 
-public class Client: WebSocketDelegate {
+public final class Client: WebSocketDelegate {
     
     internal(set) public var connected = false
     internal(set) public var authenticatedUser: User?
@@ -36,6 +36,22 @@ public class Client: WebSocketDelegate {
     internal(set) public var bots = [String: Bot]()
     internal(set) public var files = [String: File]()
     internal(set) public var sentMessages = [String: Message]()
+    
+    public var token = "SLACK_AUTH_TOKEN"
+    
+    public var webAPI: SlackWebAPI {
+        return SlackWebAPI(client: self)
+    }
+
+    internal var webSocket: WebSocket?
+    internal let api = NetworkInterface()
+
+    private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
+    internal var ping: Double?
+    internal var pong: Double?
+    internal var pingInterval: NSTimeInterval?
+    internal var timeout: NSTimeInterval?
+    internal var reconnect: Bool?
     
     //MARK: - Delegates
     public weak var slackEventsDelegate: SlackEventsDelegate?
@@ -51,29 +67,12 @@ public class Client: WebSocketDelegate {
     public weak var subteamEventsDelegate: SubteamEventsDelegate?
     public weak var teamProfileEventsDelegate: TeamProfileEventsDelegate?
     
-    public var token = "SLACK_AUTH_TOKEN"
+    required public init(apiToken: String) {
+        self.token = apiToken
+    }
     
     public func setAuthToken(token: String) {
         self.token = token
-    }
-    
-    public var webAPI: SlackWebAPI {
-        return SlackWebAPI(client: self)
-    }
-
-    internal var webSocket: WebSocket?
-    internal let api = NetworkInterface()
-
-    private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
-    internal var ping: Double?
-    internal var pong: Double?
-    
-    internal var pingInterval: NSTimeInterval?
-    internal var timeout: NSTimeInterval?
-    internal var reconnect: Bool?
-    
-    required public init(apiToken: String) {
-        self.token = apiToken
     }
     
     public func connect(simpleLatest simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
@@ -82,13 +81,13 @@ public class Client: WebSocketDelegate {
         self.reconnect = reconnect
         webAPI.rtmStart(simpleLatest, noUnreads: noUnreads, mpimAware: mpimAware, success: {
             (response) -> Void in
-            self.initialSetup(response)
-            if let socketURL = response["url"] as? String {
-                let url = NSURL(string: socketURL)
-                self.webSocket = WebSocket(url: url!)
-                self.webSocket?.delegate = self
-                self.webSocket?.connect()
+            guard let socketURL = response["url"] as? String, url = NSURL(string: socketURL) else {
+                return
             }
+            self.initialSetup(response)
+            self.webSocket = WebSocket(url: url)
+            self.webSocket?.delegate = self
+            self.webSocket?.connect()
             }, failure: {(error) -> Void in
                 self.slackEventsDelegate?.clientConnectionFailed(error)
             })
