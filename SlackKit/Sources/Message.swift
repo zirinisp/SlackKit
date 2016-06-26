@@ -47,6 +47,9 @@ public final class Message {
     public let file: File?
     internal(set) public var reactions = [Reaction]()
     internal(set) public var attachments: [Attachment]?
+    internal(set) public var responseType: ResponseType?
+    internal(set) public var replaceOriginal: Bool?
+    internal(set) public var deleteOriginal: Bool?
     
     public init(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
@@ -72,6 +75,9 @@ public final class Message {
         file = File(file: message?["file"] as? [String: AnyObject])
         reactions = Reaction.reactionsFromArray(message?["reactions"] as? [[String: AnyObject]])
         attachments = (message?["attachments"] as? [[String: AnyObject]])?.map{Attachment(attachment: $0)}
+        responseType = ResponseType(rawValue: message?["response_type"] as? String ?? "")
+        replaceOriginal = message?["replace_original"] as? Bool
+        deleteOriginal = message?["delete_original"] as? Bool
     }
     
     internal init(ts:String?) {
