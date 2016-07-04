@@ -239,16 +239,7 @@ func subteamSelfRemoved(subteamID: String)
 ```
 
 ###Examples
-####Leaderboard
-Included in the OSX-Sample is an example application of a bot you might make using SlackKit. It’s a basic leaderboard scoring bot, in the spirit of [PlusPlus](https://plusplus.chat).
-
-To configure it, enter your bot’s API token in `AppDelegate.swift` for the Leaderboard bot:
-
-```swift
-let learderboard = Leaderboard(token: "SLACK_AUTH_TOKEN")
-```
-
-It adds a point for every `@thing++`, subtracts a point for every `@thing--`, and shows a leaderboard when asked `@botname leaderboard`.
+[Check out example applications here.](https://github.com/pvzig/SlackKit-examples)
 
 ###Get In Touch
 [@pvzig](https://twitter.com/pvzig)

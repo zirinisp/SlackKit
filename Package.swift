@@ -27,7 +27,7 @@ let package = Package(
     name: "SlackKit",
     targets: [],
     dependencies: [
-        .Package(url: "https://github.com/pvzig/Starscream.git",
+        .Package(url: "https://github.com/daltoniam/Starscream",
             majorVersion: 1),
     ]
 )
