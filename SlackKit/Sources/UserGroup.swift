@@ -24,7 +24,6 @@
 public struct UserGroup {
     
     public let id: String?
-    
     internal(set) public var teamID: String?
     public let isUserGroup: Bool?
     internal(set) public var name: String?

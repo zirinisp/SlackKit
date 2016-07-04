@@ -39,8 +39,8 @@ public final class Client: WebSocketDelegate {
     
     public var token = "SLACK_AUTH_TOKEN"
     
-    public var webAPI: SlackWebAPI {
-        return SlackWebAPI(client: self)
+    public var webAPI: WebAPI {
+        return WebAPI(client: self)
     }
 
     internal var webSocket: WebSocket?

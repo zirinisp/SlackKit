@@ -55,6 +55,11 @@ import SlackKit
 ```
 
 ###Usage
+
+####Webhooks
+https://api.slack.com/slash-commands
+
+####Bot Users
 To use SlackKit you'll need a bearer token which identifies a single user. You can generate a [full access token or create one using OAuth 2](https://api.slack.com/web).
 
 Once you have a token, initialize a client instance using it:

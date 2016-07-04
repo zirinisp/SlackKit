@@ -1,5 +1,5 @@
 //
-// Package.swift
+// Webhook.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,15 +21,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import PackageDescription
+import Foundation
+import Swifter
 
-let package = Package(
-    name: "SlackKit",
-    targets: [],
-    dependencies: [
-        .Package(url: "https://github.com/daltoniam/Starscream",
-            majorVersion: 1),
-        .Package(url: "https://github.com/httpswift/swifter", majorVersion: 1)
-    ],
-    exclude: ["Examples", "Carthage", "Pods"]
-)
+public class Webhook: Server, Router {
+
+    required public init(token: String, route: Route) {
+        super.init(token: token)
+        addRoute(route)
+    }
+    
+    public func addRoute(route: Route) {
+        http["/\(route.path)"] = { request in
+            let webhookRequest = WebhookRequest(request: self.dictionaryFromRequest(request.body))
+            if webhookRequest.token == self.token {
+                return self.request(webhookRequest, reply: route.reply)
+            } else {
+                return .BadRequest(.Text("Bad request."))
+            }
+        }
+    }
+
+}

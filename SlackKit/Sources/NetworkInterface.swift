@@ -27,7 +27,7 @@ internal struct NetworkInterface {
     
     private let apiUrl = "https://slack.com/api/"
     
-    internal func request(endpoint: SlackAPIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+    internal func request(endpoint: APIEndpoint, token: String, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
         var requestString = "\(apiUrl)\(endpoint.rawValue)?token=\(token)"
         if let params = parameters {
             requestString += requestStringFromParameters(params)
@@ -47,8 +47,29 @@ internal struct NetworkInterface {
         }.resume()
     }
     
+    internal func customRequest(url: String, data: NSData, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+        guard let requestString = url.stringByRemovingPercentEncoding, url =  NSURL(string: requestString) else {
+            errorClosure(SlackError.ClientNetworkError)
+            return
+        }
+        let request = NSMutableURLRequest(URL:url)
+        request.HTTPMethod = "POST"
+        let contentType = "application/json"
+        request.setValue(contentType, forHTTPHeaderField: "Content-Type")
+        request.HTTPBody = data
+        
+        NSURLSession.sharedSession().dataTaskWithRequest(request) {
+            (data, response, internalError) -> Void in
+            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
+                successClosure(json)
+                }, errorClosure: {(error) in
+                    errorClosure(error)
+            })
+            }.resume()
+    }
+    
     internal func uploadRequest(token: String, data: NSData, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
-        var requestString = "\(apiUrl)\(SlackAPIEndpoint.FilesUpload.rawValue)?token=\(token)"
+        var requestString = "\(apiUrl)\(APIEndpoint.FilesUpload.rawValue)?token=\(token)"
         if let params = parameters {
             requestString = requestString + requestStringFromParameters(params)
         }

@@ -1,5 +1,5 @@
 //
-// Package.swift
+// MessageActionServer.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,15 +21,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import PackageDescription
+import Foundation
+import Swifter
 
-let package = Package(
-    name: "SlackKit",
-    targets: [],
-    dependencies: [
-        .Package(url: "https://github.com/daltoniam/Starscream",
-            majorVersion: 1),
-        .Package(url: "https://github.com/httpswift/swifter", majorVersion: 1)
-    ],
-    exclude: ["Examples", "Carthage", "Pods"]
-)
+public class MessageActionServer: Server, Router {
+    
+    required public init(token: String, route: Route) {
+        super.init(token: token)
+        addRoute(route)
+    }
+    
+    internal func addRoute(route: Route) {
+        http["/\(route.path)"] = { request in
+            let actionRequest = MessageActionRequest(response: self.dictionaryFromRequest(request.body))
+            if actionRequest.token == self.token {
+                return self.request(actionRequest, reply: route.reply)
+            } else {
+                return .BadRequest(.Text("Bad request."))
+            }
+        }
+    }
+    
+}

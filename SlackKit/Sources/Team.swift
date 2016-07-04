@@ -23,7 +23,7 @@
 
 public struct Team {
     
-    public let id: String
+    public let id: String?
     internal(set) public var name: String?
     internal(set) public var domain: String?
     internal(set) public var emailDomain: String?
@@ -34,7 +34,7 @@ public struct Team {
     internal(set) public var icon: TeamIcon?
     
     internal init(team: [String: AnyObject]?) {
-        id = team?["id"] as! String
+        id = team?["id"] as? String
         name = team?["name"] as? String
         domain = team?["domain"] as? String
         emailDomain = team?["email_domain"] as? String

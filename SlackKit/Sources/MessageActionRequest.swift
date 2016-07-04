@@ -1,5 +1,5 @@
 //
-// Edited.swift
+// MessageActionRequest.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -23,12 +23,32 @@
 
 import Foundation
 
-public struct Edited {
-    public let user: String?
-    public let ts: String?
+struct MessageActionRequest: Request {
     
-    internal init(edited:[String: AnyObject]?) {
-        user = edited?["user"] as? String
-        ts = edited?["ts"] as? String
+    let actions: [Action]?
+    let callbackID: String?
+    let team: Team?
+    let channel: Channel?
+    let user: User?
+    let actionTS: String?
+    let messageTS: String?
+    let attachmentID: String?
+    let token: String?
+    let originalMessage: Message?
+    let responseURL: String
+    
+    internal init(response: [String: AnyObject]?) {
+        actions = (response?["actions"] as? [[String:AnyObject]])?.map({Action(action: $0)})
+        callbackID = response?["callback_id"] as? String
+        team = Team(team: response?["team"] as? [String: AnyObject])
+        channel = Channel(channel: response?["channel"] as? [String: AnyObject])
+        user = User(user: response?["channel"] as? [String: AnyObject])
+        actionTS = response?["action_ts"] as? String
+        messageTS = response?["message_ts"] as? String
+        attachmentID = response?["attachment_id"] as? String
+        token = response?["token"] as? String
+        originalMessage = Message(message: response?["original_message"] as? [String: AnyObject])
+        responseURL = response?["response_url"] as? String ?? ""
     }
+    
 }
