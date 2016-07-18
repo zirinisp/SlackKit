@@ -37,7 +37,7 @@ internal struct AuthorizeRequest {
         return json
     }
     
-    internal init(clientID: String, scope:[Scope], redirectURI: String, state: String = "slackkit", team: String? = nil) {
+    init(clientID: String, scope:[Scope], redirectURI: String, state: String = "slackkit", team: String? = nil) {
         self.clientID = clientID
         self.scope = scope
         self.redirectURI = redirectURI

@@ -23,10 +23,10 @@
 
 public final class SlackKit: OAuthDelegate {
     
-    public var oauth: OAuthServer?
-    public var clients: [String: Client] = [:]
+    internal(set) public var oauth: OAuthServer?
+    internal(set) public var clients: [String: Client] = [:]
     private let clientOptions: ClientOptions
-    // MARK: - Block based API
+    // Initalization block
     public var onClientInitalization: ((Client) -> Void)?
     
     // If you already have an API token

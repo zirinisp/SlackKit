@@ -23,7 +23,7 @@
 
 public struct MessageActionResponder {
     
-    internal let responses:[(Action, Response)]
+    public var responses:[(Action, Response)]
     
     public init(responses:[(Action, Response)]) {
         self.responses = responses

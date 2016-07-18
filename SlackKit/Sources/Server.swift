@@ -29,7 +29,7 @@ internal enum Reply {
     case BadRequest
 }
 
-protocol Request {
+internal protocol Request {
     var responseURL: String { get }
 }
 
@@ -88,4 +88,3 @@ public class Server {
     }
     
 }
-

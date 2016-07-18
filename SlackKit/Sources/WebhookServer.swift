@@ -23,7 +23,7 @@
 
 public class WebhookServer: Server {
     
-    required public init(token: String, route: String, response: Response) {
+    public init(token: String, route: String, response: Response) {
         super.init(token: token)
         addRoute(route, response: response)
     }

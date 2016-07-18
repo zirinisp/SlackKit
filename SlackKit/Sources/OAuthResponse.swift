@@ -31,7 +31,7 @@ internal struct OAuthResponse {
     let incomingWebhook: IncomingWebhook?
     let bot: Bot?
     
-    internal init(response: [String: AnyObject]?) {
+    init(response: [String: AnyObject]?) {
         accessToken = response?["access_token"] as? String
         scope = (response?["scope"] as? String)?.componentsSeparatedByString(",").flatMap{Scope(rawValue:$0)}
         userID = response?["user_id"] as? String

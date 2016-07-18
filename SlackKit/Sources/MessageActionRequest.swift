@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-struct MessageActionRequest: Request {
+internal struct MessageActionRequest: Request {
     
     let action: Action?
     let callbackID: String?
@@ -35,7 +35,7 @@ struct MessageActionRequest: Request {
     let originalMessage: Message?
     let responseURL: String
     
-    internal init(response: [String: AnyObject]?) {
+    init(response: [String: AnyObject]?) {
         action = (response?["actions"] as? [[String:AnyObject]])?.map({Action(action: $0)}).first
         callbackID = response?["callback_id"] as? String
         team = Team(team: response?["team"] as? [String: AnyObject])

@@ -23,12 +23,12 @@
 
 public struct IncomingWebhook {
     
-    let url: String?
-    let channel: String?
-    let configurationURL: String?
-    let username: String?
-    let iconEmoji: String?
-    let iconURL: String?
+    public let url: String?
+    public let channel: String?
+    public let configurationURL: String?
+    public let username: String?
+    public let iconEmoji: String?
+    public let iconURL: String?
     
     internal init(webhook: [String: AnyObject]?) {
         url = webhook?["url"] as? String

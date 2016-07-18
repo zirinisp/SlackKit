@@ -91,6 +91,7 @@ public struct Action {
     }
     
 }
+
 public enum ActionStyle: String {
     case Default = "default"
     case Primary = "primary"
@@ -101,5 +102,3 @@ public enum ResponseType: String {
     case InChannel = "in_channel"
     case Ephemeral = "ephemeral"
 }
-
-

@@ -66,7 +66,10 @@ public struct OAuthServer {
                 return .BadRequest(.Text("Bad request."))
             }
             self.oauthRequest(response)
-            return .OK(.Text("Ok."))
+            if let redirect = self.redirectURI {
+                return .MovedPermanently(redirect)
+            }
+            return .OK(.Text("Authentication successful."))
         }
     }
     
