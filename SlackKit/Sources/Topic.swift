@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// Topic.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
-    }
+public struct Topic {
+    public let value: String?
+    public let creator: String?
+    public let lastSet: Int?
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
+    internal init(topic: [String: AnyObject]?) {
+        value = topic?["value"] as? String
+        creator = topic?["creator"] as? String
+        lastSet = topic?["last_set"] as? Int
     }
-
 }
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
-}
-

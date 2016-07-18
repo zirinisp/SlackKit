@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// Edited.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
-    }
+public struct Edited {
+    public let user: String?
+    public let ts: String?
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
+    internal init(edited:[String: AnyObject]?) {
+        user = edited?["user"] as? String
+        ts = edited?["ts"] as? String
     }
-
 }
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
-}
-

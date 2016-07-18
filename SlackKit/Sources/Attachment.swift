@@ -21,11 +21,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 public struct Attachment {
     
     public let fallback: String?
+    public let callbackID: String?
+    public let type: String?
     public let color: String?
     public let pretext: String?
     public let authorName: String?
@@ -35,6 +35,7 @@ public struct Attachment {
     public let titleLink: String?
     public let text: String?
     public let fields: [AttachmentField]?
+    public let actions: [Action]?
     public let imageURL: String?
     public let thumbURL: String?
     public let footer: String?
@@ -43,6 +44,8 @@ public struct Attachment {
 
     internal init(attachment: [String: AnyObject]?) {
         fallback = attachment?["fallback"] as? String
+        callbackID = attachment?["callback_id"] as? String
+        type = attachment?["attachment_type"] as? String
         color = attachment?["color"] as? String
         pretext = attachment?["pretext"] as? String
         authorName = attachment?["author_name"] as? String
@@ -57,10 +60,13 @@ public struct Attachment {
         footerIcon = attachment?["footer_icon"] as? String
         ts = attachment?["ts"] as? Int
         fields = (attachment?["fields"] as? [[String: AnyObject]])?.map { AttachmentField(field: $0) }
+        actions = (attachment?["actions"] as? [[String: AnyObject]])?.map { Action(action: $0) }
     }
     
-    public init(fallback: String, title:String, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, imageURL: String? = nil, thumbURL: String? = nil, footer: String? = nil, footerIcon:String? = nil, ts:Int? = nil) {
+    public init(fallback: String, title:String, callbackID: String? = nil, type: String? = nil, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, actions: [Action]? = nil, imageURL: String? = nil, thumbURL: String? = nil, footer: String? = nil, footerIcon:String? = nil, ts:Int? = nil) {
         self.fallback = fallback
+        self.callbackID = callbackID
+        self.type = type
         self.color = colorHex
         self.pretext = pretext
         self.authorName = authorName
@@ -70,6 +76,7 @@ public struct Attachment {
         self.titleLink = titleLink
         self.text = text
         self.fields = fields
+        self.actions = actions
         self.imageURL = imageURL
         self.thumbURL = thumbURL
         self.footer = footer
@@ -80,6 +87,8 @@ public struct Attachment {
     internal func dictionary() -> [String: AnyObject] {
         var attachment = [String: AnyObject]()
         attachment["fallback"] = fallback
+        attachment["callback_id"] = callbackID
+        attachment["attachment_type"] = type
         attachment["color"] = color
         attachment["pretext"] = pretext
         attachment["authorName"] = authorName
@@ -88,51 +97,14 @@ public struct Attachment {
         attachment["title"] = title
         attachment["title_link"] = titleLink
         attachment["text"] = text
-        attachment["fields"] = fieldJSONArray(fields)
+        attachment["fields"] = fields?.map{$0.dictionary()}
+        attachment["actions"] = actions?.map{$0.dictionary()}
         attachment["image_url"] = imageURL
         attachment["thumb_url"] = thumbURL
         attachment["footer"] = footer
         attachment["footer_icon"] = footerIcon
         attachment["ts"] = ts
         return attachment
-    }
-    
-    private func fieldJSONArray(fields: [AttachmentField]?) -> [[String: AnyObject]] {
-        var returnValue = [[String: AnyObject]]()
-        if let f = fields {
-            for field in f {
-                returnValue.append(field.dictionary())
-            }
-        }
-        return returnValue
-    }
-    
-}
-
-public struct AttachmentField {
-    
-    public let title: String?
-    public let value: String?
-    public let short: Bool?
-    
-    internal init(field: [String: AnyObject]?) {
-        title = field?["title"] as? String
-        value = field?["value"] as? String
-        short = field?["short"] as? Bool
-    }
-    
-    public init(title:String, value:String, short: Bool? = nil) {
-        self.title = title
-        self.value = value.slackFormatEscaping()
-        self.short = short
-    }
-    
-    internal func dictionary() -> [String: AnyObject] {
-        var field = [String: AnyObject]()
-        field["title"] = title
-        field["value"] = value
-        field["short"] = short
-        return field
     }
     
 }

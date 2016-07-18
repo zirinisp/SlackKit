@@ -1,5 +1,5 @@
 //
-// Bot.swift
+// MessageActionRequest.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,22 +21,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Bot {
+struct MessageActionRequest: Request {
     
-    public let id: String?
-    internal(set) public var botToken: String?
-    internal(set) public var name: String?
-    internal(set) public var icons: [String: AnyObject]?
+    let action: Action?
+    let callbackID: String?
+    let team: Team?
+    let channel: Channel?
+    let user: User?
+    let actionTS: String?
+    let messageTS: String?
+    let attachmentID: String?
+    let token: String?
+    let originalMessage: Message?
+    let responseURL: String
     
-    internal init(bot: [String: AnyObject]?) {
-        id = bot?["id"] as? String
-        name = bot?["name"] as? String
-        icons = bot?["icons"] as? [String: AnyObject]
-    }
-    
-    internal init(botUser: [String: AnyObject]?) {
-        id = botUser?["bot_user_id"] as? String
-        botToken = botUser?["bot_access_token"] as? String
+    internal init(response: [String: AnyObject]?) {
+        action = (response?["actions"] as? [[String:AnyObject]])?.map({Action(action: $0)}).first
+        callbackID = response?["callback_id"] as? String
+        team = Team(team: response?["team"] as? [String: AnyObject])
+        channel = Channel(channel: response?["channel"] as? [String: AnyObject])
+        user = User(user: response?["channel"] as? [String: AnyObject])
+        actionTS = response?["action_ts"] as? String
+        messageTS = response?["message_ts"] as? String
+        attachmentID = response?["attachment_id"] as? String
+        token = response?["token"] as? String
+        originalMessage = Message(message: response?["original_message"] as? [String: AnyObject])
+        responseURL = response?["response_url"] as? String ?? ""
     }
     
 }

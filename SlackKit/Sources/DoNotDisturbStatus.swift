@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// DoNotDisturbStatus.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,19 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+public struct DoNotDisturbStatus {
+    internal(set) public var enabled: Bool?
+    internal(set) public var nextDoNotDisturbStart: Int?
+    internal(set) public var nextDoNotDisturbEnd: Int?
+    internal(set) public var snoozeEnabled: Bool?
+    internal(set) public var snoozeEndtime: Int?
+    
+    internal init(status: [String: AnyObject]?) {
+        enabled = status?["dnd_enabled"] as? Bool
+        nextDoNotDisturbStart = status?["next_dnd_start_ts"] as? Int
+        nextDoNotDisturbEnd = status?["next_dnd_end_ts"] as? Int
+        snoozeEnabled = status?["snooze_enabled"] as? Bool
+        snoozeEndtime = status?["snooze_endtime"] as? Int
     }
     
 }
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
-    }
-
-}
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
-}
-

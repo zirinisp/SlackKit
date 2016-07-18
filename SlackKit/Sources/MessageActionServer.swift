@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// MessageActionServer.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,26 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+public class MessageActionServer: Server {
+    
+    internal let responder: MessageActionResponder
+    
+    required public init(token: String, route: String, responder: MessageActionResponder) {
+        self.responder = responder
+        super.init(token: token)
+        addRoute(route)
     }
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
-    }
-
-}
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
+    internal func addRoute(route: String) {
+        http.POST["/\(route)"] = { request in
+            let payload = request.parseUrlencodedForm()
+            let actionRequest = MessageActionRequest(response: self.jsonFromRequest(payload[0].1))
+            if let reply = self.responder.responseForRequest(actionRequest) where actionRequest.token == self.token {
+                return self.request(actionRequest, reply: reply)
+            } else {
+                return .BadRequest(.Text("Bad request."))
             }
         }
-        
-        return requestString
     }
-
+    
 }
-

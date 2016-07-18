@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// OAuthResponse.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+internal struct OAuthResponse {
 
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+    let accessToken: String?
+    let scope: [Scope]?
+    let userID: String?
+    let teamName: String?
+    let teamID: String?
+    let incomingWebhook: IncomingWebhook?
+    let bot: Bot?
+    
+    internal init(response: [String: AnyObject]?) {
+        accessToken = response?["access_token"] as? String
+        scope = (response?["scope"] as? String)?.componentsSeparatedByString(",").flatMap{Scope(rawValue:$0)}
+        userID = response?["user_id"] as? String
+        teamName = response?["team_name"] as? String
+        teamID = response?["team_id"] as? String
+        incomingWebhook = IncomingWebhook(webhook: response?["incoming_webhook"] as? [String: AnyObject])
+        bot = Bot(botUser: response?["bot"] as? [String: AnyObject])
     }
     
 }
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
-    }
-
-}
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
-}
-

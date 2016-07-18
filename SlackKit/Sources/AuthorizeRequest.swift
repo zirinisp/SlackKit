@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// AuthorizeRequest.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,28 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+internal struct AuthorizeRequest {
+    
+    let clientID: String
+    let scope: [Scope]
+    let redirectURI: String
+    let state: String
+    let team: String?
+    
+    var parameters: [String: AnyObject] {
+        var json = [String : AnyObject]()
+        json["scope"] = scope.map({$0.rawValue}).joinWithSeparator(",")
+        json["state"] = state
+        json["team"] = team
+        return json
     }
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
+    internal init(clientID: String, scope:[Scope], redirectURI: String, state: String = "slackkit", team: String? = nil) {
+        self.clientID = clientID
+        self.scope = scope
+        self.redirectURI = redirectURI
+        self.state = state
+        self.team = team
     }
 
 }
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
-}
-

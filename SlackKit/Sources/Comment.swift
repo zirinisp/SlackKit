@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// Comment.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,32 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+public struct Comment {
+    public let id: String?
+    public let user: String?
+    internal(set) public var created: Int?
+    internal(set) public var comment: String?
+    internal(set) public var starred: Bool?
+    internal(set) public var stars: Int?
+    internal(set) public var reactions = [Reaction]()
+    
+    internal init(comment:[String: AnyObject]?) {
+        id = comment?["id"] as? String
+        created = comment?["created"] as? Int
+        user = comment?["user"] as? String
+        starred = comment?["is_starred"] as? Bool
+        stars = comment?["num_stars"] as? Int
+        self.comment = comment?["comment"] as? String
     }
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
+    internal init(id: String?) {
+        self.id = id
+        self.user = nil
     }
-
 }
 
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
+extension Comment: Equatable {}
 
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
+public func ==(lhs: Comment, rhs: Comment) -> Bool {
+    return lhs.id == rhs.id
 }
-

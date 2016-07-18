@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public class Message {
+public final class Message {
     
     public let type = "message"
     public let subtype: String?
@@ -47,6 +47,9 @@ public class Message {
     public let file: File?
     internal(set) public var reactions = [Reaction]()
     internal(set) public var attachments: [Attachment]?
+    internal(set) public var responseType: ResponseType?
+    internal(set) public var replaceOriginal: Bool?
+    internal(set) public var deleteOriginal: Bool?
     
     public init(message: [String: AnyObject]?) {
         subtype = message?["subtype"] as? String
@@ -71,9 +74,10 @@ public class Message {
         comment = Comment(comment: message?["comment"] as? [String: AnyObject])
         file = File(file: message?["file"] as? [String: AnyObject])
         reactions = Reaction.reactionsFromArray(message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map({(attachment) -> Attachment in
-            return Attachment(attachment: attachment)
-        })
+        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map{Attachment(attachment: $0)}
+        responseType = ResponseType(rawValue: message?["response_type"] as? String ?? "")
+        replaceOriginal = message?["replace_original"] as? Bool
+        deleteOriginal = message?["delete_original"] as? Bool
     }
     
     internal init(ts:String?) {

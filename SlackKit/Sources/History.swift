@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// History.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
-    }
+public struct History {
+    internal(set) public var latest: NSDate?
+    internal(set) public var messages = [Message]()
+    public let hasMore: Bool?
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
-    }
-
-}
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
+    internal init(history: [String: AnyObject]?) {
+        if let latestStr = history?["latest"] as? String, latestDouble = Double(latestStr) {
+            latest = NSDate(timeIntervalSince1970: NSTimeInterval(latestDouble))
+        }
+        if let msgs = history?["messages"] as? [[String: AnyObject]] {
+            for message in msgs {
+                messages.append(Message(message: message))
             }
         }
-        
-        return requestString
+        hasMore = history?["has_more"] as? Bool
     }
-
 }
-

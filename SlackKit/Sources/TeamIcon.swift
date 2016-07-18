@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// TeamIcon.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
-    }
+public struct TeamIcon {
+    internal(set) public var image34: String?
+    internal(set) public var image44: String?
+    internal(set) public var image68: String?
+    internal(set) public var image88: String?
+    internal(set) public var image102: String?
+    internal(set) public var image132: String?
+    internal(set) public var imageOriginal: String?
+    internal(set) public var imageDefault: Bool?
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
+    internal init(icon: [String: AnyObject]?) {
+        image34 = icon?["image_34"] as? String
+        image44 = icon?["image_44"] as? String
+        image68 = icon?["image_68"] as? String
+        image88 = icon?["image_88"] as? String
+        image102 = icon?["image_102"] as? String
+        image132 = icon?["image_132"] as? String
+        imageOriginal = icon?["image_original"] as? String
+        imageDefault = icon?["image_default"] as? Bool
     }
-
 }
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
-            }
-        }
-        
-        return requestString
-    }
-
-}
-

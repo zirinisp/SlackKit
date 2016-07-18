@@ -1,5 +1,5 @@
 //
-// Extensions.swift
+// CustomProfile.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,41 +21,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
-public extension NSDate {
-
-    func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
-    }
+public struct CustomProfile {
+    internal(set) public var fields = [String: CustomProfileField]()
     
-}
-
-internal extension String {
-    
-    func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
-        return escapedString
-    }
-
-}
-
-internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
-
-    var requestStringFromParameters: String {
-        var requestString = ""
-        for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
-                requestString += "&\(key)=\(encodedValue)"
-            } else if let value = self[key] as? Int {
-                requestString += "&\(key)=\(value)"
+    internal init(profile: [String: AnyObject]?) {
+        if let eventFields = profile?["fields"] as? [AnyObject] {
+            for field in eventFields {
+                var cpf: CustomProfileField?
+                if let fieldDictionary = field as? [String: AnyObject] {
+                    cpf = CustomProfileField(field: fieldDictionary)
+                } else {
+                    cpf = CustomProfileField(id: field as? String)
+                }
+                if let id = cpf?.id { fields[id] = cpf }
             }
         }
-        
-        return requestString
     }
-
+    
+    internal init(customFields: [String: AnyObject]?) {
+        if let customFields = customFields {
+            for key in customFields.keys {
+                let cpf = CustomProfileField(field: customFields[key] as? [String: AnyObject])
+                self.fields[key] = cpf
+            }
+        }
+    }
+    
 }
-
