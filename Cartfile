@@ -1,2 +1,2 @@
 github "daltoniam/Starscream" ~> 1.0
-github "glock45/swifter" == 1.2.0
+github "glock45/swifter" "d7c820bfc9260e469094b5f8d3d101b30c4a8fac"

@@ -41,3 +41,21 @@ internal extension String {
     }
 
 }
+
+internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObject {
+
+    var requestStringFromParameters: String {
+        var requestString = ""
+        for key in self.keys {
+            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
+                requestString += "&\(key)=\(encodedValue)"
+            } else if let value = self[key] as? Int {
+                requestString += "&\(key)=\(value)"
+            }
+        }
+        
+        return requestString
+    }
+
+}
+

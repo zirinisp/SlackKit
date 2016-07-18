@@ -21,8 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 public enum SlackError: String, ErrorType {
     case AccountInactive = "account_inactive"
     case AlreadyArchived = "already_archived"
@@ -53,6 +51,7 @@ public enum SlackError: String, ErrorType {
     case FileNotFound = "file_not_found"
     case FileNotShared = "file_not_shared"
     case GroupContainsOthers = "group_contains_others"
+    case InvalidArgName = "invalid_arg_name"
     case InvalidArrayArg = "invalid_array_arg"
     case InvalidAuth = "invalid_auth"
     case InvalidChannel = "invalid_channel"
@@ -114,6 +113,7 @@ public enum SlackError: String, ErrorType {
     // Client
     case ClientNetworkError
     case ClientJSONError
+    case ClientOAuthError
     // HTTP
     case TooManyRequests
     case UnknownHTTPError

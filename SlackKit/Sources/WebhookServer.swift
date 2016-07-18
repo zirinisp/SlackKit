@@ -1,5 +1,5 @@
 //
-// Reaction.swift
+// WebhookServer.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,37 +21,30 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Reaction {
-    public let name: String?
-    internal(set) public var user: String?
+public class WebhookServer: Server {
     
-    internal init(reaction:[String: AnyObject]?) {
-        name = reaction?["name"] as? String
+    required public init(token: String, route: String, response: Response) {
+        super.init(token: token)
+        addRoute(route, response: response)
     }
     
-    internal init(name: String, user: String) {
-        self.name = name
-        self.user = user
-    }
-    
-    static func reactionsFromArray(array: [[String: AnyObject]]?) -> [Reaction] {
-        var reactions = [Reaction]()
-        if let array = array {
-            for reaction in array {
-                if let users = reaction["users"] as? [String], name = reaction["name"] as? String {
-                    for user in users {
-                        reactions.append(Reaction(name: name, user: user))
-                    }
-                }
+    public func addRoute(route: String, response: Response) {
+        http["/\(route)"] = { request in
+            let webhookRequest = WebhookRequest(request: self.dictionaryFromRequest(request.body))
+            if webhookRequest.token == self.token {
+                return self.request(webhookRequest, reply: self.replyForResponse(response))
+            } else {
+                return .BadRequest(.Text("Bad request."))
             }
         }
-        return reactions
     }
     
-}
+    private func replyForResponse(response: Response) -> Reply {
+        if response.attachments == nil && response.responseType == nil {
+            return Reply.Text(body: response.text)
+        } else {
+            return Reply.JSON(response: response)
+        }
+    }
 
-extension Reaction: Equatable {}
-
-public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
-    return lhs.name == rhs.name
 }

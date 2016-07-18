@@ -21,11 +21,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct MessageActionRequest: Request {
     
-    let actions: [Action]?
+    let action: Action?
     let callbackID: String?
     let team: Team?
     let channel: Channel?
@@ -38,7 +36,7 @@ struct MessageActionRequest: Request {
     let responseURL: String
     
     internal init(response: [String: AnyObject]?) {
-        actions = (response?["actions"] as? [[String:AnyObject]])?.map({Action(action: $0)})
+        action = (response?["actions"] as? [[String:AnyObject]])?.map({Action(action: $0)}).first
         callbackID = response?["callback_id"] as? String
         team = Team(team: response?["team"] as? [String: AnyObject])
         channel = Channel(channel: response?["channel"] as? [String: AnyObject])

@@ -1,5 +1,5 @@
 //
-// Webhook.swift
+// ClientOptions.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,25 +21,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-import Swifter
-
-public class Webhook: Server, Router {
-
-    required public init(token: String, route: Route) {
-        super.init(token: token)
-        addRoute(route)
+public struct ClientOptions {
+    
+    let simpleLatest: Bool?
+    let noUnreads: Bool?
+    let mpimAware: Bool?
+    let pingInterval: NSTimeInterval?
+    let timeout: NSTimeInterval?
+    let reconnect: Bool?
+    
+    public init(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
+        self.simpleLatest = simpleLatest
+        self.noUnreads = noUnreads
+        self.mpimAware = mpimAware
+        self.pingInterval = pingInterval
+        self.timeout = timeout
+        self.reconnect = reconnect
     }
     
-    public func addRoute(route: Route) {
-        http["/\(route.path)"] = { request in
-            let webhookRequest = WebhookRequest(request: self.dictionaryFromRequest(request.body))
-            if webhookRequest.token == self.token {
-                return self.request(webhookRequest, reply: route.reply)
-            } else {
-                return .BadRequest(.Text("Bad request."))
-            }
-        }
-    }
-
 }

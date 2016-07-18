@@ -1,5 +1,5 @@
 //
-// Reaction.swift
+// AuthorizeResponse.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,37 +21,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Reaction {
-    public let name: String?
-    internal(set) public var user: String?
+internal struct AuthorizeResponse {
     
-    internal init(reaction:[String: AnyObject]?) {
-        name = reaction?["name"] as? String
-    }
+    let code: String
+    let state: String
     
-    internal init(name: String, user: String) {
-        self.name = name
-        self.user = user
-    }
-    
-    static func reactionsFromArray(array: [[String: AnyObject]]?) -> [Reaction] {
-        var reactions = [Reaction]()
-        if let array = array {
-            for reaction in array {
-                if let users = reaction["users"] as? [String], name = reaction["name"] as? String {
-                    for user in users {
-                        reactions.append(Reaction(name: name, user: user))
-                    }
-                }
-            }
+    init?(queryParameters: [(String, String)]) {
+        guard let code = queryParameters.first?.1, state = queryParameters.last?.1 else {
+            return nil
         }
-        return reactions
+        self.code = code
+        self.state = state
     }
-    
-}
-
-extension Reaction: Equatable {}
-
-public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
-    return lhs.name == rhs.name
 }

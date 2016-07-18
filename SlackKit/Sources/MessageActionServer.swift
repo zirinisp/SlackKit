@@ -21,21 +21,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-import Swifter
-
-public class MessageActionServer: Server, Router {
+public class MessageActionServer: Server {
     
-    required public init(token: String, route: Route) {
+    internal let responder: MessageActionResponder
+    
+    required public init(token: String, route: String, responder: MessageActionResponder) {
+        self.responder = responder
         super.init(token: token)
         addRoute(route)
     }
     
-    internal func addRoute(route: Route) {
-        http["/\(route.path)"] = { request in
-            let actionRequest = MessageActionRequest(response: self.dictionaryFromRequest(request.body))
-            if actionRequest.token == self.token {
-                return self.request(actionRequest, reply: route.reply)
+    internal func addRoute(route: String) {
+        http.POST["/\(route)"] = { request in
+            let payload = request.parseUrlencodedForm()
+            let actionRequest = MessageActionRequest(response: self.jsonFromRequest(payload[0].1))
+            if let reply = self.responder.responseForRequest(actionRequest) where actionRequest.token == self.token {
+                return self.request(actionRequest, reply: reply)
             } else {
                 return .BadRequest(.Text("Bad request."))
             }

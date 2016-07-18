@@ -21,7 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Starscream
 
 public final class Client: WebSocketDelegate {
@@ -37,23 +36,20 @@ public final class Client: WebSocketDelegate {
     internal(set) public var files = [String: File]()
     internal(set) public var sentMessages = [String: Message]()
     
-    public var token = "SLACK_AUTH_TOKEN"
+    public var token = "xoxp-SLACK_AUTH_TOKEN"
     
     public var webAPI: WebAPI {
-        return WebAPI(client: self)
+        return WebAPI(token: token)
     }
 
     internal var webSocket: WebSocket?
-    internal let api = NetworkInterface()
-
     private let pingPongQueue = dispatch_queue_create("com.launchsoft.SlackKit", DISPATCH_QUEUE_SERIAL)
     internal var ping: Double?
     internal var pong: Double?
-    internal var pingInterval: NSTimeInterval?
-    internal var timeout: NSTimeInterval?
-    internal var reconnect: Bool?
-    
+    internal var options: ClientOptions?
+        
     //MARK: - Delegates
+    public weak var connectionEventsDelegate: ConnectionEventsDelegate?
     public weak var slackEventsDelegate: SlackEventsDelegate?
     public weak var messageEventsDelegate: MessageEventsDelegate?
     public weak var doNotDisturbEventsDelegate: DoNotDisturbEventsDelegate?
@@ -66,8 +62,9 @@ public final class Client: WebSocketDelegate {
     public weak var teamEventsDelegate: TeamEventsDelegate?
     public weak var subteamEventsDelegate: SubteamEventsDelegate?
     public weak var teamProfileEventsDelegate: TeamProfileEventsDelegate?
-    
-    required public init(apiToken: String) {
+
+    // If you already have an API token
+    internal init(apiToken: String) {
         self.token = apiToken
     }
     
@@ -75,11 +72,9 @@ public final class Client: WebSocketDelegate {
         self.token = token
     }
     
-    public func connect(simpleLatest simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
-        self.pingInterval = pingInterval
-        self.timeout = timeout
-        self.reconnect = reconnect
-        webAPI.rtmStart(simpleLatest, noUnreads: noUnreads, mpimAware: mpimAware, success: {
+    public func connect(options options: ClientOptions = ClientOptions()) {
+        self.options = options
+        webAPI.rtmStart(options.simpleLatest, noUnreads: options.noUnreads, mpimAware: options.mpimAware, success: {
             (response) -> Void in
             guard let socketURL = response["url"] as? String, url = NSURL(string: socketURL) else {
                 return
@@ -89,7 +84,7 @@ public final class Client: WebSocketDelegate {
             self.webSocket?.delegate = self
             self.webSocket?.connect()
             }, failure: {(error) -> Void in
-                self.slackEventsDelegate?.clientConnectionFailed(error)
+                self.connectionEventsDelegate?.clientConnectionFailed(self, error: error)
             })
     }
     
@@ -162,7 +157,7 @@ public final class Client: WebSocketDelegate {
     }
     
     private func timeoutCheck() -> Bool {
-        if let pong = pong, ping = ping, timeout = timeout {
+        if let pong = pong, ping = ping, timeout = options?.timeout {
             if pong - ping < timeout {
                 return true
             } else {
@@ -239,7 +234,7 @@ public final class Client: WebSocketDelegate {
     
     // MARK: - WebSocketDelegate
     public func websocketDidConnect(socket: WebSocket) {
-        if let pingInterval = pingInterval {
+        if let pingInterval = options?.pingInterval {
             pingRTMServerAtInterval(pingInterval)
         }
     }
@@ -248,9 +243,9 @@ public final class Client: WebSocketDelegate {
         connected = false
         webSocket = nil
         authenticatedUser = nil
-        slackEventsDelegate?.clientDisconnected()
-        if reconnect == true {
-            connect(pingInterval: pingInterval, timeout: timeout, reconnect: reconnect)
+        connectionEventsDelegate?.clientDisconnected(self)
+        if let options = options where options.reconnect == true {
+            connect(options: options)
         }
     }
     

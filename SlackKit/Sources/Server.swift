@@ -1,33 +1,32 @@
 //
-//  Server.swift
-//  SlackKit
+// Server.swift
 //
-//  Created by Peter Zignego on 7/3/16.
-//  Copyright © 2016 Launch Software LLC. All rights reserved.
+// Copyright © 2016 Peter Zignego. All rights reserved.
 //
+// Permission is hereby granted, free of charge, to any person obtaining a copy
+// of this software and associated documentation files (the "Software"), to deal
+// in the Software without restriction, including without limitation the rights
+// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+// copies of the Software, and to permit persons to whom the Software is
+// furnished to do so, subject to the following conditions:
+//
+// The above copyright notice and this permission notice shall be included in
+// all copies or substantial portions of the Software.
+//
+// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+// THE SOFTWARE.
 
-import Foundation
 import Swifter
 
-public enum Reply {
+internal enum Reply {
     case JSON(response: Response)
     case Text(body: String)
-    case Multipart(responses: [Response])
     case BadRequest
-}
-
-public struct Route {
-    let path: String
-    let reply: Reply
-    
-    public init(path: String, reply: Reply) {
-        self.path = path
-        self.reply = reply
-    }
-}
-
-protocol Router {
-    func addRoute(route: Route)
 }
 
 protocol Request {
@@ -43,9 +42,9 @@ public class Server {
         self.token = token
     }
     
-    public func start() {
+    public func start(port: in_port_t = 8080, forceIPV4: Bool = false) {
         do {
-            try http.start()
+            try http.start(port, forceIPv4: forceIPV4)
         } catch let error as NSError {
             print("Server failed to start with error: \(error)")
         }
@@ -61,23 +60,8 @@ public class Server {
             return .OK(.Text(body))
         case .JSON(let response):
             return .OK(.Json(response.json()))
-        case .Multipart(let responses):
-            multipartResponseWith(request, responses: responses)
-            return .OK(.Text("Got it!"))
         case .BadRequest:
             return .BadRequest(.Text("Bad request."))
-        }
-    }
-    
-    internal func multipartResponseWith(request: Request, responses: [Response]) {
-        for response in responses {
-            if let data = try? NSJSONSerialization.dataWithJSONObject(response.json(), options: []) {
-                NetworkInterface().customRequest(request.responseURL, data: data, successClosure: { (response) in
-                    print(response)
-                }, errorClosure: { (error) in
-                    print(error)
-                })
-            }
         }
     }
     
@@ -94,6 +78,13 @@ public class Server {
             return dict
         }
         return nil
+    }
+    
+    internal func jsonFromRequest(string: String) -> [String: AnyObject]? {
+        guard let data = string.dataUsingEncoding(NSUTF8StringEncoding) else {
+            return nil
+        }
+        return (try? NSJSONSerialization.JSONObjectWithData(data, options: [])) as? [String: AnyObject] ?? nil
     }
     
 }

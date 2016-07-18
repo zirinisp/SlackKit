@@ -21,8 +21,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 public struct DoNotDisturbStatus {
     internal(set) public var enabled: Bool?
     internal(set) public var nextDoNotDisturbStart: Int?

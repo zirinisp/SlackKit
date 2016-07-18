@@ -31,7 +31,7 @@ internal extension Client {
         switch type {
         case .Hello:
             connected = true
-            slackEventsDelegate?.clientConnected()
+            connectionEventsDelegate?.clientConnected(self)
         case .Ok:
             messageSent(event)
         case .Message:
@@ -144,7 +144,7 @@ internal extension Client {
             // Other clients should ignore this event.
             break
         case .TeamMigrationStarted:
-            connect(pingInterval: pingInterval, timeout: timeout, reconnect: reconnect)
+            connect(options: options ?? ClientOptions())
         case .ReconnectURL:
             // The reconnect_url event is currently unsupported and experimental.
             break

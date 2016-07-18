@@ -1,5 +1,5 @@
 //
-// Reaction.swift
+// OAuthResponse.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,37 +21,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Reaction {
-    public let name: String?
-    internal(set) public var user: String?
-    
-    internal init(reaction:[String: AnyObject]?) {
-        name = reaction?["name"] as? String
-    }
-    
-    internal init(name: String, user: String) {
-        self.name = name
-        self.user = user
-    }
-    
-    static func reactionsFromArray(array: [[String: AnyObject]]?) -> [Reaction] {
-        var reactions = [Reaction]()
-        if let array = array {
-            for reaction in array {
-                if let users = reaction["users"] as? [String], name = reaction["name"] as? String {
-                    for user in users {
-                        reactions.append(Reaction(name: name, user: user))
-                    }
-                }
-            }
-        }
-        return reactions
-    }
-    
-}
+internal struct OAuthResponse {
 
-extension Reaction: Equatable {}
-
-public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
-    return lhs.name == rhs.name
+    let accessToken: String?
+    let scope: [Scope]?
+    let userID: String?
+    let teamName: String?
+    let teamID: String?
+    let incomingWebhook: IncomingWebhook?
+    let bot: Bot?
+    
+    internal init(response: [String: AnyObject]?) {
+        accessToken = response?["access_token"] as? String
+        scope = (response?["scope"] as? String)?.componentsSeparatedByString(",").flatMap{Scope(rawValue:$0)}
+        userID = response?["user_id"] as? String
+        teamName = response?["team_name"] as? String
+        teamID = response?["team_id"] as? String
+        incomingWebhook = IncomingWebhook(webhook: response?["incoming_webhook"] as? [String: AnyObject])
+        bot = Bot(botUser: response?["bot"] as? [String: AnyObject])
+    }
+    
 }

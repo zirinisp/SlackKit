@@ -1,5 +1,5 @@
 //
-// Reaction.swift
+// MessageActionResponder.swift
 //
 // Copyright © 2016 Peter Zignego. All rights reserved.
 //
@@ -21,37 +21,20 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Reaction {
-    public let name: String?
-    internal(set) public var user: String?
+public struct MessageActionResponder {
     
-    internal init(reaction:[String: AnyObject]?) {
-        name = reaction?["name"] as? String
+    internal let responses:[(Action, Response)]
+    
+    public init(responses:[(Action, Response)]) {
+        self.responses = responses
     }
     
-    internal init(name: String, user: String) {
-        self.name = name
-        self.user = user
-    }
-    
-    static func reactionsFromArray(array: [[String: AnyObject]]?) -> [Reaction] {
-        var reactions = [Reaction]()
-        if let array = array {
-            for reaction in array {
-                if let users = reaction["users"] as? [String], name = reaction["name"] as? String {
-                    for user in users {
-                        reactions.append(Reaction(name: name, user: user))
-                    }
-                }
-            }
+    internal func responseForRequest(request:MessageActionRequest) -> Reply? {
+        if let response = responses.filter({$0.0.name == request.action?.name}).first?.1 {
+            return Reply.JSON(response: response)
+        } else {
+            return nil
         }
-        return reactions
     }
     
-}
-
-extension Reaction: Equatable {}
-
-public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
-    return lhs.name == rhs.name
 }
