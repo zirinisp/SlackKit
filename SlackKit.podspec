@@ -14,6 +14,6 @@ Pod::Spec.new do |s|
   s.source_files = 'SlackKit/Sources/*.swift'  
   s.frameworks = 'Foundation'
   s.dependency 'Starscream', '~> 1.1.3'
-  s.dependency 'Swifter', :git => 'https://github.com/httpswift/swifter.git', :commit => 'd7c820bfc9260e469094b5f8d3d101b30c4a8fac'
+  s.dependency 'Swifter'
 end
 
