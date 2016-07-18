@@ -3,7 +3,7 @@
 ### Description
 This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible to [bot users](https://api.slack.com/bot-users). SlackKit also supports Slack’s [OAuth 2.0](https://api.slack.com/docs/oauth) flow including the [Add to Slack](https://api.slack.com/docs/slack-button) and [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack) buttons, [incoming webhooks](https://api.slack.com/incoming-webhooks), [slash commands](https://api.slack.com/slash-commands), and [message buttons](https://api.slack.com/docs/message-buttons).
 
-Support for: [Swift 3](https://github.com/pvzig/SlackKit/tree/swift3), [Linux](https://github.com/pvzig/SlackKit/tree/linux)
+SlackKit also has alpha support for: [Swift 3](https://github.com/pvzig/SlackKit/tree/swift3), [Linux](https://github.com/pvzig/SlackKit/tree/linux)
 
 #### Building the SlackKit Framework
 To build the SlackKit project directly, first build the dependencies using Carthage or CocoaPods. To use the framework in your application, install it in one of the following ways:
@@ -54,7 +54,6 @@ import SlackKit
 ```
 
 ### Usage
-For local development of things like OAuth, slash commands, and message buttons that require connecting over `https`, you may want to use a tool like [ngrok](https://ngrok.com) or [localtunnel](http://localtunnel.me).
 
 #### OAuth
 Slack has [many different oauth scopes](https://api.slack.com/docs/oauth-scopes) that can be combined in different ways. If your application does not request the proper OAuth scopes, your API calls will fail. 
@@ -65,6 +64,8 @@ If you wish to make OAuth requests yourself, you can generate them using the `au
 ```swift
 func authorizeRequest(scope:[Scope], redirectURI: String, state: String = "slackkit", team: String? = nil)
 ```
+
+For local development of things like OAuth, slash commands, and message buttons that require connecting over `https`, you may want to use a tool like [ngrok](https://ngrok.com) or [localtunnel](http://localtunnel.me).
 
 #### Incoming Webhooks
 After [configuring your incoming webhook in Slack](https://my.slack.com/services/new/incoming-webhook/), initialize IncomingWebhook with the provided URL and use `postMessage` to send messages.
@@ -89,7 +90,7 @@ func addRoute(route: String, response: Response)
 ```
 
 #### Message Buttons
-If you are a Slack App and are authorizing using OAuth, you can use [message buttons](https://api.slack.com/docs/message-buttons).
+If you are developing a Slack App and are authorizing using OAuth, you can use [message buttons](https://api.slack.com/docs/message-buttons).
 
 To send messages with actions, add them to an attachment:
 ```swift
@@ -114,7 +115,7 @@ Initialize a SlackKit instance using your [application’s Client ID and Client 
 let bot = SlackKit(clientID: "CLIENT_ID", clientSecret: "CLIENT_SECRET")
 ```
 
-or using a manually acquired token:
+or use a manually acquired token:
 ```swift
 let bot = SlackKit(withAPIToken: "xoxp-YOUR-SLACK-API-TOKEN")
 ```
@@ -305,4 +306,5 @@ teamProfileReordered(client: Client, profile: CustomProfile)
 
 ### Get In Touch
 [@pvzig](https://twitter.com/pvzig)
+
 <peter@launchsoft.co>
