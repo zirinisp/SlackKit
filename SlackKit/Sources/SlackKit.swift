@@ -46,7 +46,7 @@ public final class SlackKit: OAuthDelegate {
         oauth = try? OAuthServer(clientID: clientID, clientSecret: clientSecret, state: state, redirectURI: redirectURI, port: port, forceIPV4: forceIPV4, delegate: self)
     }
     
-    internal func userAuthed(response: OAuthResponse) {
+    internal func userAuthed(_ response: OAuthResponse) {
         // User auth
         if let token = response.accessToken {
             let client = Client(apiToken: token)

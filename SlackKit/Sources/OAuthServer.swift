@@ -25,7 +25,7 @@ import Foundation
 import Swifter
 
 internal protocol OAuthDelegate {
-    mutating func userAuthed(response: OAuthResponse)
+    func userAuthed(_ response: OAuthResponse)
 }
 
 public struct OAuthServer {
@@ -49,7 +49,7 @@ public struct OAuthServer {
         start(port, forceIPV4: forceIPV4)
     }
     
-    public func start(port: in_port_t = 8080, forceIPV4: Bool = false) {
+    public func start(_ port: in_port_t = 8080, forceIPV4: Bool = false) {
         do {
             try http.start(port, forceIPv4: forceIPV4)
         } catch let error as NSError {
@@ -61,37 +61,33 @@ public struct OAuthServer {
         http.stop()
     }
     
-    private mutating func oauthRoute() {
+    private func oauthRoute() {
         http["/oauth"] = { request in
-            guard let response = AuthorizeResponse(queryParameters: request.queryParams) where response.state == self.state else {
-                return .BadRequest(.Text("Bad request."))
+            guard let response = AuthorizeResponse(queryParameters: request.queryParams), response.state == self.state else {
+                return .badRequest(.text("Bad request."))
             }
-            self.oauthRequest(response)
+            WebAPI.oauthAccess(self.clientID, clientSecret: self.clientSecret, code: response.code, redirectURI: self.redirectURI, success: {(response) in
+                self.delegate?.userAuthed(OAuthResponse(response: response))
+            }, failure: {(error) in
+                print("Authorization failed")
+            })
             if let redirect = self.redirectURI {
-                return .MovedPermanently(redirect)
+                return .movedPermanently(redirect)
             }
-            return .OK(.Text("Authentication successful."))
+            return .ok(.text("Authentication successful."))
         }
     }
     
-    private mutating func oauthRequest(auth: AuthorizeResponse) {
-        WebAPI.oauthAccess(self.clientID, clientSecret: self.clientSecret, code: auth.code, redirectURI: self.redirectURI, success: {(response) in
-            self.delegate?.userAuthed(OAuthResponse(response: response))
-        }, failure: {(error) in
-            
-        })
-    }
-    
-    private func oauthURLRequest(authorize: AuthorizeRequest) -> NSURLRequest? {
+    private func oauthURLRequest(_ authorize: AuthorizeRequest) -> URLRequest? {
         var requestString = "\(oauthURL)?client_id=\(authorize.clientID)"
         requestString += authorize.parameters.requestStringFromParameters
-        guard let url = NSURL(string: requestString) else {
+        guard let url = URL(string: requestString) else {
             return nil
         }
-        return NSURLRequest(URL:url)
+        return URLRequest(url:url)
     }
     
-    public func authorizeRequest(scope:[Scope], redirectURI: String, state: String = "slackkit", team: String? = nil) -> NSURLRequest? {
+    public func authorizeRequest(_ scope:[Scope], redirectURI: String, state: String = "slackkit", team: String? = nil) -> URLRequest? {
         let request = AuthorizeRequest(clientID: clientID, scope: scope, redirectURI: redirectURI, state: state, team: team)
         return oauthURLRequest(request)
     }

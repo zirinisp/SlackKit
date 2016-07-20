@@ -23,7 +23,7 @@
 
 internal extension Client {
 
-    func dispatch(event: [String: AnyObject]) {
+    func dispatch(_ event: [String: AnyObject]) {
         let event = Event(event: event)
         guard let type = event.type else {
             return
@@ -160,8 +160,8 @@ internal extension Client {
         }
     }
     
-    func messageDispatcher(event:Event) {
-        guard let value = event.subtype, subtype = MessageSubtype(rawValue:value) else {
+    func messageDispatcher(_ event:Event) {
+        guard let value = event.subtype, let subtype = MessageSubtype(rawValue:value) else {
             return
         }
         switch subtype {

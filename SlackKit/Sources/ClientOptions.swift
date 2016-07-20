@@ -28,11 +28,11 @@ public struct ClientOptions {
     let simpleLatest: Bool?
     let noUnreads: Bool?
     let mpimAware: Bool?
-    let pingInterval: NSTimeInterval?
-    let timeout: NSTimeInterval?
+    let pingInterval: TimeInterval?
+    let timeout: TimeInterval?
     let reconnect: Bool?
     
-    public init(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: NSTimeInterval? = nil, timeout: NSTimeInterval? = nil, reconnect: Bool? = nil) {
+    public init(simpleLatest: Bool? = nil, noUnreads: Bool? = nil, mpimAware: Bool? = nil, pingInterval: TimeInterval? = nil, timeout: TimeInterval? = nil, reconnect: Bool? = nil) {
         self.simpleLatest = simpleLatest
         self.noUnreads = noUnreads
         self.mpimAware = mpimAware

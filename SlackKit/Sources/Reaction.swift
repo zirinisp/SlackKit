@@ -34,11 +34,11 @@ public struct Reaction {
         self.user = user
     }
     
-    static func reactionsFromArray(array: [[String: AnyObject]]?) -> [Reaction] {
+    static func reactionsFromArray(_ array: [[String: AnyObject]]?) -> [Reaction] {
         var reactions = [Reaction]()
         if let array = array {
             for reaction in array {
-                if let users = reaction["users"] as? [String], name = reaction["name"] as? String {
+                if let users = reaction["users"] as? [String], let name = reaction["name"] as? String {
                     for user in users {
                         reactions.append(Reaction(name: name, user: user))
                     }

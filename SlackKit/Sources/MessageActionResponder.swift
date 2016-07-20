@@ -29,9 +29,9 @@ public struct MessageActionResponder {
         self.responses = responses
     }
     
-    internal func responseForRequest(request:MessageActionRequest) -> Reply? {
+    internal func responseForRequest(_ request:MessageActionRequest) -> Reply? {
         if let response = responses.filter({$0.0.name == request.action?.name}).first?.1 {
-            return Reply.JSON(response: response)
+            return Reply.json(response: response)
         } else {
             return nil
         }

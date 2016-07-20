@@ -23,10 +23,10 @@
 
 import Foundation
 
-public extension NSDate {
+public extension Date {
 
     func slackTimestamp() -> Double {
-        return NSNumber(double: timeIntervalSince1970).doubleValue
+        return NSNumber(value: timeIntervalSince1970).doubleValue
     }
     
 }
@@ -34,9 +34,9 @@ public extension NSDate {
 internal extension String {
     
     func slackFormatEscaping() -> String {
-        var escapedString = stringByReplacingOccurrencesOfString("&", withString: "&amp;")
-        escapedString = stringByReplacingOccurrencesOfString("<", withString: "&lt;")
-        escapedString = stringByReplacingOccurrencesOfString(">", withString: "&gt;")
+        var escapedString = replacingOccurrences(of: "&", with: "&amp;")
+        escapedString = replacingOccurrences(of: "<", with: "&lt;")
+        escapedString = replacingOccurrences(of: ">", with: "&gt;")
         return escapedString
     }
 
@@ -47,7 +47,7 @@ internal extension Dictionary where Key: StringLiteralConvertible, Value: AnyObj
     var requestStringFromParameters: String {
         var requestString = ""
         for key in self.keys {
-            if let value = self[key] as? String, encodedValue = value.stringByAddingPercentEncodingWithAllowedCharacters(NSCharacterSet.URLHostAllowedCharacterSet()) {
+            if let value = self[key] as? String, let encodedValue = value.addingPercentEncoding(withAllowedCharacters: CharacterSet.urlHostAllowed) {
                 requestString += "&\(key)=\(encodedValue)"
             } else if let value = self[key] as? Int {
                 requestString += "&\(key)=\(value)"

@@ -26,13 +26,13 @@ import Foundation
 internal extension Client {
 
     //MARK: - Pong
-    func pong(event: Event) {
+    func pong(_ event: Event) {
         pong = event.replyTo
     }
     
     //MARK: - Messages
-    func messageSent(event: Event) {
-        guard let reply = event.replyTo, message = sentMessages[NSNumber(double: reply).stringValue], channel = message.channel, ts = message.ts else {
+    func messageSent(_ event: Event) {
+        guard let reply = event.replyTo, let message = sentMessages[NSNumber(value: reply).stringValue], let channel = message.channel, let ts = message.ts else {
             return
         }
         
@@ -42,8 +42,8 @@ internal extension Client {
         messageEventsDelegate?.messageSent(self, message: message)
     }
     
-    func messageReceived(event: Event) {
-        guard let channel = event.channel, message = event.message, id = channel.id, ts = message.ts else {
+    func messageReceived(_ event: Event) {
+        guard let channel = event.channel, let message = event.message, let id = channel.id, let ts = message.ts else {
             return
         }
         
@@ -51,8 +51,8 @@ internal extension Client {
         messageEventsDelegate?.messageReceived(self, message: message)
     }
     
-    func messageChanged(event: Event) {
-        guard let id = event.channel?.id, nested = event.nestedMessage, ts = nested.ts else {
+    func messageChanged(_ event: Event) {
+        guard let id = event.channel?.id, let nested = event.nestedMessage, let ts = nested.ts else {
             return
         }
         
@@ -60,35 +60,35 @@ internal extension Client {
         messageEventsDelegate?.messageChanged(self, message: nested)
     }
     
-    func messageDeleted(event: Event) {
-        guard let id = event.channel?.id, key = event.message?.deletedTs, message = channels[id]?.messages[key] else {
+    func messageDeleted(_ event: Event) {
+        guard let id = event.channel?.id, let key = event.message?.deletedTs, let message = channels[id]?.messages[key] else {
             return
         }
         
-        channels[id]?.messages.removeValueForKey(key)
+        _ = channels[id]?.messages.removeValue(forKey: key)
         messageEventsDelegate?.messageDeleted(self, message: message)
     }
     
     //MARK: - Channels
-    func userTyping(event: Event) {
-        guard let channel = event.channel, channelID = channel.id, user = event.user, userID = user.id where
-            channels.indexForKey(channelID) != nil && !channels[channelID]!.usersTyping.contains(userID) else {
+    func userTyping(_ event: Event) {
+        guard let channel = event.channel, let channelID = channel.id, let user = event.user, let userID = user.id ,
+            channels.index(forKey: channelID) != nil && !channels[channelID]!.usersTyping.contains(userID) else {
             return
         }
 
         channels[channelID]?.usersTyping.append(userID)
         channelEventsDelegate?.userTyping(self, channel: channel, user: user)
 
-        let timeout = dispatch_time(DISPATCH_TIME_NOW, Int64(5.0 * Double(NSEC_PER_SEC)))
-        dispatch_after(timeout, dispatch_get_main_queue()) {
-            if let index = self.channels[channelID]?.usersTyping.indexOf(userID) {
-                self.channels[channelID]?.usersTyping.removeAtIndex(index)
+        let timeout = DispatchTime.now() + Double(Int64(5.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
+        DispatchQueue.main.after(when: timeout) {
+            if let index = self.channels[channelID]?.usersTyping.index(of: userID) {
+                self.channels[channelID]?.usersTyping.remove(at: index)
             }
         }
     }
 
-    func channelMarked(event: Event) {
-        guard let channel = event.channel, id = channel.id, timestamp = event.ts else {
+    func channelMarked(_ event: Event) {
+        guard let channel = event.channel, let id = channel.id, let timestamp = event.ts else {
             return
         }
         
@@ -96,8 +96,8 @@ internal extension Client {
         channelEventsDelegate?.channelMarked(self, channel: channel, timestamp: timestamp)
     }
     
-    func channelCreated(event: Event) {
-        guard let channel = event.channel, id = channel.id else {
+    func channelCreated(_ event: Event) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
@@ -105,17 +105,17 @@ internal extension Client {
         channelEventsDelegate?.channelCreated(self, channel: channel)
     }
     
-    func channelDeleted(event: Event) {
-        guard let channel = event.channel, id = channel.id else {
+    func channelDeleted(_ event: Event) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
-        channels.removeValueForKey(id)
+        channels.removeValue(forKey: id)
         channelEventsDelegate?.channelDeleted(self, channel: channel)
     }
     
-    func channelJoined(event: Event) {
-        guard let channel = event.channel, id = channel.id else {
+    func channelJoined(_ event: Event) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
@@ -123,19 +123,19 @@ internal extension Client {
         channelEventsDelegate?.channelJoined(self, channel: channel)
     }
     
-    func channelLeft(event: Event) {
-        guard let channel = event.channel, id = channel.id else {
+    func channelLeft(_ event: Event) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
-        if let userID = authenticatedUser?.id, index = channels[id]?.members?.indexOf(userID) {
-            channels[id]?.members?.removeAtIndex(index)
+        if let userID = authenticatedUser?.id, let index = channels[id]?.members?.index(of: userID) {
+            channels[id]?.members?.remove(at: index)
         }
         channelEventsDelegate?.channelLeft(self, channel: channel)
     }
     
-    func channelRenamed(event: Event) {
-        guard let channel = event.channel, id = channel.id else {
+    func channelRenamed(_ event: Event) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
@@ -143,8 +143,8 @@ internal extension Client {
         channelEventsDelegate?.channelRenamed(self, channel: channel)
     }
     
-    func channelArchived(event: Event, archived: Bool) {
-        guard let channel = event.channel, id = channel.id else {
+    func channelArchived(_ event: Event, archived: Bool) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
@@ -152,7 +152,7 @@ internal extension Client {
         channelEventsDelegate?.channelArchived(self, channel: channel)
     }
     
-    func channelHistoryChanged(event: Event) {
+    func channelHistoryChanged(_ event: Event) {
         guard let channel = event.channel else {
             return
         }
@@ -160,7 +160,7 @@ internal extension Client {
     }
     
     //MARK: - Do Not Disturb
-    func doNotDisturbUpdated(event: Event) {
+    func doNotDisturbUpdated(_ event: Event) {
         guard let dndStatus = event.dndStatus else {
             return
         }
@@ -169,8 +169,8 @@ internal extension Client {
         doNotDisturbEventsDelegate?.doNotDisturbUpdated(self, dndStatus: dndStatus)
     }
     
-    func doNotDisturbUserUpdated(event: Event) {
-        guard let dndStatus = event.dndStatus, user = event.user, id = user.id else {
+    func doNotDisturbUserUpdated(_ event: Event) {
+        guard let dndStatus = event.dndStatus, let user = event.user, let id = user.id else {
             return
         }
         
@@ -179,8 +179,8 @@ internal extension Client {
     }
     
     //MARK: - IM & Group Open/Close
-    func open(event: Event, open: Bool) {
-        guard let channel = event.channel, id = channel.id else {
+    func open(_ event: Event, open: Bool) {
+        guard let channel = event.channel, let id = channel.id else {
             return
         }
         
@@ -189,11 +189,11 @@ internal extension Client {
     }
     
     //MARK: - Files
-    func processFile(event: Event) {
-        guard let file = event.file, id = file.id else {
+    func processFile(_ event: Event) {
+        guard let file = event.file, let id = file.id else {
             return
         }
-        if let comment = file.initialComment, commentID = comment.id {
+        if let comment = file.initialComment, let commentID = comment.id {
             if files[id]?.comments[commentID] == nil {
                 files[id]?.comments[commentID] = comment
             }
@@ -203,8 +203,8 @@ internal extension Client {
         fileEventsDelegate?.fileProcessed(self, file: file)
     }
     
-    func filePrivate(event: Event) {
-        guard let file =  event.file, id = file.id else {
+    func filePrivate(_ event: Event) {
+        guard let file =  event.file, let id = file.id else {
             return
         }
         
@@ -212,19 +212,19 @@ internal extension Client {
         fileEventsDelegate?.fileMadePrivate(self, file: file)
     }
     
-    func deleteFile(event: Event) {
-        guard let file = event.file, id = file.id else {
+    func deleteFile(_ event: Event) {
+        guard let file = event.file, let id = file.id else {
             return
         }
         
         if files[id] != nil {
-            files.removeValueForKey(id)
+            files.removeValue(forKey: id)
         }
         fileEventsDelegate?.fileDeleted(self, file: file)
     }
     
-    func fileCommentAdded(event: Event) {
-        guard let file = event.file, id = file.id, comment = event.comment, commentID = comment.id else {
+    func fileCommentAdded(_ event: Event) {
+        guard let file = event.file, let id = file.id, let comment = event.comment, let commentID = comment.id else {
             return
         }
         
@@ -232,8 +232,8 @@ internal extension Client {
         fileEventsDelegate?.fileCommentAdded(self, file: file, comment: comment)
     }
     
-    func fileCommentEdited(event: Event) {
-        guard let file = event.file, id = file.id, comment = event.comment, commentID = comment.id else {
+    func fileCommentEdited(_ event: Event) {
+        guard let file = event.file, let id = file.id, let comment = event.comment, let commentID = comment.id else {
             return
         }
         
@@ -241,18 +241,18 @@ internal extension Client {
         fileEventsDelegate?.fileCommentEdited(self, file: file, comment: comment)
     }
     
-    func fileCommentDeleted(event: Event) {
-        guard let file = event.file, id = file.id, comment = event.comment, commentID = comment.id else {
+    func fileCommentDeleted(_ event: Event) {
+        guard let file = event.file, let id = file.id, let comment = event.comment, let commentID = comment.id else {
             return
         }
         
-        files[id]?.comments.removeValueForKey(commentID)
+        _ = files[id]?.comments.removeValue(forKey: commentID)
         fileEventsDelegate?.fileCommentDeleted(self, file: file, comment: comment)
     }
     
     //MARK: - Pins
-    func pinAdded(event: Event) {
-        guard let id = event.channelID, item = event.item else {
+    func pinAdded(_ event: Event) {
+        guard let id = event.channelID, let item = event.item else {
             return
         }
         
@@ -260,8 +260,8 @@ internal extension Client {
         pinEventsDelegate?.itemPinned(self, item: item, channel: channels[id])
     }
     
-    func pinRemoved(event: Event) {
-        guard let id = event.channelID, item = event.item else {
+    func pinRemoved(_ event: Event) {
+        guard let id = event.channelID, let item = event.item else {
             return
         }
 
@@ -272,8 +272,8 @@ internal extension Client {
     }
 
     //MARK: - Stars
-    func itemStarred(event: Event, star: Bool) {
-        guard let item = event.item, type = item.type else {
+    func itemStarred(_ event: Event, star: Bool) {
+        guard let item = event.item, let type = item.type else {
             return
         }
         switch type {
@@ -290,15 +290,15 @@ internal extension Client {
         starEventsDelegate?.itemStarred(self, item: item, star: star)
     }
     
-    func starMessage(item: Item, star: Bool) {
-        guard let message = item.message, ts = message.ts, channel = item.channel where channels[channel]?.messages[ts] != nil else {
+    func starMessage(_ item: Item, star: Bool) {
+        guard let message = item.message, let ts = message.ts, let channel = item.channel , channels[channel]?.messages[ts] != nil else {
             return
         }
         channels[channel]?.messages[ts]?.isStarred = star
     }
     
-    func starFile(item: Item, star: Bool) {
-        guard let file = item.file, id = file.id else {
+    func starFile(_ item: Item, star: Bool) {
+        guard let file = item.file, let id = file.id else {
             return
         }
         
@@ -314,22 +314,22 @@ internal extension Client {
         }
     }
     
-    func starComment(item: Item) {
-        guard let file = item.file, id = file.id, comment = item.comment, commentID = comment.id else {
+    func starComment(_ item: Item) {
+        guard let file = item.file, let id = file.id, let comment = item.comment, let commentID = comment.id else {
             return
         }
         files[id]?.comments[commentID] = comment
     }
     
     //MARK: - Reactions
-    func addedReaction(event: Event) {
-        guard let item = event.item, type = item.type, reaction = event.reaction, userID = event.user?.id, itemUser = event.itemUser else {
+    func addedReaction(_ event: Event) {
+        guard let item = event.item, let type = item.type, let reaction = event.reaction, let userID = event.user?.id, let itemUser = event.itemUser else {
             return
         }
         
         switch type {
         case "message":
-            guard let channel = item.channel, ts = item.ts, message = channels[channel]?.messages[ts] else {
+            guard let channel = item.channel, let ts = item.ts, let message = channels[channel]?.messages[ts] else {
                 return
             }
             message.reactions.append(Reaction(name: reaction, user: userID))
@@ -339,7 +339,7 @@ internal extension Client {
             }
             files[id]?.reactions.append(Reaction(name: reaction, user: userID))
         case "file_comment":
-            guard let id = item.file?.id, commentID = item.fileCommentID else {
+            guard let id = item.file?.id, let commentID = item.fileCommentID else {
                 return
             }
             files[id]?.comments[commentID]?.reactions.append(Reaction(name: reaction, user: userID))
@@ -350,24 +350,24 @@ internal extension Client {
         reactionEventsDelegate?.reactionAdded(self, reaction: reaction, item: item, itemUser: itemUser)
     }
 
-    func removedReaction(event: Event) {
-        guard let item = event.item, type = item.type, key = event.reaction, userID = event.user?.id, itemUser = event.itemUser else {
+    func removedReaction(_ event: Event) {
+        guard let item = event.item, let type = item.type, let key = event.reaction, let userID = event.user?.id, let itemUser = event.itemUser else {
             return
         }
 
         switch type {
         case "message":
-            guard let channel = item.channel, ts = item.ts, message = channels[channel]?.messages[ts] else {
+            guard let channel = item.channel, let ts = item.ts, let message = channels[channel]?.messages[ts] else {
                 return
             }
             message.reactions = message.reactions.filter({$0.name != key && $0.user != userID})
         case "file":
-            guard let itemFile = item.file, id = itemFile.id else {
+            guard let itemFile = item.file, let id = itemFile.id else {
                 return
             }
             files[id]?.reactions = files[id]!.reactions.filter({$0.name != key && $0.user != userID})
         case "file_comment":
-            guard let id = item.file?.id, commentID = item.fileCommentID else {
+            guard let id = item.file?.id, let commentID = item.fileCommentID else {
                 return
             }
             files[id]?.comments[commentID]?.reactions = files[id]!.comments[commentID]!.reactions.filter({$0.name != key && $0.user != userID})
@@ -379,7 +379,7 @@ internal extension Client {
     }
 
     //MARK: - Preferences
-    func changePreference(event: Event) {
+    func changePreference(_ event: Event) {
         guard let name = event.name else {
             return
         }
@@ -389,8 +389,8 @@ internal extension Client {
     }
     
     //Mark: - User Change
-    func userChange(event: Event) {
-        guard let user = event.user, id = user.id else {
+    func userChange(_ event: Event) {
+        guard let user = event.user, let id = user.id else {
             return
         }
         
@@ -401,8 +401,8 @@ internal extension Client {
     }
     
     //MARK: - User Presence
-    func presenceChange(event: Event) {
-        guard let user = event.user, id = user.id, presence = event.presence else {
+    func presenceChange(_ event: Event) {
+        guard let user = event.user, let id = user.id, let presence = event.presence else {
             return
         }
         
@@ -411,8 +411,8 @@ internal extension Client {
     }
     
     //MARK: - Team
-    func teamJoin(event: Event) {
-        guard let user = event.user, id = user.id else {
+    func teamJoin(_ event: Event) {
+        guard let user = event.user, let id = user.id else {
             return
         }
         
@@ -420,7 +420,7 @@ internal extension Client {
         teamEventsDelegate?.teamJoined(self, user: user)
     }
     
-    func teamPlanChange(event: Event) {
+    func teamPlanChange(_ event: Event) {
         guard let plan = event.plan else {
             return
         }
@@ -429,7 +429,7 @@ internal extension Client {
         teamEventsDelegate?.teamPlanChanged(self, plan: plan)
     }
     
-    func teamPreferenceChange(event: Event) {
+    func teamPreferenceChange(_ event: Event) {
         guard let name = event.name else {
             return
         }
@@ -438,7 +438,7 @@ internal extension Client {
         teamEventsDelegate?.teamPreferencesChanged(self, preference: name, value: event.value)
     }
     
-    func teamNameChange(event: Event) {
+    func teamNameChange(_ event: Event) {
         guard let name = event.name else {
             return
         }
@@ -447,7 +447,7 @@ internal extension Client {
         teamEventsDelegate?.teamNameChanged(self, name: name)
     }
     
-    func teamDomainChange(event: Event) {
+    func teamDomainChange(_ event: Event) {
         guard let domain = event.domain else {
             return
         }
@@ -456,7 +456,7 @@ internal extension Client {
         teamEventsDelegate?.teamDomainChanged(self, domain: domain)
     }
     
-    func emailDomainChange(event: Event) {
+    func emailDomainChange(_ event: Event) {
         guard let domain = event.emailDomain else {
             return
         }
@@ -465,13 +465,13 @@ internal extension Client {
         teamEventsDelegate?.teamEmailDomainChanged(self, domain: domain)
     }
     
-    func emojiChanged(event: Event) {
+    func emojiChanged(_ event: Event) {
         teamEventsDelegate?.teamEmojiChanged(self)
     }
     
     //MARK: - Bots
-    func bot(event: Event) {
-        guard let bot = event.bot, id = bot.id else {
+    func bot(_ event: Event) {
+        guard let bot = event.bot, let id = bot.id else {
             return
         }
         
@@ -480,8 +480,8 @@ internal extension Client {
     }
     
     //MARK: - Subteams
-    func subteam(event: Event) {
-        guard let subteam = event.subteam, id = subteam.id else {
+    func subteam(_ event: Event) {
+        guard let subteam = event.subteam, let id = subteam.id else {
             return
         }
         
@@ -489,8 +489,8 @@ internal extension Client {
         subteamEventsDelegate?.subteamEvent(self, userGroup: subteam)
     }
     
-    func subteamAddedSelf(event: Event) {
-        guard let subteamID = event.subteamID, _ = authenticatedUser?.userGroups else {
+    func subteamAddedSelf(_ event: Event) {
+        guard let subteamID = event.subteamID, let _ = authenticatedUser?.userGroups else {
             return
         }
         
@@ -498,17 +498,17 @@ internal extension Client {
         subteamEventsDelegate?.subteamSelfAdded(self, subteamID: subteamID)
     }
     
-    func subteamRemovedSelf(event: Event) {
+    func subteamRemovedSelf(_ event: Event) {
         guard let subteamID = event.subteamID else {
             return
         }
         
-        authenticatedUser?.userGroups?.removeValueForKey(subteamID)
+        _ = authenticatedUser?.userGroups?.removeValue(forKey: subteamID)
         subteamEventsDelegate?.subteamSelfRemoved(self, subteamID: subteamID)
     }
     
     //MARK: - Team Profiles
-    func teamProfileChange(event: Event) {
+    func teamProfileChange(_ event: Event) {
         guard let profile = event.profile else {
             return
         }
@@ -522,7 +522,7 @@ internal extension Client {
         teamProfileEventsDelegate?.teamProfileChanged(self, profile: profile)
     }
     
-    func teamProfileDeleted(event: Event) {
+    func teamProfileDeleted(_ event: Event) {
         guard let profile = event.profile else {
             return
         }
@@ -536,7 +536,7 @@ internal extension Client {
         teamProfileEventsDelegate?.teamProfileDeleted(self, profile: profile)
     }
     
-    func teamProfileReordered(event: Event) {
+    func teamProfileReordered(_ event: Event) {
         guard let profile = event.profile else {
             return
         }
@@ -551,8 +551,8 @@ internal extension Client {
     }
     
     //MARK: - Authenticated User
-    func manualPresenceChange(event: Event) {
-        guard let presence = event.presence, user = authenticatedUser else {
+    func manualPresenceChange(_ event: Event) {
+        guard let presence = event.presence, let user = authenticatedUser else {
             return
         }
         

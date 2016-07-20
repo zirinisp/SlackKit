@@ -27,9 +27,9 @@ let package = Package(
     name: "SlackKit",
     targets: [],
     dependencies: [
-        .Package(url: "https://github.com/daltoniam/Starscream",
-            majorVersion: 1),
-        .Package(url: "https://github.com/httpswift/swifter", majorVersion: 1)
+        .Package(url: "https://github.com/pvzig/swifter.git",
+                 majorVersion: 1, minor: 3),
+        .Package(url: "https://github.com/pvzig/Starscream.git", majorVersion: 1, minor: 2)
     ],
     exclude: ["Examples", "Carthage", "Pods"]
 )

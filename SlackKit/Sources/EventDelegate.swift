@@ -22,88 +22,88 @@
 // THE SOFTWARE.
 
 public protocol ConnectionEventsDelegate: class {
-    func clientConnected(client: Client)
-    func clientDisconnected(client: Client)
-    func clientConnectionFailed(client: Client, error: SlackError)
+    func clientConnected(_ client: Client)
+    func clientDisconnected(_ client: Client)
+    func clientConnectionFailed(_ client: Client, error: SlackError)
 }
 
 public protocol MessageEventsDelegate: class {
-    func messageSent(client: Client, message: Message)
-    func messageReceived(client: Client, message: Message)
-    func messageChanged(client: Client, message: Message)
-    func messageDeleted(client: Client, message: Message?)
+    func messageSent(_ client: Client, message: Message)
+    func messageReceived(_ client: Client, message: Message)
+    func messageChanged(_ client: Client, message: Message)
+    func messageDeleted(_ client: Client, message: Message?)
 }
 
 public protocol ChannelEventsDelegate: class {
-    func userTyping(client: Client, channel: Channel, user: User)
-    func channelMarked(client: Client, channel: Channel, timestamp: String)
-    func channelCreated(client: Client, channel: Channel)
-    func channelDeleted(client: Client, channel: Channel)
-    func channelRenamed(client: Client, channel: Channel)
-    func channelArchived(client: Client, channel: Channel)
-    func channelHistoryChanged(client: Client, channel: Channel)
-    func channelJoined(client: Client, channel: Channel)
-    func channelLeft(client: Client, channel: Channel)
+    func userTyping(_ client: Client, channel: Channel, user: User)
+    func channelMarked(_ client: Client, channel: Channel, timestamp: String)
+    func channelCreated(_ client: Client, channel: Channel)
+    func channelDeleted(_ client: Client, channel: Channel)
+    func channelRenamed(_ client: Client, channel: Channel)
+    func channelArchived(_ client: Client, channel: Channel)
+    func channelHistoryChanged(_ client: Client, channel: Channel)
+    func channelJoined(_ client: Client, channel: Channel)
+    func channelLeft(_ client: Client, channel: Channel)
 }
 
 public protocol DoNotDisturbEventsDelegate: class {
-    func doNotDisturbUpdated(client: Client, dndStatus: DoNotDisturbStatus)
-    func doNotDisturbUserUpdated(client: Client, dndStatus: DoNotDisturbStatus, user: User)
+    func doNotDisturbUpdated(_ client: Client, dndStatus: DoNotDisturbStatus)
+    func doNotDisturbUserUpdated(_ client: Client, dndStatus: DoNotDisturbStatus, user: User)
 }
 
 public protocol GroupEventsDelegate: class {
-    func groupOpened(client: Client, group: Channel)
+    func groupOpened(_ client: Client, group: Channel)
 }
 
 public protocol FileEventsDelegate: class {
-    func fileProcessed(client: Client, file: File)
-    func fileMadePrivate(client: Client, file: File)
-    func fileDeleted(client: Client, file: File)
-    func fileCommentAdded(client: Client, file: File, comment: Comment)
-    func fileCommentEdited(client: Client, file: File, comment: Comment)
-    func fileCommentDeleted(client: Client, file: File, comment: Comment)
+    func fileProcessed(_ client: Client, file: File)
+    func fileMadePrivate(_ client: Client, file: File)
+    func fileDeleted(_ client: Client, file: File)
+    func fileCommentAdded(_ client: Client, file: File, comment: Comment)
+    func fileCommentEdited(_ client: Client, file: File, comment: Comment)
+    func fileCommentDeleted(_ client: Client, file: File, comment: Comment)
 }
 
 public protocol PinEventsDelegate: class {
-    func itemPinned(client: Client, item: Item, channel: Channel?)
-    func itemUnpinned(client: Client, item: Item, channel: Channel?)
+    func itemPinned(_ client: Client, item: Item, channel: Channel?)
+    func itemUnpinned(_ client: Client, item: Item, channel: Channel?)
 }
 
 public protocol StarEventsDelegate: class {
-    func itemStarred(client: Client, item: Item, star: Bool)
+    func itemStarred(_ client: Client, item: Item, star: Bool)
 }
 
 public protocol ReactionEventsDelegate: class {
-    func reactionAdded(client: Client, reaction: String, item: Item, itemUser: String)
-    func reactionRemoved(client: Client, reaction: String, item: Item, itemUser: String)
+    func reactionAdded(_ client: Client, reaction: String, item: Item, itemUser: String)
+    func reactionRemoved(_ client: Client, reaction: String, item: Item, itemUser: String)
 }
 
 public protocol SlackEventsDelegate: class {
-    func preferenceChanged(client: Client, preference: String, value: AnyObject?)
-    func userChanged(client: Client, user: User)
-    func presenceChanged(client: Client, user: User, presence: String)
-    func manualPresenceChanged(client: Client, user: User, presence: String)
-    func botEvent(client: Client, bot: Bot)
+    func preferenceChanged(_ client: Client, preference: String, value: AnyObject?)
+    func userChanged(_ client: Client, user: User)
+    func presenceChanged(_ client: Client, user: User, presence: String)
+    func manualPresenceChanged(_ client: Client, user: User, presence: String)
+    func botEvent(_ client: Client, bot: Bot)
 }
 
 public protocol TeamEventsDelegate: class {
-    func teamJoined(client: Client, user: User)
-    func teamPlanChanged(client: Client, plan: String)
-    func teamPreferencesChanged(client: Client, preference: String, value: AnyObject?)
-    func teamNameChanged(client: Client, name: String)
-    func teamDomainChanged(client: Client, domain: String)
-    func teamEmailDomainChanged(client: Client, domain: String)
-    func teamEmojiChanged(client: Client)
+    func teamJoined(_ client: Client, user: User)
+    func teamPlanChanged(_ client: Client, plan: String)
+    func teamPreferencesChanged(_ client: Client, preference: String, value: AnyObject?)
+    func teamNameChanged(_ client: Client, name: String)
+    func teamDomainChanged(_ client: Client, domain: String)
+    func teamEmailDomainChanged(_ client: Client, domain: String)
+    func teamEmojiChanged(_ client: Client)
 }
 
 public protocol SubteamEventsDelegate: class {
-    func subteamEvent(client: Client, userGroup: UserGroup)
-    func subteamSelfAdded(client: Client, subteamID: String)
-    func subteamSelfRemoved(client: Client, subteamID: String)
+    func subteamEvent(_ client: Client, userGroup: UserGroup)
+    func subteamSelfAdded(_ client: Client, subteamID: String)
+    func subteamSelfRemoved(_ client: Client, subteamID: String)
 }
 
 public protocol TeamProfileEventsDelegate: class {
-    func teamProfileChanged(client: Client, profile: CustomProfile)
-    func teamProfileDeleted(client: Client, profile: CustomProfile)
-    func teamProfileReordered(client: Client, profile: CustomProfile)
+    func teamProfileChanged(_ client: Client, profile: CustomProfile)
+    func teamProfileDeleted(_ client: Client, profile: CustomProfile)
+    func teamProfileReordered(_ client: Client, profile: CustomProfile)
 }

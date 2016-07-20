@@ -33,7 +33,7 @@ internal struct OAuthResponse {
     
     init(response: [String: AnyObject]?) {
         accessToken = response?["access_token"] as? String
-        scope = (response?["scope"] as? String)?.componentsSeparatedByString(",").flatMap{Scope(rawValue:$0)}
+        scope = (response?["scope"] as? String)?.components(separatedBy: ",").flatMap{Scope(rawValue:$0)}
         userID = response?["user_id"] as? String
         teamName = response?["team_name"] as? String
         teamID = response?["team_id"] as? String

@@ -25,13 +25,13 @@ import Foundation
 
 public struct History {
     
-    internal(set) public var latest: NSDate?
+    internal(set) public var latest: Date?
     internal(set) public var messages = [Message]()
     public let hasMore: Bool?
     
     internal init(history: [String: AnyObject]?) {
-        if let latestStr = history?["latest"] as? String, latestDouble = Double(latestStr) {
-            latest = NSDate(timeIntervalSince1970: NSTimeInterval(latestDouble))
+        if let latestStr = history?["latest"] as? String, let latestDouble = Double(latestStr) {
+            latest = Date(timeIntervalSince1970: TimeInterval(latestDouble))
         }
         if let msgs = history?["messages"] as? [[String: AnyObject]] {
             for message in msgs {

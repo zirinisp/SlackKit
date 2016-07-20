@@ -31,14 +31,14 @@ public class MessageActionServer: Server {
         addRoute(route)
     }
     
-    internal func addRoute(route: String) {
+    internal func addRoute(_ route: String) {
         http.POST["/\(route)"] = { request in
             let payload = request.parseUrlencodedForm()
             let actionRequest = MessageActionRequest(response: self.jsonFromRequest(payload[0].1))
-            if let reply = self.responder.responseForRequest(actionRequest) where actionRequest.token == self.token {
+            if let reply = self.responder.responseForRequest(actionRequest), actionRequest.token == self.token {
                 return self.request(actionRequest, reply: reply)
             } else {
-                return .BadRequest(.Text("Bad request."))
+                return .badRequest(.text("Bad request."))
             }
         }
     }

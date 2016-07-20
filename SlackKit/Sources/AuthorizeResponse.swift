@@ -27,7 +27,7 @@ internal struct AuthorizeResponse {
     let state: String
     
     init?(queryParameters: [(String, String)]) {
-        guard let code = queryParameters.first?.1, state = queryParameters.last?.1 else {
+        guard let code = queryParameters.first?.1, let state = queryParameters.last?.1 else {
             return nil
         }
         self.code = code

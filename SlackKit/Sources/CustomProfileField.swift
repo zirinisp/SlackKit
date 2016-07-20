@@ -50,7 +50,7 @@ public struct CustomProfileField {
         self.id = id
     }
     
-    internal mutating func updateProfileField(profile: CustomProfileField?) {
+    internal mutating func updateProfileField(_ profile: CustomProfileField?) {
         id = profile?.id != nil ? profile?.id : id
         alt = profile?.alt != nil ? profile?.alt : alt
         value = profile?.value != nil ? profile?.value : value
