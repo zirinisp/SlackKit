@@ -1,29 +1,23 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
 ## SlackKit: A Swift Slack Client Library
 ### Description
-This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible to [bot users](https://api.slack.com/bot-users). SlackKit also supports Slack’s [OAuth 2.0](https://api.slack.com/docs/oauth) flow including the [Add to Slack](https://api.slack.com/docs/slack-button) and [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack) buttons, [incoming webhooks](https://api.slack.com/incoming-webhooks), [slash commands](https://api.slack.com/slash-commands), and [message buttons](https://api.slack.com/docs/message-buttons).
 
-SlackKit also has alpha support for: [Swift 3](https://github.com/pvzig/SlackKit/tree/swift3), [Linux](https://github.com/pvzig/SlackKit/tree/linux)
+This is the Swift 3 beta branch. It will continue to track the Xcode 8 beta releases until it is officially released, at which point Swift 3 will be merged down to the master branch.
+
+SlackKit also supports: [Swift 2.2](https://github.com/pvzig/SlackKit/), [Linux](https://github.com/pvzig/SlackKit/tree/linux)
+
+This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible to [bot users](https://api.slack.com/bot-users). SlackKit also supports Slack’s [OAuth 2.0](https://api.slack.com/docs/oauth) flow including the [Add to Slack](https://api.slack.com/docs/slack-button) and [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack) buttons, [incoming webhooks](https://api.slack.com/incoming-webhooks), [slash commands](https://api.slack.com/slash-commands), and [message buttons](https://api.slack.com/docs/message-buttons).
 
 #### Building the SlackKit Framework
 To build the SlackKit project directly, first build the dependencies using Carthage or CocoaPods. To use the framework in your application, install it in one of the following ways:
 
 ### Installation
-#### CocoaPods
-Add the pod to your podfile:
-```
-pod 'SlackKit'
-```
-and run
-```
-pod install
-```
 
 #### Carthage
 
 Add SlackKit to your Cartfile:
 ```
-github "pvzig/SlackKit" ~> 2.0
+github "https://github.com/pvzig/slackkit.git" "swift3"
 ```
 and run
 ```
@@ -42,7 +36,7 @@ import PackageDescription
 
 let package = Package(
     dependencies: [
-        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 2)
+        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 3)
     ]
 )
 ```
