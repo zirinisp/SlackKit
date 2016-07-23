@@ -37,7 +37,7 @@ public struct Response {
         var json = [String : AnyObject]()
         json["text"] = text
         json["response_type"] = responseType?.rawValue
-        json["attachments"] = attachments?.flatMap({$0.dictionary()})
+        json["attachments"] = attachments?.map({$0.dictionary()})
         return json
     }
     
