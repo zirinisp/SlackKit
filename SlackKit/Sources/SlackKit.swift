@@ -35,7 +35,9 @@ public final class SlackKit: OAuthDelegate {
     public init(withAPIToken token: String, clientOptions: ClientOptions = ClientOptions()) {
         self.clientOptions = clientOptions
         let client = Client(apiToken: token)
-        self.onClientInitalization?(client)
+        DispatchQueue.main.async(execute: {
+            self.onClientInitalization?(client)
+        })
         clients[token] = client
         client.connect(options: self.clientOptions)
     }
