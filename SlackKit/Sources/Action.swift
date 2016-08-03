@@ -54,6 +54,7 @@ public struct Action {
         dict["text"] = text
         dict["type"] = type
         dict["value"] = value
+        dict["style"] = style?.rawValue
         dict["confirm"] = confirm?.dictionary()
         return dict
     }
