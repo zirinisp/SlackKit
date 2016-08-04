@@ -80,11 +80,11 @@ internal extension Client {
         channelEventsDelegate?.userTyping(self, channel: channel, user: user)
 
         let timeout = DispatchTime.now() + Double(Int64(5.0 * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        DispatchQueue.main.after(when: timeout) {
+        DispatchQueue.main.asyncAfter(deadline: timeout, execute: {
             if let index = self.channels[channelID]?.usersTyping.index(of: userID) {
                 self.channels[channelID]?.usersTyping.remove(at: index)
             }
-        }
+        })
     }
 
     func channelMarked(_ event: Event) {
