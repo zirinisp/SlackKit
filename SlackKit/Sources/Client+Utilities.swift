@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public enum ClientError: ErrorProtocol {
+public enum ClientError: Error {
     case channelDoesNotExist
     case userDoesNotExist
 }

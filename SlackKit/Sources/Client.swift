@@ -44,7 +44,7 @@ public final class Client: WebSocketDelegate {
     }
 
     internal var webSocket: WebSocket?
-    private let pingPongQueue = DispatchQueue(label: "com.launchsoft.SlackKit", attributes: DispatchQueueAttributes.serial)
+    private let pingPongQueue = DispatchQueue(label: "com.launchsoft.SlackKit")
     internal var ping: Double?
     internal var pong: Double?
     internal var options: ClientOptions?
@@ -128,7 +128,7 @@ public final class Client: WebSocketDelegate {
     //MARK: - RTM Ping
     private func pingRTMServerAtInterval(_ interval: TimeInterval) {
         let delay = DispatchTime.now() + Double(Int64(interval * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
-        pingPongQueue.after(when: delay, execute: {
+        pingPongQueue.asyncAfter(deadline: delay, execute: {
             guard self.connected && self.timeoutCheck() else {
                 self.disconnect()
                 return
