@@ -1,4 +1,6 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
+
+![Swift Version](https://img.shields.io/badge/swift-DEVELOPMENT--SNAPSHOT--2016--05--09--a-orange.svg) ![Plaforms](https://img.shields.io/badge/Platforms-macOS,&nbsp;linux-lightgrey.svg) ![License MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg) [![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager)
 ##Alpha Linux Slack Client Library
 ###Description
 This is a Slack client library for Linux written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible by [bot users](https://api.slack.com/bot-users).
