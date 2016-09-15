@@ -144,7 +144,7 @@ internal extension Client {
             // Other clients should ignore this event.
             break
         case .TeamMigrationStarted:
-            connect(options: options ?? ClientOptions())
+            connect(options ?? ClientOptions())
         case .ReconnectURL:
             // The reconnect_url event is currently unsupported and experimental.
             break

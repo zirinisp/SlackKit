@@ -1,2 +1,2 @@
-github "https://github.com/pvzig/swifter.git" "master"
-github "https://github.com/pvzig/Starscream.git" "swift3"
+git "/Users/pzignego/Repositories/swifter" "xcode8b6"
+git "/Users/pzignego/Repositories/Starscream" "xcode8b6"

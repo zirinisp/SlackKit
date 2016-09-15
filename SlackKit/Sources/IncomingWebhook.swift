@@ -60,12 +60,12 @@ public struct IncomingWebhook {
         }
     }
     
-    private func jsonBody(_ response: [String: AnyObject]) -> [String: AnyObject] {
+    fileprivate func jsonBody(_ response: [String: AnyObject]) -> [String: AnyObject] {
         var json = response
-        json["channel"] = channel
-        json["username"] = username
-        json["icon_emoji"] = iconEmoji
-        json["icon_url"] = iconURL
+        json["channel"] = channel as AnyObject?
+        json["username"] = username as AnyObject?
+        json["icon_emoji"] = iconEmoji as AnyObject?
+        json["icon_url"] = iconURL as AnyObject?
         return json
     }
     

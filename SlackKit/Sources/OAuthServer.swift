@@ -30,14 +30,14 @@ internal protocol OAuthDelegate {
 
 public struct OAuthServer {
     
-    private let oauthURL = "https://slack.com/oauth/authorize"
+    fileprivate let oauthURL = "https://slack.com/oauth/authorize"
 
-    private let http = HttpServer()
-    private let clientID: String
-    private let clientSecret: String
-    private let state: String?
-    private let redirectURI: String?
-    private var delegate: OAuthDelegate?
+    fileprivate let http = HttpServer()
+    fileprivate let clientID: String
+    fileprivate let clientSecret: String
+    fileprivate let state: String?
+    fileprivate let redirectURI: String?
+    fileprivate var delegate: OAuthDelegate?
     
     internal init(clientID: String, clientSecret: String, state: String? = nil, redirectURI: String? = nil, port:in_port_t = 8080, forceIPV4: Bool = false, delegate: OAuthDelegate? = nil) throws {
         self.clientID = clientID
@@ -61,7 +61,7 @@ public struct OAuthServer {
         http.stop()
     }
     
-    private func oauthRoute() {
+    fileprivate func oauthRoute() {
         http["/oauth"] = { request in
             guard let response = AuthorizeResponse(queryParameters: request.queryParams), response.state == self.state else {
                 return .badRequest(.text("Bad request."))
@@ -78,7 +78,7 @@ public struct OAuthServer {
         }
     }
     
-    private func oauthURLRequest(_ authorize: AuthorizeRequest) -> URLRequest? {
+    fileprivate func oauthURLRequest(_ authorize: AuthorizeRequest) -> URLRequest? {
         var requestString = "\(oauthURL)?client_id=\(authorize.clientID)"
         requestString += authorize.parameters.requestStringFromParameters
         guard let url = URL(string: requestString) else {

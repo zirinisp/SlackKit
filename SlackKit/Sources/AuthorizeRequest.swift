@@ -31,9 +31,9 @@ internal struct AuthorizeRequest {
     
     var parameters: [String: AnyObject] {
         var json = [String : AnyObject]()
-        json["scope"] = scope.map({$0.rawValue}).joined(separator: ",")
-        json["state"] = state
-        json["team"] = team
+        json["scope"] = scope.map({$0.rawValue}).joined(separator: ",") as AnyObject?
+        json["state"] = state as AnyObject?
+        json["team"] = team as AnyObject?
         return json
     }
     

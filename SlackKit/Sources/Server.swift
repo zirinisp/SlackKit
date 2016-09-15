@@ -34,7 +34,7 @@ internal protocol Request {
     var responseURL: String { get }
 }
 
-public class Server {
+open class Server {
     
     internal let http = HttpServer()
     internal let token: String
@@ -43,7 +43,7 @@ public class Server {
         self.token = token
     }
     
-    public func start(_ port: in_port_t = 8080, forceIPV4: Bool = false) {
+    open func start(_ port: in_port_t = 8080, forceIPV4: Bool = false) {
         do {
             try http.start(port, forceIPv4: forceIPV4)
         } catch let error as NSError {
@@ -51,7 +51,7 @@ public class Server {
         }
     }
     
-    public func stop() {
+    open func stop() {
         http.stop()
     }
     
@@ -73,7 +73,7 @@ public class Server {
             for argument in body {
                 let kv = argument.components(separatedBy: "=")
                 if let key = kv.first, let value = kv.last {
-                    dict[key] = value
+                    dict[key] = value as AnyObject?
                 }
             }
             return dict

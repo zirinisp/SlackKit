@@ -41,9 +41,9 @@ public struct AttachmentField {
     
     internal func dictionary() -> [String: AnyObject] {
         var field = [String: AnyObject]()
-        field["title"] = title
-        field["value"] = value
-        field["short"] = short
+        field["title"] = title as AnyObject?
+        field["value"] = value as AnyObject?
+        field["short"] = short as AnyObject?
         return field
     }
     

@@ -50,12 +50,12 @@ public struct Action {
     
     internal func dictionary() -> [String: AnyObject] {
         var dict = [String: AnyObject]()
-        dict["name"] = name
-        dict["text"] = text
-        dict["type"] = type
-        dict["value"] = value
-        dict["style"] = style?.rawValue
-        dict["confirm"] = confirm?.dictionary()
+        dict["name"] = name as AnyObject?
+        dict["text"] = text as AnyObject?
+        dict["type"] = type as AnyObject?
+        dict["value"] = value as AnyObject?
+        dict["style"] = style?.rawValue as AnyObject?
+        dict["confirm"] = confirm?.dictionary() as AnyObject?
         return dict
     }
     
@@ -82,10 +82,10 @@ public struct Action {
         
         internal func dictionary() -> [String: AnyObject] {
             var dict = [String: AnyObject]()
-            dict["title"] = title
-            dict["text"] = text
-            dict["ok_text"] = okText
-            dict["dismiss_text"] = dismissText
+            dict["title"] = title as AnyObject?
+            dict["text"] = text as AnyObject?
+            dict["ok_text"] = okText as AnyObject?
+            dict["dismiss_text"] = dismissText as AnyObject?
             return dict
         }
         

@@ -35,9 +35,9 @@ public struct Response {
     
     internal func json() -> [String: AnyObject] {
         var json = [String : AnyObject]()
-        json["text"] = text
-        json["response_type"] = responseType?.rawValue
-        json["attachments"] = attachments?.map({$0.dictionary()})
+        json["text"] = text as AnyObject?
+        json["response_type"] = responseType?.rawValue as AnyObject?
+        json["attachments"] = attachments?.map({$0.dictionary()}) as AnyObject?
         return json
     }
     

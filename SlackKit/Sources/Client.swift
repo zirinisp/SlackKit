@@ -44,7 +44,7 @@ public final class Client: WebSocketDelegate {
     }
 
     internal var webSocket: WebSocket?
-    private let pingPongQueue = DispatchQueue(label: "com.launchsoft.SlackKit")
+    fileprivate let pingPongQueue = DispatchQueue(label: "com.launchsoft.SlackKit")
     internal var ping: Double?
     internal var pong: Double?
     internal var options: ClientOptions?
@@ -73,7 +73,7 @@ public final class Client: WebSocketDelegate {
         self.token = token
     }
     
-    public func connect(options: ClientOptions = ClientOptions()) {
+    public func connect(_ options: ClientOptions = ClientOptions()) {
         self.options = options
         webAPI.rtmStart(options.simpleLatest, noUnreads: options.noUnreads, mpimAware: options.mpimAware, success: {
             (response) -> Void in
@@ -102,31 +102,31 @@ public final class Client: WebSocketDelegate {
         }
     }
     
-    private func formatMessageToSlackJsonString(_ message: (msg: String, channel: String)) throws -> Data {
+    fileprivate func formatMessageToSlackJsonString(_ message: (msg: String, channel: String)) throws -> Data {
         let json: [String: AnyObject] = [
-            "id": Date().slackTimestamp(),
-            "type": "message",
-            "channel": message.channel,
-            "text": message.msg.slackFormatEscaping()
+            "id": Date().slackTimestamp() as AnyObject,
+            "type": "message" as AnyObject,
+            "channel": message.channel as AnyObject,
+            "text": message.msg.slackFormatEscaping() as AnyObject
         ]
         addSentMessage(json)
         return try JSONSerialization.data(withJSONObject: json, options: [])
     }
     
-    private func addSentMessage(_ dictionary: [String: AnyObject]) {
+    fileprivate func addSentMessage(_ dictionary: [String: AnyObject]) {
         var message = dictionary
         guard let id = message["id"] as? NSNumber else {
             return
         }
-        let ts = String(id)
+        let ts = String(describing: id)
         message.removeValue(forKey: "id")
-        message["ts"] = ts
-        message["user"] = self.authenticatedUser?.id
+        message["ts"] = ts as AnyObject?
+        message["user"] = self.authenticatedUser?.id as AnyObject?
         sentMessages[ts] = Message(message: message)
     }
     
     //MARK: - RTM Ping
-    private func pingRTMServerAtInterval(_ interval: TimeInterval) {
+    fileprivate func pingRTMServerAtInterval(_ interval: TimeInterval) {
         let delay = DispatchTime.now() + Double(Int64(interval * Double(NSEC_PER_SEC))) / Double(NSEC_PER_SEC)
         pingPongQueue.asyncAfter(deadline: delay, execute: {
             guard self.connected && self.timeoutCheck() else {
@@ -138,13 +138,13 @@ public final class Client: WebSocketDelegate {
         })
     }
     
-    private func sendRTMPing() {
+    fileprivate func sendRTMPing() {
         guard connected else {
             return
         }
         let json: [String: AnyObject] = [
-            "id": Date().slackTimestamp(),
-            "type": "ping",
+            "id": Date().slackTimestamp() as AnyObject,
+            "type": "ping" as AnyObject,
         ]
         guard let data = try? JSONSerialization.data(withJSONObject: json, options: []) else {
             return
@@ -155,7 +155,7 @@ public final class Client: WebSocketDelegate {
         }
     }
     
-    private func timeoutCheck() -> Bool {
+    fileprivate func timeoutCheck() -> Bool {
         if let pong = pong, let ping = ping, let timeout = options?.timeout {
             if pong - ping < timeout {
                 return true
@@ -169,7 +169,7 @@ public final class Client: WebSocketDelegate {
     }
     
     //MARK: - Client setup
-    private func initialSetup(_ json: [String: AnyObject]) {
+    fileprivate func initialSetup(_ json: [String: AnyObject]) {
         team = Team(team: json["team"] as? [String: AnyObject])
         authenticatedUser = User(user: json["self"] as? [String: AnyObject])
         authenticatedUser?.doNotDisturbStatus = DoNotDisturbStatus(status: json["dnd"] as? [String: AnyObject])
@@ -182,28 +182,28 @@ public final class Client: WebSocketDelegate {
         enumerateSubteams(json["subteams"] as? [String: AnyObject])
     }
     
-    private func addUser(_ aUser: [String: AnyObject]) {
+    fileprivate func addUser(_ aUser: [String: AnyObject]) {
         let user = User(user: aUser)
         if let id = user.id {
             users[id] = user
         }
     }
     
-    private func addChannel(_ aChannel: [String: AnyObject]) {
+    fileprivate func addChannel(_ aChannel: [String: AnyObject]) {
         let channel = Channel(channel: aChannel)
         if let id = channel.id {
             channels[id] = channel
         }
     }
     
-    private func addBot(_ aBot: [String: AnyObject]) {
+    fileprivate func addBot(_ aBot: [String: AnyObject]) {
         let bot = Bot(bot: aBot)
         if let id = bot.id {
             bots[id] = bot
         }
     }
     
-    private func enumerateSubteams(_ subteams: [String: AnyObject]?) {
+    fileprivate func enumerateSubteams(_ subteams: [String: AnyObject]?) {
         if let subteams = subteams {
             if let all = subteams["all"] as? [[String: AnyObject]] {
                 for item in all {
@@ -221,7 +221,7 @@ public final class Client: WebSocketDelegate {
     }
     
     // MARK: - Utilities
-    private func enumerateObjects(_ array: [AnyObject]?, initalizer: ([String: AnyObject])-> Void) {
+    fileprivate func enumerateObjects(_ array: [AnyObject]?, initalizer: ([String: AnyObject])-> Void) {
         if let array = array {
             for object in array {
                 if let dictionary = object as? [String: AnyObject] {
@@ -232,7 +232,7 @@ public final class Client: WebSocketDelegate {
     }
     
     // MARK: - WebSocketDelegate
-    public func websocketDidConnect(socket: WebSocket) {
+    public func websocketDidConnect(_ socket: WebSocket) {
         if let pingInterval = options?.pingInterval {
             pingRTMServerAtInterval(pingInterval)
         }
@@ -244,7 +244,7 @@ public final class Client: WebSocketDelegate {
         authenticatedUser = nil
         connectionEventsDelegate?.clientDisconnected(self)
         if let options = options, options.reconnect == true {
-            connect(options: options)
+            connect(options)
         }
     }
     

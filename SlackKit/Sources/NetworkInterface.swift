@@ -27,7 +27,7 @@ internal struct NetworkInterface {
     
     private let apiUrl = "https://slack.com/api/"
     
-    internal func request(_ endpoint: Endpoint, token: String? = nil, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+    internal func request(_ endpoint: Endpoint, token: String? = nil, parameters: [String: AnyObject]?, successClosure: @escaping ([String: AnyObject])->Void, errorClosure: @escaping (SlackError)->Void) {
         var requestString = "\(apiUrl)\(endpoint.rawValue)?"
         if let token = token {
             requestString += "token=\(token)"
@@ -42,15 +42,15 @@ internal struct NetworkInterface {
         let request = URLRequest(url:url)
         URLSession.shared.dataTask(with: request) {
             (data, response, internalError) -> Void in
-            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
-                successClosure(json)
-            }, errorClosure: {(error) in
-                errorClosure(error)
-            })
+//            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
+//                successClosure(json)
+//            }, errorClosure: {(error) in
+//                errorClosure(error)
+//            })
         }.resume()
     }
     
-    internal func customRequest(_ url: String, data: Data, success: (Bool)->Void, errorClosure: (SlackError)->Void) {
+    internal func customRequest(_ url: String, data: Data, success: @escaping (Bool)->Void, errorClosure: @escaping (SlackError)->Void) {
         guard let url =  URL(string: url.removePercentEncoding()) else {
             errorClosure(SlackError.ClientNetworkError)
             return
@@ -71,7 +71,7 @@ internal struct NetworkInterface {
             }.resume()
     }
     
-    internal func uploadRequest(_ token: String, data: Data, parameters: [String: AnyObject]?, successClosure: ([String: AnyObject])->Void, errorClosure: (SlackError)->Void) {
+    internal func uploadRequest(_ token: String, data: Data, parameters: [String: AnyObject]?, successClosure: @escaping ([String: AnyObject])->Void, errorClosure: @escaping (SlackError)->Void) {
         var requestString = "\(apiUrl)\(Endpoint.FilesUpload.rawValue)?token=\(token)"
         if let params = parameters {
             requestString = requestString + params.requestStringFromParameters
@@ -102,11 +102,11 @@ internal struct NetworkInterface {
 
         URLSession.shared.dataTask(with: request) {
             (data, response, internalError) -> Void in
-            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
-                successClosure(json)
-            }, errorClosure: {(error) in
-                errorClosure(error)
-            })
+//            self.handleResponse(data, response: response, internalError: internalError, successClosure: {(json) in
+//                successClosure(json)
+//            }, errorClosure: {(error) in
+//                errorClosure(error)
+//            })
         }.resume()
     }
     

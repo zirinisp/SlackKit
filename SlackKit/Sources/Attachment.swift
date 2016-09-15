@@ -86,24 +86,24 @@ public struct Attachment {
     
     internal func dictionary() -> [String: AnyObject] {
         var attachment = [String: AnyObject]()
-        attachment["fallback"] = fallback
-        attachment["callback_id"] = callbackID
-        attachment["attachment_type"] = type
-        attachment["color"] = color
-        attachment["pretext"] = pretext
-        attachment["authorName"] = authorName
-        attachment["author_link"] = authorLink
-        attachment["author_icon"] = authorIcon
-        attachment["title"] = title
-        attachment["title_link"] = titleLink
-        attachment["text"] = text
-        attachment["fields"] = fields?.map{$0.dictionary()}
-        attachment["actions"] = actions?.map{$0.dictionary()}
-        attachment["image_url"] = imageURL
-        attachment["thumb_url"] = thumbURL
-        attachment["footer"] = footer
-        attachment["footer_icon"] = footerIcon
-        attachment["ts"] = ts
+        attachment["fallback"] = fallback as AnyObject?
+        attachment["callback_id"] = callbackID as AnyObject?
+        attachment["attachment_type"] = type as AnyObject?
+        attachment["color"] = color as AnyObject?
+        attachment["pretext"] = pretext as AnyObject?
+        attachment["authorName"] = authorName as AnyObject?
+        attachment["author_link"] = authorLink as AnyObject?
+        attachment["author_icon"] = authorIcon as AnyObject?
+        attachment["title"] = title as AnyObject?
+        attachment["title_link"] = titleLink as AnyObject?
+        attachment["text"] = text as AnyObject?
+        attachment["fields"] = fields?.map{$0.dictionary()} as AnyObject?
+        attachment["actions"] = actions?.map{$0.dictionary()} as AnyObject?
+        attachment["image_url"] = imageURL as AnyObject?
+        attachment["thumb_url"] = thumbURL as AnyObject?
+        attachment["footer"] = footer as AnyObject?
+        attachment["footer_icon"] = footerIcon as AnyObject?
+        attachment["ts"] = ts as AnyObject?
         return attachment
     }
     
