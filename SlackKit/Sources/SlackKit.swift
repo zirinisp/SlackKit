@@ -39,7 +39,7 @@ public final class SlackKit: OAuthDelegate {
             self.onClientInitalization?(client)
         })
         clients[token] = client
-        client.connect(self.clientOptions)
+        client.connect(options: self.clientOptions)
     }
     
     // If you're going to be receiving and/or initiating OAuth requests, provide a client ID and secret
@@ -60,8 +60,7 @@ public final class SlackKit: OAuthDelegate {
             let client = Client(apiToken: token)
             self.onClientInitalization?(client)
             clients[token] = client
-            client.connect(self.clientOptions)
+            client.connect(options: self.clientOptions)
         }
     }
-    
 }

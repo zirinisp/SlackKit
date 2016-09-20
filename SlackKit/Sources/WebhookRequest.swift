@@ -34,7 +34,7 @@ internal struct WebhookRequest: Request {
     let text: String
     let responseURL: String
     
-    init(request: [String: AnyObject]?) {
+    init(request: [String: Any]?) {
         token = request?["token"] as? String
         teamID = request?["team_id"] as? String ?? ""
         teamDomain = request?["team_domain"] as? String ?? ""
@@ -46,5 +46,4 @@ internal struct WebhookRequest: Request {
         text = request?["text"] as? String ?? ""
         responseURL = request?["response_url"] as? String ?? ""
     }
-    
 }

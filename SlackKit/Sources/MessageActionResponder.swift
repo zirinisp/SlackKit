@@ -36,5 +36,4 @@ public struct MessageActionResponder {
             return nil
         }
     }
-    
 }

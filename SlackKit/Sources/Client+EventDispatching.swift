@@ -23,7 +23,7 @@
 
 internal extension Client {
 
-    func dispatch(_ event: [String: AnyObject]) {
+    func dispatch(_ event: [String: Any]) {
         let event = Event(event: event)
         guard let type = event.type else {
             return
@@ -31,7 +31,7 @@ internal extension Client {
         switch type {
         case .Hello:
             connected = true
-            connectionEventsDelegate?.clientConnected(self)
+            connectionEventsDelegate?.connected(self)
         case .Ok:
             messageSent(event)
         case .Message:
@@ -144,7 +144,7 @@ internal extension Client {
             // Other clients should ignore this event.
             break
         case .TeamMigrationStarted:
-            connect(options ?? ClientOptions())
+            connect(options: options ?? ClientOptions())
         case .ReconnectURL:
             // The reconnect_url event is currently unsupported and experimental.
             break
@@ -156,7 +156,6 @@ internal extension Client {
             subteamRemovedSelf(event)
         case .Error:
             print("Error: \(event)")
-            break
         }
     }
     
@@ -173,5 +172,4 @@ internal extension Client {
             messageReceived(event)
         }
     }
-    
 }

@@ -29,21 +29,21 @@ public enum ClientError: Error {
 public extension Client {
     
     //MARK: - User & Channel
-    public func getChannelIDByName(_ name: String) throws -> String {
-        guard let id = channels.filter({$0.1.name == stripString(name)}).first?.0 else {
+    public func getChannelIDWith(name: String) throws -> String {
+        guard let id = channels.filter({$0.1.name == strip(string:name)}).first?.0 else {
             throw ClientError.channelDoesNotExist
         }
         return id
     }
 
-    public func getUserIDByName(_ name: String) throws -> String {
-        guard let id = users.filter({$0.1.name == stripString(name)}).first?.0 else {
+    public func getUserIDWith(name: String) throws -> String {
+        guard let id = users.filter({$0.1.name == strip(string:name)}).first?.0 else {
             throw ClientError.userDoesNotExist
         }
         return id
     }
 
-    public func getImIDForUserWithID(_ id: String, success: @escaping (_ imID: String?)->Void, failure: @escaping (SlackError)->Void) {
+    public func getImIDForUserWith(id: String, success: @escaping (_ imID: String?)->Void, failure: @escaping (SlackError)->Void) {
         let ims = channels.filter{$0.1.isIM == true}
         let channel = ims.filter{$0.1.user == id}.first
         if let channel = channel {
@@ -54,7 +54,7 @@ public extension Client {
     }
 
     //MARK: - Utilities
-    internal func stripString(_ string: String) -> String {
+    internal func strip(string: String) -> String {
         var strippedString = string
         if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
             strippedString = string.substring(from: string.characters.index(string.startIndex, offsetBy: 1))

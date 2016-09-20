@@ -91,5 +91,4 @@ public struct OAuthServer {
         let request = AuthorizeRequest(clientID: clientID, scope: scope, redirectURI: redirectURI, state: state, team: team)
         return oauthURLRequest(request)
     }
-    
 }

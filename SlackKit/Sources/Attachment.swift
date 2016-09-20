@@ -42,7 +42,7 @@ public struct Attachment {
     public let footerIcon: String?
     public let ts: Int?
 
-    internal init(attachment: [String: AnyObject]?) {
+    internal init(attachment: [String: Any]?) {
         fallback = attachment?["fallback"] as? String
         callbackID = attachment?["callback_id"] as? String
         type = attachment?["attachment_type"] as? String
@@ -59,8 +59,8 @@ public struct Attachment {
         footer = attachment?["footer"] as? String
         footerIcon = attachment?["footer_icon"] as? String
         ts = attachment?["ts"] as? Int
-        fields = (attachment?["fields"] as? [[String: AnyObject]])?.map { AttachmentField(field: $0) }
-        actions = (attachment?["actions"] as? [[String: AnyObject]])?.map { Action(action: $0) }
+        fields = (attachment?["fields"] as? [[String: Any]])?.map { AttachmentField(field: $0) }
+        actions = (attachment?["actions"] as? [[String: Any]])?.map { Action(action: $0) }
     }
     
     public init(fallback: String, title:String, callbackID: String? = nil, type: String? = nil, colorHex: String? = nil, pretext: String? = nil, authorName: String? = nil, authorLink: String? = nil, authorIcon: String? = nil, titleLink: String? = nil, text: String? = nil, fields: [AttachmentField]? = nil, actions: [Action]? = nil, imageURL: String? = nil, thumbURL: String? = nil, footer: String? = nil, footerIcon:String? = nil, ts:Int? = nil) {
@@ -84,29 +84,28 @@ public struct Attachment {
         self.ts = ts
     }
     
-    internal func dictionary() -> [String: AnyObject] {
-        var attachment = [String: AnyObject]()
-        attachment["fallback"] = fallback as AnyObject?
-        attachment["callback_id"] = callbackID as AnyObject?
-        attachment["attachment_type"] = type as AnyObject?
-        attachment["color"] = color as AnyObject?
-        attachment["pretext"] = pretext as AnyObject?
-        attachment["authorName"] = authorName as AnyObject?
-        attachment["author_link"] = authorLink as AnyObject?
-        attachment["author_icon"] = authorIcon as AnyObject?
-        attachment["title"] = title as AnyObject?
-        attachment["title_link"] = titleLink as AnyObject?
-        attachment["text"] = text as AnyObject?
-        attachment["fields"] = fields?.map{$0.dictionary()} as AnyObject?
-        attachment["actions"] = actions?.map{$0.dictionary()} as AnyObject?
-        attachment["image_url"] = imageURL as AnyObject?
-        attachment["thumb_url"] = thumbURL as AnyObject?
-        attachment["footer"] = footer as AnyObject?
-        attachment["footer_icon"] = footerIcon as AnyObject?
-        attachment["ts"] = ts as AnyObject?
+    internal var dictionary: [String: Any] {
+        var attachment = [String: Any]()
+        attachment["fallback"] = fallback
+        attachment["callback_id"] = callbackID
+        attachment["attachment_type"] = type
+        attachment["color"] = color
+        attachment["pretext"] = pretext
+        attachment["authorName"] = authorName
+        attachment["author_link"] = authorLink
+        attachment["author_icon"] = authorIcon
+        attachment["title"] = title
+        attachment["title_link"] = titleLink
+        attachment["text"] = text
+        attachment["fields"] = fields?.map{$0.dictionary}
+        attachment["actions"] = actions?.map{$0.dictionary}
+        attachment["image_url"] = imageURL
+        attachment["thumb_url"] = thumbURL
+        attachment["footer"] = footer
+        attachment["footer_icon"] = footerIcon
+        attachment["ts"] = ts
         return attachment
     }
-    
 }
 
 public enum AttachmentColor: String {

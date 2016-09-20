@@ -46,5 +46,4 @@ open class WebhookServer: Server {
             return Reply.json(response: response)
         }
     }
-
 }

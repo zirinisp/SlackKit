@@ -25,24 +25,22 @@ import Foundation
 
 public extension Date {
 
-    func slackTimestamp() -> Double {
+    var slackTimestamp: Double {
         return NSNumber(value: timeIntervalSince1970).doubleValue
     }
-    
 }
 
 internal extension String {
     
-    func slackFormatEscaping() -> String {
+    var slackFormatEscaping: String {
         var escapedString = replacingOccurrences(of: "&", with: "&amp;")
         escapedString = replacingOccurrences(of: "<", with: "&lt;")
         escapedString = replacingOccurrences(of: ">", with: "&gt;")
         return escapedString
     }
-
 }
 
-internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: AnyObject {
+internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: Any {
 
     var requestStringFromParameters: String {
         var requestString = ""
@@ -56,6 +54,5 @@ internal extension Dictionary where Key: ExpressibleByStringLiteral, Value: AnyO
         
         return requestString
     }
-
 }
 
