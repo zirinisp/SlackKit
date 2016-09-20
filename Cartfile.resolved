@@ -1,2 +1,2 @@
-git "/Users/pzignego/Repositories/Starscream" "34ed78556478730252d77cab878ff5aa2fda7fe4"
-git "/Users/pzignego/Repositories/swifter" "0b4fadaca0011da031730f225357f2b87f6e68fa"
+git "https://github.com/daltoniam/Starscream" "2.0.0"
+git "https://github.com/pvzig/swifter.git" "3.0.1"

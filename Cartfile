@@ -1,2 +1,2 @@
-git "/Users/pzignego/Repositories/swifter" "xcode8b6"
-git "/Users/pzignego/Repositories/Starscream" "xcode8b6"
+git "https://github.com/daltoniam/Starscream"
+git "https://github.com/pvzig/swifter.git"
