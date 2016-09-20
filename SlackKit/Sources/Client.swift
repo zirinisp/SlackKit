@@ -233,13 +233,13 @@ public final class Client: WebSocketDelegate {
     }
     
     // MARK: - WebSocketDelegate
-    public func websocketDidConnect(_ socket: WebSocket) {
+    public func websocketDidConnect(socket: WebSocket) {
         if let pingInterval = options?.pingInterval {
             pingRTMServerAt(interval: pingInterval)
         }
     }
     
-    public func websocketDidDisconnect(_ socket: WebSocket, error: NSError?) {
+    public func websocketDidDisconnect(socket: WebSocket, error: NSError?) {
         connected = false
         webSocket = nil
         authenticatedUser = nil
@@ -249,7 +249,7 @@ public final class Client: WebSocketDelegate {
         }
     }
     
-    public func websocketDidReceiveMessage(_ socket: WebSocket, text: String) {
+    public func websocketDidReceiveMessage(socket: WebSocket, text: String) {
         guard let data = text.data(using: String.Encoding.utf8) else {
             return
         }
@@ -259,5 +259,5 @@ public final class Client: WebSocketDelegate {
         }
     }
 
-    public func websocketDidReceiveData(_ socket: WebSocket, data: Data) {}
+    public func websocketDidReceiveData(socket: WebSocket, data: Data) {}
 }
