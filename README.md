@@ -1,14 +1,11 @@
 ![SlackKit](https://cloud.githubusercontent.com/assets/8311605/10260893/5ec60f96-694e-11e5-91fd-da6845942201.png)
-
-![Swift Version](https://img.shields.io/badge/Swift-3.0-orange.svg) ![Plaforms](https://img.shields.io/badge/Platforms-macOS,iOS,tvOS-lightgrey.svg) ![License MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg) [![SwiftPM compatible](https://img.shields.io/badge/SwiftPM-compatible-brightgreen.svg)](https://github.com/apple/swift-package-manager) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
+![Swift Version](https://img.shields.io/badge/Swift-3.0-orange.svg) ![Plaforms](https://img.shields.io/badge/Platforms-macOS,iOS,tvOS-lightgrey.svg) ![License MIT](https://img.shields.io/badge/License-MIT-lightgrey.svg) [![Carthage compatible](https://img.shields.io/badge/Carthage-compatible-brightgreen.svg)](https://github.com/Carthage/Carthage)
 ## SlackKit: A Swift Slack Client Library
 ### Description
 
-This is the Swift 3 beta branch. It will continue to track the Xcode 8 beta releases until it is officially released, at which point Swift 3 will be merged down to the master branch.
-
-SlackKit also supports: [Swift 2.2](https://github.com/pvzig/SlackKit/), [Linux](https://github.com/pvzig/SlackKit/tree/linux)
-
 This is a Slack client library for OS X, iOS, and tvOS written in Swift. It's intended to expose all of the functionality of Slack's [Real Time Messaging API](https://api.slack.com/rtm) as well as the [web APIs](https://api.slack.com/web) that are accessible to [bot users](https://api.slack.com/bot-users). SlackKit also supports Slack’s [OAuth 2.0](https://api.slack.com/docs/oauth) flow including the [Add to Slack](https://api.slack.com/docs/slack-button) and [Sign in with Slack](https://api.slack.com/docs/sign-in-with-slack) buttons, [incoming webhooks](https://api.slack.com/incoming-webhooks), [slash commands](https://api.slack.com/slash-commands), and [message buttons](https://api.slack.com/docs/message-buttons).
+
+This is the **Swift 3** branch of SlackKit. SlackKit also has support for [Swift 2.3](https://github.com/pvzig/SlackKit/tree/swift2.3) and [Linux](https://github.com/pvzig/SlackKit/tree/linux).
 
 #### Building the SlackKit Framework
 To build the SlackKit project directly, first build the dependencies using Carthage or CocoaPods. To use the framework in your application, install it in one of the following ways:
@@ -19,7 +16,7 @@ To build the SlackKit project directly, first build the dependencies using Carth
 
 Add SlackKit to your Cartfile:
 ```
-github "https://github.com/pvzig/slackkit.git" "swift3"
+github "https://github.com/pvzig/slackkit.git"
 ```
 and run
 ```
@@ -29,20 +26,12 @@ carthage bootstrap
 ```
 carthage bootstrap --configuration "Debug"
 ```
+
 Drag the built `SlackKit.framework` into your Xcode project.
 
-#### Swift Package Manager
-Add SlackKit to your Package.swift
-```swift
-import PackageDescription
-
-let package = Package(
-    dependencies: [
-        .Package(url: "https://github.com/pvzig/SlackKit.git", majorVersion: 3)
-    ]
-)
-```
-Run `swift build` on your application’s main directory.
+#### ~~CocoaPods~~
+#### ~~Swift Package Manager~~
+SlackKit doesn’t currently build correctly using CocoaPods or Swift Package Manager and Swift 3. I’m hoping to restore support for both soon.
 
 To use the library in your project import it:
 ```
@@ -185,23 +174,22 @@ SlackKit currently supports the a subset of the Slack Web APIs that are availabl
 
 They can be accessed through a Client object’s `webAPI` property:
 ```swift
-client.webAPI.authenticationTest({ (authenticated) -> Void in
-	print(authenticated)
-}){(error) -> Void in
+client.webAPI.authenticationTest({(auth) in
+	print(auth)
+}, failure: {(error) in
 	print(error)
-}
+})
 ```
 
 #### Delegate methods
 
 To receive delegate callbacks for events, register an object as the delegate for those events using the `onClientInitalization` block:
 ```swift
-let bot = SlackKit(clientID: "CLIENT_ID", clientSecret: "CLIENT_SECRET")
+let bot = SlackKit(clientID: clientID, clientSecret: clientSecret)
 bot.onClientInitalization = { (client: Client) in
-    dispatch_async(dispatch_get_main_queue(), {
-		client.connectionEventsDelegate = self
+    DispatchQueue.main.async(execute: {
 	    client.messageEventsDelegate = self
-	})
+    })
 }
 ```
 
@@ -211,90 +199,90 @@ There are a number of delegates that you can set to receive callbacks for certai
 
 ##### ConnectionEventsDelegate
 ```swift
-clientConnected(client: Client)
-clientDisconnected(client: Client)
-clientConnectionFailed(client: Client, error: SlackError)
+connected(_ client: Client)
+disconnected(_ client: Client)
+connectionFailed(_ client: Client, error: SlackError)
 ```
 ##### MessageEventsDelegate
 ```swift
-messageSent(client: Client, message: Message)
-messageReceived(client: Client, message: Message)
-messageChanged(client: Client, message: Message)
-messageDeleted(client: Client, message: Message?)
+sent(_ message: Message, client: Client)
+received(_ message: Message, client: Client)
+changed(_ message: Message, client: Client)
+deleted(_ message: Message?, client: Client)
 ```
 ##### ChannelEventsDelegate
 ```swift
-userTyping(client: Client, channel: Channel, user: User)
-channelMarked(client: Client, channel: Channel, timestamp: String)
-channelCreated(client: Client, channel: Channel)
-channelDeleted(client: Client, channel: Channel)
-channelRenamed(client: Client, channel: Channel)
-channelArchived(client: Client, channel: Channel)
-channelHistoryChanged(client: Client, channel: Channel)
-channelJoined(client: Client, channel: Channel)
-channelLeft(client: Client, channel: Channel)
+userTypingIn(_ channel: Channel, user: User, client: Client)
+marked(_ channel: Channel, timestamp: String, client: Client)
+created(_ channel: Channel, client: Client)
+deleted(_ channel: Channel, client: Client)
+renamed(_ channel: Channel, client: Client)
+archived(_ channel: Channel, client: Client)
+historyChanged(_ channel: Channel, client: Client)
+joined(_ channel: Channel, client: Client)
+left(_ channel: Channel, client: Client)
 ```
 ##### DoNotDisturbEventsDelegate
 ```swift
-doNotDisturbUpdated(client: Client, dndStatus: DoNotDisturbStatus)
-doNotDisturbUserUpdated(client: Client, dndStatus: DoNotDisturbStatus, user: User)
+updated(_ status: DoNotDisturbStatus, client: Client)
+userUpdated(_ status: DoNotDisturbStatus, user: User, client: Client)
 ```
 ##### GroupEventsDelegate
 ```swift
-groupOpened(client: Client, group: Channel)
+opened(_ group: Channel, client: Client)
 ```
 ##### FileEventsDelegate
 ```swift
-fileProcessed(client: Client, file: File)
-fileMadePrivate(client: Client, file: File)
-fileDeleted(client: Client, file: File)
-fileCommentAdded(client: Client, file: File, comment: Comment)
-fileCommentEdited(client: Client, file: File, comment: Comment)
-fileCommentDeleted(client: Client, file: File, comment: Comment)
+processed(_ file: File, client: Client)
+madePrivate(_ file: File, client: Client)
+deleted(_ file: File, client: Client)
+commentAdded(_ file: File, comment: Comment, client: Client)
+commentEdited(_ file: File, comment: Comment, client: Client)
+commentDeleted(_ file: File, comment: Comment, client: Client)
 ```
 ##### PinEventsDelegate
 ```swift
-itemPinned(client: Client, item: Item, channel: Channel?)
-itemUnpinned(client: Client, item: Item, channel: Channel?)
+pinned(_ item: Item, channel: Channel?, client: Client)
+unpinned(_ item: Item, channel: Channel?, client: Client)
 ```
 ##### StarEventsDelegate
 ```swift
-itemStarred(client: Client, item: Item, star: Bool)
+starred(_ item: Item, starred: Bool, _ client: Client)
 ```
 ##### ReactionEventsDelegate
 ```swift
-reactionAdded(client: Client, reaction: String, item: Item, itemUser: String)
-reactionRemoved(client: Client, reaction: String, item: Item, itemUser: String)
+added(_ reaction: String, item: Item, itemUser: String, client: Client)
+removed(_ reaction: String, item: Item, itemUser: String, client: Client)
 ```
 ##### SlackEventsDelegate
 ```swift
-preferenceChanged(client: Client, preference: String, value: AnyObject?)
-userChanged(client: Client, user: User)
-presenceChanged(client: Client, user: User, presence: String)
-manualPresenceChanged(client: Client, user: User, presence: String)
-botEvent(client: Client, bot: Bot)
+preferenceChanged(_ preference: String, value: Any?, client: Client)
+userChanged(_ user: User, client: Client)
+presenceChanged(_ user: User, presence: String, client: Client)
+manualPresenceChanged(_ user: User, presence: String, client: Client)
+botEvent(_ bot: Bot, client: Client)
 ```
 ##### TeamEventsDelegate
 ```swift
-teamJoined(client: Client, user: User)
-teamPlanChanged(client: Client, plan: String)
-teamPreferencesChanged(client: Client, preference: String, value: AnyObject?)
-teamNameChanged(client: Client, name: String)
-teamDomainChanged(client: Client, domain: String)
-teamEmailDomainChanged(client: Client, domain: String)
-teamEmojiChanged(client: Client)
+userJoined(_ user: User, client: Client)
+planChanged(_ plan: String, client: Client)
+preferencesChanged(_ preference: String, value: Any?, client: Client)
+nameChanged(_ name: String, client: Client)
+domainChanged(_ domain: String, client: Client)
+emailDomainChanged(_ domain: String, client: Client)
+emojiChanged(_ client: Client)
 ```
 ##### SubteamEventsDelegate
 ```swift
-subteamEvent(client: Client, userGroup: UserGroup)
-subteamSelfAdded(client: Client, subteamID: String)
-subteamSelfRemoved(client: Client, subteamID: String)
+event(_ userGroup: UserGroup, client: Client)
+selfAdded(_ subteamID: String, client: Client)
+selfRemoved(_ subteamID: String, client: Client)
 ```
 ##### TeamProfileEventsDelegate
 ```swift
-teamProfileChanged(client: Client, profile: CustomProfile)
-teamProfileDeleted(client: Client, profile: CustomProfile)
-teamProfileReordered(client: Client, profile: CustomProfile)
+changed(_ profile: CustomProfile, client: Client)
+deleted(_ profile: CustomProfile, client: Client)
+reordered(_ profile: CustomProfile, client: Client)
 ```
 
 ### Examples
