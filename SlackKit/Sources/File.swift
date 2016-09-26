@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct File {
+public struct File: Equatable {
 
     public let id: String?
     public let created: Int?
@@ -78,7 +78,7 @@ public struct File {
     internal(set) public var comments = [String: Comment]()
     internal(set) public var reactions = [Reaction]()
     
-    public init(file:[String: AnyObject]?) {
+    public init(file:[String: Any]?) {
         id = file?["id"] as? String
         created = file?["created"] as? Int
         name = file?["name"] as? String
@@ -127,11 +127,11 @@ public struct File {
         channels = file?["channels"] as? [String]
         groups = file?["groups"] as? [String]
         ims = file?["ims"] as? [String]
-        initialComment = Comment(comment: file?["initial_comment"] as? [String: AnyObject])
+        initialComment = Comment(comment: file?["initial_comment"] as? [String: Any])
         stars = file?["num_stars"] as? Int
         isStarred = file?["is_starred"] as? Bool
         pinnedTo = file?["pinned_to"] as? [String]
-        reactions = Reaction.reactionsFromArray(file?["reactions"] as? [[String: AnyObject]])        
+        reactions = Reaction.reactionsFromArray(file?["reactions"] as? [[String: Any]])        
     }
     
     internal init(id:String?) {
@@ -179,11 +179,8 @@ public struct File {
         linesMore = nil
         initialComment = nil
     }
-}
-
-extension File: Equatable {}
-
-public func ==(lhs: File, rhs: File) -> Bool {
-    return lhs.id == rhs.id
-}
     
+    public static func ==(lhs: File, rhs: File) -> Bool {
+        return lhs.id == rhs.id
+    }
+}

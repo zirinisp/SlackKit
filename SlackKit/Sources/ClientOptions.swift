@@ -40,5 +40,4 @@ public struct ClientOptions {
         self.timeout = timeout
         self.reconnect = reconnect
     }
-    
 }

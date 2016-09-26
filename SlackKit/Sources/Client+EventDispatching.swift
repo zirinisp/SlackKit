@@ -23,7 +23,7 @@
 
 internal extension Client {
 
-    func dispatch(_ event: [String: AnyObject]) {
+    func dispatch(_ event: [String: Any]) {
         let event = Event(event: event)
         guard let type = event.type else {
             return
@@ -31,7 +31,7 @@ internal extension Client {
         switch type {
         case .Hello:
             connected = true
-            connectionEventsDelegate?.clientConnected(self)
+            connectionEventsDelegate?.connected(self)
         case .Ok:
             messageSent(event)
         case .Message:
@@ -156,7 +156,6 @@ internal extension Client {
             subteamRemovedSelf(event)
         case .Error:
             print("Error: \(event)")
-            break
         }
     }
     
@@ -173,5 +172,4 @@ internal extension Client {
             messageReceived(event)
         }
     }
-    
 }

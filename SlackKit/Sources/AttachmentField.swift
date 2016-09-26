@@ -27,7 +27,7 @@ public struct AttachmentField {
     public let value: String?
     public let short: Bool?
     
-    internal init(field: [String: AnyObject]?) {
+    internal init(field: [String: Any]?) {
         title = field?["title"] as? String
         value = field?["value"] as? String
         short = field?["short"] as? Bool
@@ -35,16 +35,15 @@ public struct AttachmentField {
     
     public init(title:String, value:String, short: Bool? = nil) {
         self.title = title
-        self.value = value.slackFormatEscaping()
+        self.value = value.slackFormatEscaping
         self.short = short
     }
     
-    internal func dictionary() -> [String: AnyObject] {
-        var field = [String: AnyObject]()
+    internal var dictionary: [String: Any] {
+        var field = [String: Any]()
         field["title"] = title
         field["value"] = value
         field["short"] = short
         return field
     }
-    
 }

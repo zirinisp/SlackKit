@@ -1,2 +1,2 @@
-github "https://github.com/pvzig/swifter.git" "master"
-github "https://github.com/pvzig/Starscream.git" "swift3"
+git "https://github.com/daltoniam/Starscream"
+git "https://github.com/pvzig/swifter.git"

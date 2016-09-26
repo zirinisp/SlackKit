@@ -27,7 +27,7 @@ public final class SlackKit: OAuthDelegate {
     
     internal(set) public var oauth: OAuthServer?
     internal(set) public var clients: [String: Client] = [:]
-    private let clientOptions: ClientOptions
+    fileprivate let clientOptions: ClientOptions
     // Initalization block
     public var onClientInitalization: ((Client) -> Void)?
     
@@ -63,5 +63,4 @@ public final class SlackKit: OAuthDelegate {
             client.connect(options: self.clientOptions)
         }
     }
-    
 }

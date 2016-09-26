@@ -21,11 +21,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Reaction {
+public struct Reaction: Equatable {
+    
     public let name: String?
     internal(set) public var user: String?
     
-    internal init(reaction:[String: AnyObject]?) {
+    internal init(reaction:[String: Any]?) {
         name = reaction?["name"] as? String
     }
     
@@ -34,7 +35,7 @@ public struct Reaction {
         self.user = user
     }
     
-    static func reactionsFromArray(_ array: [[String: AnyObject]]?) -> [Reaction] {
+    static func reactionsFromArray(_ array: [[String: Any]]?) -> [Reaction] {
         var reactions = [Reaction]()
         if let array = array {
             for reaction in array {
@@ -48,10 +49,7 @@ public struct Reaction {
         return reactions
     }
     
-}
-
-extension Reaction: Equatable {}
-
-public func ==(lhs: Reaction, rhs: Reaction) -> Bool {
-    return lhs.name == rhs.name
+    public static func ==(lhs: Reaction, rhs: Reaction) -> Bool {
+        return lhs.name == rhs.name
+    }
 }

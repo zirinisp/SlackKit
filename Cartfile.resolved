@@ -1,2 +1,2 @@
-github "pvzig/Starscream" "2fde5c5eb9302439e634753c3aacc794ca2e42e8"
-github "pvzig/swifter" "ddbebdde19360a2c9e4e01e5a0642dd12082cc92"
+git "https://github.com/daltoniam/Starscream" "2.0.0"
+git "https://github.com/pvzig/swifter.git" "3.0.1"
