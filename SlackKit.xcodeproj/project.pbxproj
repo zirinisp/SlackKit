@@ -74,12 +74,10 @@
 		269B47C81D3AE25B0042D137 /* MessageActionServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B30B8F1D298E08004D4AB5 /* MessageActionServer.swift */; };
 		269B47C91D3AE2620042D137 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B30B911D298E12004D4AB5 /* Server.swift */; };
 		269B47CA1D3AE2670042D137 /* WebhookServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC15001D260B1000FD3A53 /* WebhookServer.swift */; };
-		269B47CC1D3AE5670042D137 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269B47CB1D3AE5670042D137 /* Swifter.framework */; };
 		269B47CE1D3C22FC0042D137 /* ClientOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269B47CD1D3C22FC0042D137 /* ClientOptions.swift */; };
 		269B47CF1D3C22FC0042D137 /* ClientOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269B47CD1D3C22FC0042D137 /* ClientOptions.swift */; };
 		269B47D01D3C22FC0042D137 /* ClientOptions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 269B47CD1D3C22FC0042D137 /* ClientOptions.swift */; };
 		26B30B6C1D289FA0004D4AB5 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B30B6B1D289FA0004D4AB5 /* Swifter.framework */; };
-		26B30B6F1D289FB2004D4AB5 /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B30B6E1D289FB2004D4AB5 /* Swifter.framework */; };
 		26B30B881D297A98004D4AB5 /* MessageActionRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B30B871D297A98004D4AB5 /* MessageActionRequest.swift */; };
 		26B30B901D298E08004D4AB5 /* MessageActionServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B30B8F1D298E08004D4AB5 /* MessageActionServer.swift */; };
 		26B30B921D298E12004D4AB5 /* Server.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26B30B911D298E12004D4AB5 /* Server.swift */; };
@@ -147,6 +145,8 @@
 		26EC14FB1D1F355A00FD3A53 /* Action.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC14F81D1F355A00FD3A53 /* Action.swift */; };
 		26EC15011D260B1000FD3A53 /* WebhookServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC15001D260B1000FD3A53 /* WebhookServer.swift */; };
 		26EC15021D260B1000FD3A53 /* WebhookServer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 26EC15001D260B1000FD3A53 /* WebhookServer.swift */; };
+		26F76EB21D40318F00C3A3DD /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 26B30B6E1D289FB2004D4AB5 /* Swifter.framework */; };
+		26F76EB31D40319700C3A3DD /* Swifter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 269B47CB1D3AE5670042D137 /* Swifter.framework */; };
 		4307A0801CC6D0910011D5DE /* Starscream.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4307A07F1CC6D0910011D5DE /* Starscream.framework */; };
 		C16C987A1CE7D3DD00692776 /* Client+Utilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = C16C98791CE7D3DD00692776 /* Client+Utilities.swift */; };
 		C1A85FF91CE3BCEF00756C40 /* Client+EventDispatching.swift in Sources */ = {isa = PBXBuildFile; fileRef = C1A85FF71CE3BCEF00756C40 /* Client+EventDispatching.swift */; };
@@ -227,7 +227,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				263993AB1CE90EE0004A6E93 /* Starscream.framework in Frameworks */,
-				26B30B6F1D289FB2004D4AB5 /* Swifter.framework in Frameworks */,
+				26F76EB21D40318F00C3A3DD /* Swifter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -236,7 +236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				263993CA1CE90EED004A6E93 /* Starscream.framework in Frameworks */,
-				269B47CC1D3AE5670042D137 /* Swifter.framework in Frameworks */,
+				26F76EB31D40319700C3A3DD /* Swifter.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -452,11 +452,12 @@
 			isa = PBXProject;
 			attributes = {
 				LastSwiftUpdateCheck = 0730;
-				LastUpgradeCheck = 0730;
+				LastUpgradeCheck = 0800;
 				ORGANIZATIONNAME = "Launch Software LLC";
 				TargetAttributes = {
 					26072A331BB48B3A00CD650C = {
 						CreatedOnToolsVersion = 7.0;
+						LastSwiftMigration = 0800;
 					};
 				};
 			};
@@ -773,6 +774,7 @@
 				PRODUCT_NAME = SlackKit;
 				SKIP_INSTALL = YES;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -798,6 +800,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.launchsoft.SlackKit;
 				PRODUCT_NAME = SlackKit;
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -828,6 +832,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Debug;
 		};
@@ -857,6 +862,8 @@
 				SDKROOT = iphoneos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 			};
 			name = Release;
 		};
@@ -884,6 +891,7 @@
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 3.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Debug;
@@ -911,6 +919,8 @@
 				SDKROOT = appletvos;
 				SKIP_INSTALL = YES;
 				SUPPORTED_PLATFORMS = "appletvsimulator appletvos";
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				SWIFT_VERSION = 3.0;
 				TVOS_DEPLOYMENT_TARGET = 9.0;
 			};
 			name = Release;

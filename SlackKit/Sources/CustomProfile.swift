@@ -22,13 +22,14 @@
 // THE SOFTWARE.
 
 public struct CustomProfile {
+    
     internal(set) public var fields = [String: CustomProfileField]()
     
-    internal init(profile: [String: AnyObject]?) {
-        if let eventFields = profile?["fields"] as? [AnyObject] {
+    internal init(profile: [String: Any]?) {
+        if let eventFields = profile?["fields"] as? [Any] {
             for field in eventFields {
                 var cpf: CustomProfileField?
-                if let fieldDictionary = field as? [String: AnyObject] {
+                if let fieldDictionary = field as? [String: Any] {
                     cpf = CustomProfileField(field: fieldDictionary)
                 } else {
                     cpf = CustomProfileField(id: field as? String)
@@ -38,13 +39,12 @@ public struct CustomProfile {
         }
     }
     
-    internal init(customFields: [String: AnyObject]?) {
+    internal init(customFields: [String: Any]?) {
         if let customFields = customFields {
             for key in customFields.keys {
-                let cpf = CustomProfileField(field: customFields[key] as? [String: AnyObject])
+                let cpf = CustomProfileField(field: customFields[key] as? [String: Any])
                 self.fields[key] = cpf
             }
         }
     }
-    
 }

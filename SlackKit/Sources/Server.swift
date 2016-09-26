@@ -25,16 +25,16 @@ import Foundation
 import Swifter
 
 internal enum Reply {
-    case JSON(response: Response)
-    case Text(body: String)
-    case BadRequest
+    case json(response: Response)
+    case text(body: String)
+    case badRequest
 }
 
 internal protocol Request {
     var responseURL: String { get }
 }
 
-public class Server {
+open class Server {
     
     internal let http = HttpServer()
     internal let token: String
@@ -43,7 +43,7 @@ public class Server {
         self.token = token
     }
     
-    public func start(port: in_port_t = 8080, forceIPV4: Bool = false) {
+    open func start(_ port: in_port_t = 8080, forceIPV4: Bool = false) {
         do {
             try http.start(port, forceIPv4: forceIPV4)
         } catch let error as NSError {
@@ -51,29 +51,29 @@ public class Server {
         }
     }
     
-    public func stop() {
+    open func stop() {
         http.stop()
     }
     
-    internal func request(request:Request, reply: Reply) -> HttpResponse {
+    internal func request(_ request:Request, reply: Reply) -> HttpResponse {
         switch reply {
-        case .Text(let body):
-            return .OK(.Text(body))
-        case .JSON(let response):
-            return .OK(.Json(response.json()))
-        case .BadRequest:
-            return .BadRequest(.Text("Bad request."))
+        case .text(let body):
+            return .ok(.text(body))
+        case .json(let response):
+            return .ok(.json(response.json))
+        case .badRequest:
+            return .badRequest(.text("Bad request."))
         }
     }
     
-    internal func dictionaryFromRequest(body: [UInt8]) -> [String: AnyObject]? {
-        let string = NSString(data: NSData(bytes: body, length: body.count), encoding: NSUTF8StringEncoding)
-        if let body = string?.componentsSeparatedByString("&") {
-            var dict: [String: AnyObject] = [:]
+    internal func dictionaryFromRequest(_ body: [UInt8]) -> [String: Any]? {
+        let string = String(data: Data(bytes: UnsafePointer<UInt8>(body), count: body.count), encoding: String.Encoding.utf8)
+        if let body = string?.components(separatedBy: "&") {
+            var dict: [String: Any] = [:]
             for argument in body {
-                let kv = argument.componentsSeparatedByString("=")
-                if let key = kv.first, value = kv.last {
-                    dict[key] = value
+                let kv = argument.components(separatedBy: "=")
+                if let key = kv.first, let value = kv.last {
+                    dict[key] = value as Any?
                 }
             }
             return dict
@@ -81,11 +81,10 @@ public class Server {
         return nil
     }
     
-    internal func jsonFromRequest(string: String) -> [String: AnyObject]? {
-        guard let data = string.dataUsingEncoding(NSUTF8StringEncoding) else {
+    internal func jsonFromRequest(_ string: String) -> [String: Any]? {
+        guard let data = string.data(using: String.Encoding.utf8) else {
             return nil
         }
-        return (try? NSJSONSerialization.JSONObjectWithData(data, options: [])) as? [String: AnyObject] ?? nil
+        return (try? JSONSerialization.jsonObject(with: data, options: [])) as? [String: Any] ?? nil
     }
-    
 }

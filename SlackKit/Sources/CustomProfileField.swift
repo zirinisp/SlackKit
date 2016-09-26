@@ -22,6 +22,7 @@
 // THE SOFTWARE.
 
 public struct CustomProfileField {
+    
     internal(set) public var id: String?
     internal(set) public var alt: String?
     internal(set) public var value: String?
@@ -33,7 +34,7 @@ public struct CustomProfileField {
     internal(set) public var possibleValues: [String]?
     internal(set) public var type: String?
     
-    internal init(field: [String: AnyObject]?) {
+    internal init(field: [String: Any]?) {
         id = field?["id"] as? String
         alt = field?["alt"] as? String
         value = field?["value"] as? String
@@ -50,7 +51,7 @@ public struct CustomProfileField {
         self.id = id
     }
     
-    internal mutating func updateProfileField(profile: CustomProfileField?) {
+    internal mutating func updateProfileField(_ profile: CustomProfileField?) {
         id = profile?.id != nil ? profile?.id : id
         alt = profile?.alt != nil ? profile?.alt : alt
         value = profile?.value != nil ? profile?.value : value

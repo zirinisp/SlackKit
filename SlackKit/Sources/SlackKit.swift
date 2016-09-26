@@ -27,7 +27,7 @@ public final class SlackKit: OAuthDelegate {
     
     internal(set) public var oauth: OAuthServer?
     internal(set) public var clients: [String: Client] = [:]
-    private let clientOptions: ClientOptions
+    fileprivate let clientOptions: ClientOptions
     // Initalization block
     public var onClientInitalization: ((Client) -> Void)?
     
@@ -35,7 +35,7 @@ public final class SlackKit: OAuthDelegate {
     public init(withAPIToken token: String, clientOptions: ClientOptions = ClientOptions()) {
         self.clientOptions = clientOptions
         let client = Client(apiToken: token)
-        dispatch_async(dispatch_get_main_queue(), {
+        DispatchQueue.main.async(execute: {
             self.onClientInitalization?(client)
         })
         clients[token] = client
@@ -48,7 +48,7 @@ public final class SlackKit: OAuthDelegate {
         oauth = try? OAuthServer(clientID: clientID, clientSecret: clientSecret, state: state, redirectURI: redirectURI, port: port, forceIPV4: forceIPV4, delegate: self)
     }
     
-    internal func userAuthed(response: OAuthResponse) {
+    internal func userAuthed(_ response: OAuthResponse) {
         // User auth
         if let token = response.accessToken {
             let client = Client(apiToken: token)
@@ -63,5 +63,4 @@ public final class SlackKit: OAuthDelegate {
             client.connect(options: self.clientOptions)
         }
     }
-    
 }
