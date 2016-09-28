@@ -32,7 +32,7 @@ public struct IncomingWebhook {
     public let iconEmoji: String?
     public let iconURL: String?
     
-    internal init(webhook: [String: AnyObject]?) {
+    internal init(webhook: [String: Any]?) {
         url = webhook?["url"] as? String
         channel = webhook?["channel"] as? String
         configurationURL = webhook?["configuration_url"] as? String
@@ -50,8 +50,8 @@ public struct IncomingWebhook {
         self.configurationURL = nil
     }
     
-    public func postMessage(response: Response, success: ((Bool)->Void)? = nil, failure: ((SlackError)->Void)? = nil) {
-        if let url = self.url, data = try? NSJSONSerialization.dataWithJSONObject(jsonBody(response.json()), options: []) {
+    public func postMessage(_ response: Response, success: ((Bool)->Void)? = nil, failure: ((SlackError)->Void)? = nil) {
+        if let url = self.url, let data = try? JSONSerialization.data(withJSONObject: jsonBody(response.json), options: []) {
             NetworkInterface().customRequest(url, data: data, success: { _ in
                 success?(true)
             }, errorClosure: {(error) in
@@ -60,7 +60,7 @@ public struct IncomingWebhook {
         }
     }
     
-    private func jsonBody(response: [String: AnyObject]) -> [String: AnyObject] {
+    fileprivate func jsonBody(_ response: [String: Any]) -> [String: Any] {
         var json = response
         json["channel"] = channel
         json["username"] = username
@@ -68,5 +68,4 @@ public struct IncomingWebhook {
         json["icon_url"] = iconURL
         return json
     }
-    
 }

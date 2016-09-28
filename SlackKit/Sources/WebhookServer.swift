@@ -21,30 +21,29 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public class WebhookServer: Server {
+open class WebhookServer: Server {
     
     public init(token: String, route: String, response: Response) {
         super.init(token: token)
         addRoute(route, response: response)
     }
     
-    public func addRoute(route: String, response: Response) {
+    open func addRoute(_ route: String, response: Response) {
         http["/\(route)"] = { request in
             let webhookRequest = WebhookRequest(request: self.dictionaryFromRequest(request.body))
             if webhookRequest.token == self.token {
                 return self.request(webhookRequest, reply: self.replyForResponse(response))
             } else {
-                return .BadRequest(.Text("Bad request."))
+                return .badRequest(.text("Bad request."))
             }
         }
     }
     
-    private func replyForResponse(response: Response) -> Reply {
+    fileprivate func replyForResponse(_ response: Response) -> Reply {
         if response.attachments == nil && response.responseType == nil {
-            return Reply.Text(body: response.text)
+            return Reply.text(body: response.text)
         } else {
-            return Reply.JSON(response: response)
+            return Reply.json(response: response)
         }
     }
-
 }

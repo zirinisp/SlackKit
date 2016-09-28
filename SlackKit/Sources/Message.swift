@@ -21,7 +21,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public final class Message {
+public final class Message: Equatable {
     
     public let type = "message"
     public let subtype: String?
@@ -32,7 +32,7 @@ public final class Message {
     internal(set) public var text: String?
     public let botID: String?
     public let username: String?
-    public let icons: [String: AnyObject]?
+    public let icons: [String: Any]?
     public let deletedTs: String?
     internal(set) var purpose: String?
     internal(set) var topic: String?
@@ -51,33 +51,33 @@ public final class Message {
     internal(set) public var replaceOriginal: Bool?
     internal(set) public var deleteOriginal: Bool?
     
-    public init(message: [String: AnyObject]?) {
-        subtype = message?["subtype"] as? String
-        ts = message?["ts"] as? String
-        user = message?["user"] as? String
-        channel = message?["channel"] as? String
-        hidden = message?["hidden"] as? Bool
-        text = message?["text"] as? String
-        botID = message?["bot_id"] as? String
-        username = message?["username"] as? String
-        icons = message?["icons"] as? [String: AnyObject]
-        deletedTs = message?["deleted_ts"] as? String
-        purpose = message?["purpose"] as? String
-        topic = message?["topic"] as? String
-        name = message?["name"] as? String
-        members = message?["members"] as? [String]
-        oldName = message?["old_name"] as? String
-        upload = message?["upload"] as? Bool
-        itemType = message?["item_type"] as? String
-        isStarred = message?["is_starred"] as? Bool
-        pinnedTo = message?["pinned_to"] as? [String]
-        comment = Comment(comment: message?["comment"] as? [String: AnyObject])
-        file = File(file: message?["file"] as? [String: AnyObject])
-        reactions = Reaction.reactionsFromArray(message?["reactions"] as? [[String: AnyObject]])
-        attachments = (message?["attachments"] as? [[String: AnyObject]])?.map{Attachment(attachment: $0)}
-        responseType = ResponseType(rawValue: message?["response_type"] as? String ?? "")
-        replaceOriginal = message?["replace_original"] as? Bool
-        deleteOriginal = message?["delete_original"] as? Bool
+    public init(dictionary: [String: Any]?) {
+        subtype = dictionary?["subtype"] as? String
+        ts = dictionary?["ts"] as? String
+        user = dictionary?["user"] as? String
+        channel = dictionary?["channel"] as? String
+        hidden = dictionary?["hidden"] as? Bool
+        text = dictionary?["text"] as? String
+        botID = dictionary?["bot_id"] as? String
+        username = dictionary?["username"] as? String
+        icons = dictionary?["icons"] as? [String: Any]
+        deletedTs = dictionary?["deleted_ts"] as? String
+        purpose = dictionary?["purpose"] as? String
+        topic = dictionary?["topic"] as? String
+        name = dictionary?["name"] as? String
+        members = dictionary?["members"] as? [String]
+        oldName = dictionary?["old_name"] as? String
+        upload = dictionary?["upload"] as? Bool
+        itemType = dictionary?["item_type"] as? String
+        isStarred = dictionary?["is_starred"] as? Bool
+        pinnedTo = dictionary?["pinned_to"] as? [String]
+        comment = Comment(comment: dictionary?["comment"] as? [String: Any])
+        file = File(file: dictionary?["file"] as? [String: Any])
+        reactions = Reaction.reactionsFromArray(dictionary?["reactions"] as? [[String: Any]])
+        attachments = (dictionary?["attachments"] as? [[String: Any]])?.map{Attachment(attachment: $0)}
+        responseType = ResponseType(rawValue: dictionary?["response_type"] as? String ?? "")
+        replaceOriginal = dictionary?["replace_original"] as? Bool
+        deleteOriginal = dictionary?["delete_original"] as? Bool
     }
     
     internal init(ts:String?) {
@@ -94,11 +94,8 @@ public final class Message {
         comment = nil
         file = nil
     }
-
-}
-
-extension Message: Equatable {}
-
-public func ==(lhs: Message, rhs: Message) -> Bool {
-    return lhs.ts == rhs.ts && lhs.user == rhs.user && lhs.text == rhs.text
+    
+    public static func ==(lhs: Message, rhs: Message) -> Bool {
+        return lhs.ts == rhs.ts && lhs.user == rhs.user && lhs.text == rhs.text
+    }
 }

@@ -21,7 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Comment {
+public struct Comment: Equatable {
+    
     public let id: String?
     public let user: String?
     internal(set) public var created: Int?
@@ -30,7 +31,7 @@ public struct Comment {
     internal(set) public var stars: Int?
     internal(set) public var reactions = [Reaction]()
     
-    internal init(comment:[String: AnyObject]?) {
+    internal init(comment:[String: Any]?) {
         id = comment?["id"] as? String
         created = comment?["created"] as? Int
         user = comment?["user"] as? String
@@ -43,10 +44,8 @@ public struct Comment {
         self.id = id
         self.user = nil
     }
-}
-
-extension Comment: Equatable {}
-
-public func ==(lhs: Comment, rhs: Comment) -> Bool {
-    return lhs.id == rhs.id
+    
+    public static func ==(lhs: Comment, rhs: Comment) -> Bool {
+        return lhs.id == rhs.id
+    }
 }

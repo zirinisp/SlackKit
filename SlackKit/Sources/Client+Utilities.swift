@@ -21,43 +21,43 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public enum ClientError: ErrorType {
-    case ChannelDoesNotExist
-    case UserDoesNotExist
+public enum ClientError: Error {
+    case channelDoesNotExist
+    case userDoesNotExist
 }
 
 public extension Client {
     
     //MARK: - User & Channel
-    public func getChannelIDByName(name: String) throws -> String {
-        guard let id = channels.filter({$0.1.name == stripString(name)}).first?.0 else {
-            throw ClientError.ChannelDoesNotExist
+    public func getChannelIDWith(name: String) throws -> String {
+        guard let id = channels.filter({$0.1.name == strip(string:name)}).first?.0 else {
+            throw ClientError.channelDoesNotExist
         }
         return id
     }
 
-    public func getUserIDByName(name: String) throws -> String {
-        guard let id = users.filter({$0.1.name == stripString(name)}).first?.0 else {
-            throw ClientError.UserDoesNotExist
+    public func getUserIDWith(name: String) throws -> String {
+        guard let id = users.filter({$0.1.name == strip(string:name)}).first?.0 else {
+            throw ClientError.userDoesNotExist
         }
         return id
     }
 
-    public func getImIDForUserWithID(id: String, success: (imID: String?)->Void, failure: (error: SlackError)->Void) {
+    public func getImIDForUserWith(id: String, success: @escaping (_ imID: String?)->Void, failure: @escaping (SlackError)->Void) {
         let ims = channels.filter{$0.1.isIM == true}
         let channel = ims.filter{$0.1.user == id}.first
         if let channel = channel {
-            success(imID: channel.0)
+            success(channel.0)
         } else {
             webAPI.openIM(id, success: success, failure: failure)
         }
     }
 
     //MARK: - Utilities
-    internal func stripString(string: String) -> String {
+    internal func strip(string: String) -> String {
         var strippedString = string
         if string[string.startIndex] == "@" || string[string.startIndex] == "#" {
-            strippedString = string.substringFromIndex(string.startIndex.advancedBy(1))
+            strippedString = string.substring(from: string.characters.index(string.startIndex, offsetBy: 1))
         }
         return strippedString
     }

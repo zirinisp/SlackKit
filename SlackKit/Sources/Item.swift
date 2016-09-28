@@ -21,7 +21,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-public struct Item {
+public struct Item: Equatable {
+    
     public let type: String?
     public let ts: String?
     public let channel: String?
@@ -30,21 +31,20 @@ public struct Item {
     public let comment: Comment?
     public let fileCommentID: String?
     
-    internal init(item:[String: AnyObject]?) {
+    internal init(item:[String: Any]?) {
         type = item?["type"] as? String
         ts = item?["ts"] as? String
         channel = item?["channel"] as? String
-        
-        message = Message(message: item?["message"] as? [String: AnyObject])
+        message = Message(dictionary: item?["message"] as? [String: Any])
         
         // Comment and File can come across as Strings or Dictionaries
-        if let commentDictionary = item?["comment"] as? [String: AnyObject] {
+        if let commentDictionary = item?["comment"] as? [String: Any] {
             comment = Comment(comment: commentDictionary)
         } else {
             comment = Comment(id: item?["comment"] as? String)
         }
         
-        if let fileDictionary = item?["file"] as? [String: AnyObject] {
+        if let fileDictionary = item?["file"] as? [String: Any] {
             file = File(file: fileDictionary)
         } else {
             file = File(id: item?["file"] as? String)
@@ -52,10 +52,8 @@ public struct Item {
         
         fileCommentID = item?["file_comment"] as? String
     }
-}
-
-extension Item: Equatable {}
-
-public func ==(lhs: Item, rhs: Item) -> Bool {
-    return lhs.type == rhs.type && lhs.channel == rhs.channel && lhs.file == rhs.file && lhs.comment == rhs.comment && lhs.message == rhs.message
+    
+    public static func ==(lhs: Item, rhs: Item) -> Bool {
+        return lhs.type == rhs.type && lhs.channel == rhs.channel && lhs.file == rhs.file && lhs.comment == rhs.comment && lhs.message == rhs.message
+    }
 }

@@ -22,11 +22,12 @@
 // THE SOFTWARE.
 
 public struct Topic {
+    
     public let value: String?
     public let creator: String?
     public let lastSet: Int?
     
-    internal init(topic: [String: AnyObject]?) {
+    internal init(topic: [String: Any]?) {
         value = topic?["value"] as? String
         creator = topic?["creator"] as? String
         lastSet = topic?["last_set"] as? Int
